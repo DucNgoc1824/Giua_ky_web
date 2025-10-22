@@ -40,6 +40,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/materials', courseMaterialRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại cổng http://localhost:${PORT}`);

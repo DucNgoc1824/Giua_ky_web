@@ -13,10 +13,15 @@ const courseMaterialService = {
   },
 
   // 2. Thêm tài liệu mới (cho GV/Admin)
-  addMaterial: async (materialData) => {
-    // materialData là { subject_id, title, url }
+  addMaterial: async (formData) => {
+    // formData bây giờ là một đối tượng FormData
     try {
-      const response = await api.post('/materials', materialData);
+      const response = await api.post('/materials', formData, {
+        // Cần báo cho axios đây là 'multipart/form-data'
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('Lỗi khi thêm tài liệu:', error);

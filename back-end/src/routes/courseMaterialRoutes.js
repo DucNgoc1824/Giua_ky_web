@@ -6,13 +6,19 @@ const {
   isLecturerOrAdmin,
 } = require('../middleware/authMiddleware');
 
+const uploadMiddleware = require('../middleware/uploadMiddleware');
+
 // === BẢO VỆ TẤT CẢ API DƯỚI ĐÂY ===
 // Yêu cầu phải đăng nhập (có token)
 router.use(verifyToken);
 
 // 1. API Thêm tài liệu (POST /api/materials)
 // Yêu cầu là Giảng viên HOẶC Admin
-router.post('/', isLecturerOrAdmin, courseMaterialController.addMaterial);
+router.post(
+  '/',
+  [verifyToken, isLecturerOrAdmin, uploadMiddleware], // <--- SỬA
+  courseMaterialController.addMaterial
+);
 
 // 2. API Lấy tài liệu của 1 môn (GET /api/materials/subject/:subjectId)
 // (Ai đăng nhập cũng xem được, kể cả Sinh viên)

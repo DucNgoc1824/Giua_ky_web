@@ -4,24 +4,36 @@ const courseMaterialController = {
   // 1. (GV/Admin) Thêm tài liệu
   addMaterial: async (req, res) => {
     try {
-      const { subject_id, title, url } = req.body;
-      const added_by_user_id = req.user.userId; // Lấy từ token (đã qua middleware)
+      // 1. Lấy 'title' và 'subject_id' từ req.body (dạng FormData)
+      const { subject_id, title } = req.body;
+      const added_by_user_id = req.user.userId;
 
-      if (!subject_id || !title || !url) {
+      // 2. Kiểm tra xem file đã được upload chưa
+      if (!req.file) {
+        return res.status(400).json({ message: 'Vui lòng chọn một file để upload.' });
+      }
+      
+      // 3. Lấy đường dẫn của file (do multer tạo ra)
+      // req.file.path sẽ là 'uploads/12345-tenfile.pdf'
+      // Chúng ta sẽ lưu đường dẫn này vào CSDL (cột 'url')
+      // Chúng ta cần chuẩn hóa nó thành /uploads/12345-tenfile.pdf
+      const fileUrl = `/uploads/${req.file.filename}`;
+
+      if (!subject_id || !title) {
         return res
           .status(400)
-          .json({ message: 'Vui lòng nhập đủ Môn học, Tiêu đề và URL.' });
+          .json({ message: 'Vui lòng nhập đủ Môn học và Tiêu đề.' });
       }
 
       const newMaterialId = await materialModel.create(
         subject_id,
         title,
-        url,
+        fileUrl, // <-- SỬA: Lưu fileUrl thay vì url từ body
         added_by_user_id
       );
       res
         .status(201)
-        .json({ message: 'Thêm tài liệu thành công!', materialId: newMaterialId });
+        .json({ message: 'Upload tài liệu thành công!', materialId: newMaterialId });
     } catch (error) {
       if (error.code === 'ER_NO_REFERENCED_ROW_2') {
          return res.status(404).json({ message: 'Không tìm thấy môn học này.' });

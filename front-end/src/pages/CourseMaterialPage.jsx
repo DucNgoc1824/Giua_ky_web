@@ -4,6 +4,7 @@ import courseMaterialService from '../services/courseMaterialService'; // Servic
 import Modal from '../components/Modal';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
+const BACKEND_URL = 'http://localhost:8080';
 
 const CourseMaterialPage = () => {
   // State
@@ -17,7 +18,8 @@ const CourseMaterialPage = () => {
 
   // State cho Modal (Thêm mới)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ title: '', url: '' });
+  // Sửa formData: 'url' đổi thành 'file' (để lưu object File)
+  const [formData, setFormData] = useState({ title: '', file: null }); 
   const [formError, setFormError] = useState(null);
 
   // 1. Tải danh sách Môn học (chỉ 1 lần)
@@ -65,7 +67,7 @@ const CourseMaterialPage = () => {
       alert('Vui lòng chọn một môn học trước khi thêm tài liệu.');
       return;
     }
-    setFormData({ title: '', url: '' });
+    setFormData({ title: '', file: null });
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -73,19 +75,38 @@ const CourseMaterialPage = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    
+    if (name === 'file') {
+      // Nếu là input file, lưu cả object File
+      setFormData(prev => ({ ...prev, file: files[0] }));
+    } else {
+      // Nếu là input text
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setFormError(null);
+    
+    // 1. Kiểm tra
+    if (!formData.file) {
+      setFormError('Vui lòng chọn một file.');
+      return;
+    }
+    
+    // 2. Tạo đối tượng FormData
+    const dataToSend = new FormData();
+    dataToSend.append('subject_id', selectedSubjectId);
+    dataToSend.append('title', formData.title);
+    dataToSend.append('file', formData.file); // Đây là object File
+
     try {
-      await courseMaterialService.addMaterial({
-        ...formData,
-        subject_id: parseInt(selectedSubjectId, 10),
-      });
-      // Tải lại danh sách tài liệu
+      // 3. Gửi FormData
+      await courseMaterialService.addMaterial(dataToSend);
+      
+      // ... (Tải lại tài liệu và đóng modal, giữ nguyên) ...
       const data = await courseMaterialService.getMaterialsBySubject(selectedSubjectId);
       setMaterials(data);
       handleCloseModal();
@@ -151,7 +172,7 @@ const CourseMaterialPage = () => {
           <thead>
             <tr>
               <th>Tiêu đề</th>
-              <th>Đường dẫn (URL)</th>
+              {/* XÓA CỘT NÀY: <th>Đường dẫn (URL)</th> */}
               <th>Người thêm</th>
               <th>Ngày thêm</th>
               <th>Hành động</th>
@@ -161,12 +182,25 @@ const CourseMaterialPage = () => {
             {materials.length > 0 ? (
               materials.map((material) => (
                 <tr key={material.material_id}>
-                  <td>{material.title}</td>
+                  
+                  {/* SỬA CỘT "TIÊU ĐỀ" THÀNH LINK */}
                   <td>
-                    <a href={material.url} target="_blank" rel="noopener noreferrer">
-                      Link
+                    <a 
+                      href={`${BACKEND_URL}${material.url}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{fontWeight: '600', textDecoration: 'none'}}
+                    >
+                      {material.title}
                     </a>
                   </td>
+                  
+                  {/* XÓA CỘT "LINK" NÀY
+                  <td>
+                    <a href... >Link</a>
+                  </td>
+                  */}
+
                   <td>{material.added_by}</td>
                   <td>{new Date(material.created_at).toLocaleDateString()}</td>
                   <td className="actions">
@@ -181,7 +215,8 @@ const CourseMaterialPage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" style={{ textAlign: 'center' }}>
+                {/* SỬA LẠI colSpan TỪ 5 THÀNH 4 */}
+                <td colSpan="4" style={{ textAlign: 'center' }}>
                   {selectedSubjectId ? 'Chưa có tài liệu nào cho môn này.' : 'Vui lòng chọn môn học.'}
                 </td>
               </tr>
@@ -200,14 +235,16 @@ const CourseMaterialPage = () => {
               value={formData.title} onChange={handleFormChange} required
             />
           </div>
+          {/* SỬA PHẦN NÀY: Dùng input type="file" */}
           <div className="form-group">
-            <label htmlFor="url">Đường dẫn (URL)</label>
+            <label htmlFor="file">Chọn File (Tối đa 10MB)</label>
             <input
-              type="url" id="url" name="url"
-              placeholder="https://example.com/file.pdf"
-              value={formData.url} onChange={handleFormChange} required
+              type="file" id="file" name="file"
+              onChange={handleFormChange} required
             />
           </div>
+          {/* HẾT PHẦN SỬA */}
+          
           {formError && <p className="error-text" style={{marginTop: 0}}>{formError}</p>}
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Hủy</button>

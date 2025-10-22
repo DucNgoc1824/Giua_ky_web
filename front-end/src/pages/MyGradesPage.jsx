@@ -46,15 +46,19 @@ const MyGradesPage = () => {
   }, []);
 
   // === HÀM XỬ LÝ MODAL TÀI LIỆU (Giữ nguyên) ===
+  // === HÀM XỬ LÝ MODAL TÀI LIỆU (ĐÃ SỬA LỖI) ===
+  // === HÀM MỚI: XỬ LÝ MỞ MODAL TÀI LIỆU (ĐÃ SỬA LỖI) ===
   const handleViewMaterials = async (subjectId, subjectName) => {
     setIsMaterialModalOpen(true);
     setIsLoadingMaterials(true);
     setModalMaterialError(null);
     setSelectedSubjectName(subjectName);
+    
     try {
+      // Gọi API lấy tài liệu cho môn học này
       const data = await courseMaterialService.getMaterialsBySubject(subjectId);
       setSelectedMaterials(data);
-    } catch (err) {
+    } catch (err) { // <--- SỬA LỖI Ở ĐÂY: dùng { thay vì _
       setModalMaterialError(err.message || 'Không thể tải tài liệu.');
     } finally {
       setIsLoadingMaterials(false);
@@ -110,6 +114,8 @@ const MyGradesPage = () => {
   if (isLoading) return <div className="loading-text">Đang tải bảng điểm...</div>;
   if (error) return <div className="error-text">Lỗi: {error}</div>;
 
+  const BACKEND_URL = 'http://localhost:8080';
+
   return (
     <div className="my-grades-page">
       <div className="page-header">
@@ -128,7 +134,7 @@ const MyGradesPage = () => {
             <th>Môn học</th>
             <th>Điểm GK</th>
             <th>Điểm CK</th>
-            <th>Hành động</th> {/* <--- Gom 2 nút vào 1 cột */}
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -177,6 +183,29 @@ const MyGradesPage = () => {
         onClose={handleCloseMaterialModal} 
         title={`Tài liệu môn: ${selectedSubjectName}`}
       >
+        {selectedMaterials.length > 0 ? (
+          <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+            {selectedMaterials.map(material => (
+              <li key={material.material_id} style={{ marginBottom: '1rem' }}>
+                <strong>
+                  {/* SỬA LẠI LINK NÀY */}
+                  <a 
+                    href={`${BACKEND_URL}${material.url}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    {material.title}
+                  </a>
+                  {/* KẾT THÚC SỬA */}
+                </strong>
+                <br />
+                <small style={{color: '#555'}}>
+                  {/* ... (thông tin người thêm) ... */}
+                </small>
+              </li>
+            ))}
+          </ul>
+        ) : (<p>Không có tài liệu nào cho môn học này.</p>)}
         {/* ... (Code của Modal Tài liệu giữ nguyên) ... */}
         <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
           <button type="button" className="btn btn-secondary" onClick={handleCloseMaterialModal}>
