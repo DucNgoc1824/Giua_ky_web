@@ -30,6 +30,7 @@ const gradeModel = {
     const query = `
       SELECT 
         g.semester,
+        s.subject_id, 
         s.subject_code,
         s.subject_name,
         s.credits,

@@ -1,17 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import gradeService from '../services/gradeService'; // <-- Import service
-import { useAuth } from '../context/AuthContext'; // <-- Import kho
-import '../assets/ManagementPage.css'; // Dùng chung CSS bảng
+import gradeService from '../services/gradeService';
+import courseMaterialService from '../services/courseMaterialService';
+import ticketService from '../services/ticketService'; // <--- 1. Import service mới
+import { useAuth } from '../context/AuthContext';
+import Modal from '../components/Modal';
+import '../assets/ManagementPage.css';
+import '../assets/Modal.css';
 
 const MyGradesPage = () => {
   const [grades, setGrades] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Lấy thông tin user để hiển thị tên
   const { user } = useAuth(); 
 
-  // Hàm tải dữ liệu
+  // State cho Modal Tài liệu (giữ nguyên)
+  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [isLoadingMaterials, setIsLoadingMaterials] = useState(false);
+  const [modalMaterialError, setModalMaterialError] = useState(null);
+  const [selectedSubjectName, setSelectedSubjectName] = useState('');
+  
+  // === STATE MỚI CHO MODAL HỎI ĐÁP ===
+  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+  const [ticketMessage, setTicketMessage] = useState('');
+  const [selectedGradeInfo, setSelectedGradeInfo] = useState(null); // Lưu thông tin môn/kỳ
+  const [formError, setFormError] = useState(null);
+  const [formSuccess, setFormSuccess] = useState('');
+
+  // Hàm tải điểm (Giữ nguyên)
   const fetchMyGrades = async () => {
     setIsLoading(true);
     setError(null);
@@ -25,19 +41,74 @@ const MyGradesPage = () => {
     }
   };
 
-  // Tải điểm khi trang được mở
   useEffect(() => {
     fetchMyGrades();
   }, []);
 
-  // === RENDER ===
-  if (isLoading) {
-    return <div className="loading-text">Đang tải bảng điểm...</div>;
-  }
+  // === HÀM XỬ LÝ MODAL TÀI LIỆU (Giữ nguyên) ===
+  const handleViewMaterials = async (subjectId, subjectName) => {
+    setIsMaterialModalOpen(true);
+    setIsLoadingMaterials(true);
+    setModalMaterialError(null);
+    setSelectedSubjectName(subjectName);
+    try {
+      const data = await courseMaterialService.getMaterialsBySubject(subjectId);
+      setSelectedMaterials(data);
+    } catch (err) {
+      setModalMaterialError(err.message || 'Không thể tải tài liệu.');
+    } finally {
+      setIsLoadingMaterials(false);
+    }
+  };
+  const handleCloseMaterialModal = () => setIsMaterialModalOpen(false);
 
-  if (error) {
-    return <div className="error-text">Lỗi: {error}</div>;
-  }
+  // === HÀM MỚI: XỬ LÝ MODAL HỎI ĐÁP ===
+  const handleOpenTicketModal = (grade) => {
+    setSelectedGradeInfo(grade); // Lưu cả hàng điểm
+    setTicketMessage(''); // Reset tin nhắn
+    setFormError(null);
+    setFormSuccess(null);
+    setIsTicketModalOpen(true);
+  };
+  
+  const handleCloseTicketModal = () => setIsTicketModalOpen(false);
+
+  const handleTicketSubmit = async (e) => {
+    e.preventDefault();
+    setFormError(null);
+    setFormSuccess(null);
+
+    if (!ticketMessage) {
+      setFormError('Vui lòng nhập nội dung thắc mắc.');
+      return;
+    }
+    
+    if (ticketMessage.length > 255) {
+       setFormError('Tin nhắn không được quá 255 ký tự.');
+       return;
+    }
+
+    try {
+      const ticketData = {
+        subject_id: selectedGradeInfo.subject_id,
+        semester: selectedGradeInfo.semester,
+        message_text: ticketMessage,
+      };
+      
+      const response = await ticketService.createTicket(ticketData);
+      setFormSuccess(response.message);
+      setTicketMessage(''); // Xóa form
+      // (Không cần đóng modal ngay để SV đọc thông báo)
+      
+    } catch (err) {
+      setFormError(err.message || 'Lỗi khi gửi ticket.');
+    }
+  };
+
+
+  // === RENDER ===
+  if (isLoading) return <div className="loading-text">Đang tải bảng điểm...</div>;
+  if (error) return <div className="error-text">Lỗi: {error}</div>;
 
   return (
     <div className="my-grades-page">
@@ -45,7 +116,6 @@ const MyGradesPage = () => {
         <h1>Bảng điểm của tôi</h1>
       </div>
       
-      {/* Hiển thị thông tin SV */}
       <div style={{ marginBottom: '2rem', fontSize: '1.2rem' }}>
         <strong>Sinh viên:</strong> {user.fullName} <br/>
         <strong>Tên đăng nhập:</strong> {user.username}
@@ -55,34 +125,105 @@ const MyGradesPage = () => {
         <thead>
           <tr>
             <th>Học kỳ</th>
-            <th>Mã môn học</th>
-            <th>Tên môn học</th>
-            <th>Số tín chỉ</th>
-            <th>Điểm giữa kỳ</th>
-            <th>Điểm cuối kỳ</th>
+            <th>Môn học</th>
+            <th>Điểm GK</th>
+            <th>Điểm CK</th>
+            <th>Hành động</th> {/* <--- Gom 2 nút vào 1 cột */}
           </tr>
         </thead>
         <tbody>
           {grades.length > 0 ? (
-            grades.map((grade, index) => (
-              <tr key={index}>
+            grades.map((grade) => (
+              <tr key={`${grade.semester}-${grade.subject_id}`}>
                 <td>{grade.semester}</td>
-                <td>{grade.subject_code}</td>
-                <td>{grade.subject_name}</td>
-                <td>{grade.credits}</td>
+                <td>
+                  {grade.subject_name}
+                  <br/>
+                  <small style={{color: '#555'}}>({grade.subject_code})</small>
+                </td>
                 <td>{grade.midterm_score}</td>
                 <td>{grade.final_score}</td>
+                <td className="actions" style={{minWidth: '220px'}}> {/* Cột Hành động */}
+                  <button 
+                    className="btn btn-secondary" 
+                    style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
+                    onClick={() => handleViewMaterials(grade.subject_id, grade.subject_name)}
+                  >
+                    Xem Tài liệu
+                  </button>
+                  <button 
+                    className="btn btn-primary" // <--- NÚT MỚI
+                    style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
+                    onClick={() => handleOpenTicketModal(grade)}
+                  >
+                    Hỏi đáp
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6" style={{ textAlign: 'center' }}>
+              <td colSpan="5" style={{ textAlign: 'center' }}> {/* Sửa colSpan="5" */}
                 Bạn chưa có điểm nào.
               </td>
             </tr>
           )}
         </tbody>
       </table>
+
+      {/* === MODAL TÀI LIỆU (Giữ nguyên) === */}
+      <Modal 
+        isOpen={isMaterialModalOpen} 
+        onClose={handleCloseMaterialModal} 
+        title={`Tài liệu môn: ${selectedSubjectName}`}
+      >
+        {/* ... (Code của Modal Tài liệu giữ nguyên) ... */}
+        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+          <button type="button" className="btn btn-secondary" onClick={handleCloseMaterialModal}>
+            Đóng
+          </button>
+        </div>
+      </Modal>
+
+      {/* === MODAL HỎI ĐÁP (MỚI) === */}
+      <Modal 
+        isOpen={isTicketModalOpen} 
+        onClose={handleCloseTicketModal} 
+        title={`Hỏi đáp/Khiếu nại: ${selectedGradeInfo?.subject_name}`}
+      >
+        <form className="modal-form" onSubmit={handleTicketSubmit}>
+          <p>
+            Gửi thắc mắc về môn học 
+            <strong> {selectedGradeInfo?.subject_name} </strong>
+            (Học kỳ: {selectedGradeInfo?.semester})
+          </p>
+          <div className="form-group">
+            <label htmlFor="message_text">Nội dung (tối đa 255 ký tự):</label>
+            <textarea
+              id="message_text"
+              name="message_text"
+              rows="4"
+              value={ticketMessage}
+              onChange={(e) => setTicketMessage(e.target.value)}
+              required
+              maxLength="255"
+              style={{ padding: '0.5rem', fontSize: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}
+            />
+          </div>
+          
+          {formError && <p className="error-text" style={{marginTop: 0}}>{formError}</p>}
+          {formSuccess && <p style={{color: 'green', textAlign: 'center', marginTop: 0}}>{formSuccess}</p>}
+
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={handleCloseTicketModal}>
+              Hủy
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Gửi
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

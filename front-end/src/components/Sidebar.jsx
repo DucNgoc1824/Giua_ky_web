@@ -48,18 +48,48 @@ const Sidebar = () => {
           Quản lý Môn học
         </NavLink>
       </li>
+      <li>
+      <NavLink to="/materials" // <--- THÊM 
+        className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+      >
+        Quản lý Tài liệu
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/assignments" // <--- THÊM
+        className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+      >
+        Phân công Giảng dạy
+      </NavLink>
+    </li>
     </>
   );
 
-  // 5. Định nghĩa các link chỉ Giảng viên (roleId === 2) mới thấy
+    // 5. Định nghĩa các link chỉ Giảng viên (roleId === 2) mới thấy
   const lecturerLinks = (
-    <li>
-      <NavLink to="/manage-grades"
-        className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-      >
-        Quản lý Điểm số
-      </NavLink>
-    </li>
+    <>
+      <li>
+        <NavLink to="/manage-grades"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+        >
+          Nhập/Sửa Điểm
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/tickets-inbox" // <--- LINK MỚI
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+        >
+          Hòm thư Hỏi đáp
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/materials"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+        >
+          Quản lý Tài liệu
+        </NavLink>
+      </li>
+    </>
   );
 
   // 6. Định nghĩa các link chỉ Sinh viên (roleId === 3) mới thấy

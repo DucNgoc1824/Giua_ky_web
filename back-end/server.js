@@ -12,6 +12,9 @@ const studentRoutes = require('./src/routes/studentRoutes');
 const lecturerRoutes = require('./src/routes/lecturerRoutes');
 const gradeRoutes = require('./src/routes/gradeRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
+const courseMaterialRoutes = require('./src/routes/courseMaterialRoutes');
+const assignmentRoutes = require('./src/routes/assignmentRoutes');
+const ticketRoutes = require('./src/routes/ticketRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -34,6 +37,9 @@ app.use('/api/students', studentRoutes);
 app.use('/api/lecturers', lecturerRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/materials', courseMaterialRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại cổng http://localhost:${PORT}`);

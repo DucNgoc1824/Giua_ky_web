@@ -9,6 +9,9 @@ import LecturerManagementPage from './pages/LecturerManagementPage';
 import MyGradesPage from './pages/MyGradesPage';
 import ManageGradesPage from './pages/ManageGradesPage';
 import DashboardPage from './pages/DashboardPage';
+import CourseMaterialPage from './pages/CourseMaterialPage';
+import AssignmentPage from './pages/AssignmentPage';
+import TicketInboxPage from './pages/TicketInboxPage';
 
 function App() {
   const { isAuthenticated, user } = useAuth();
@@ -39,13 +42,18 @@ function App() {
             <Route path="lecturers" element={<LecturerManagementPage />} /> 
             <Route path="classes" element={<ClassManagementPage />} />
             <Route path="subjects" element={<SubjectManagementPage />} />
+            <Route path="materials" element={<CourseMaterialPage />} />
+            <Route path="assignments" element={<AssignmentPage />} />
           </>
         )}
 
         {/* === ROUTES CỦA GIẢNG VIÊN (roleId === 2) === */}
         {user?.roleId === 2 && (
-          // 2. Dùng trang "thật" ở đây
-          <Route path="manage-grades" element={<ManageGradesPage />} />
+          <>
+            <Route path="manage-grades" element={<ManageGradesPage />} />
+            <Route path="materials" element={<CourseMaterialPage />} />
+            <Route path="tickets-inbox" element={<TicketInboxPage />} />
+          </>
         )}
         
         {/* === ROUTES CỦA SINH VIÊN (roleId === 3) === */}
