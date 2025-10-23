@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 const gradeModel = {
-  // 1. Hàm UPSERT: Tạo mới hoặc cập nhật điểm
   upsert: async (student_id, subject_id, semester, midtermScore, finalScore) => {
     const query = `
       INSERT INTO Grades (student_id, subject_id, semester, midterm_score, final_score)
@@ -12,20 +11,18 @@ const gradeModel = {
     `;
     try {
       const [result] = await db.execute(query, [
-        student_id, // SỬA BIẾN NÀY
-        subject_id, // SỬA BIẾN NÀY
+        student_id,
+        subject_id,
         semester,
         midtermScore,
         finalScore,
       ]);
       return result;
     } catch (error) {
-      console.error('Lỗi khi upsert điểm:', error);
       throw error;
     }
   },
 
-  // 2. Hàm lấy bảng điểm cho 1 sinh viên (dùng cho sinh viên)
   findByStudentId: async (studentId) => {
     const query = `
       SELECT 
@@ -45,12 +42,61 @@ const gradeModel = {
       const [rows] = await db.query(query, [studentId]);
       return rows;
     } catch (error) {
-      console.error('Lỗi khi lấy bảng điểm sinh viên:', error);
       throw error;
     }
   },
   
-  // (Bạn có thể thêm các hàm khác sau, vd: lấy điểm của cả 1 lớp)
+  findBySubjectAndSemester: async (subjectId, semester) => {
+    const query = `
+      SELECT 
+        st.student_id,
+        st.student_code,
+        u.full_name AS student_name,
+        c.class_code,
+        g.midterm_score,
+        g.final_score,
+        ROUND((COALESCE(g.midterm_score, 0) * 0.4 + COALESCE(g.final_score, 0) * 0.6), 2) AS average_score
+      FROM Students st
+      JOIN Users u ON st.user_id = u.user_id
+      JOIN Classes c ON st.class_id = c.class_id
+      LEFT JOIN Grades g ON st.student_id = g.student_id 
+        AND g.subject_id = ? 
+        AND g.semester = ?
+      ORDER BY c.class_code, st.student_code;
+    `;
+    try {
+      const [rows] = await db.query(query, [subjectId, semester]);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  findBySubject: async (subjectId) => {
+    const query = `
+      SELECT 
+        g.semester,
+        st.student_id,
+        st.student_code,
+        u.full_name AS student_name,
+        c.class_code,
+        g.midterm_score,
+        g.final_score,
+        ROUND((COALESCE(g.midterm_score, 0) * 0.4 + COALESCE(g.final_score, 0) * 0.6), 2) AS average_score
+      FROM Grades g
+      JOIN Students st ON g.student_id = st.student_id
+      JOIN Users u ON st.user_id = u.user_id
+      JOIN Classes c ON st.class_id = c.class_id
+      WHERE g.subject_id = ?
+      ORDER BY g.semester DESC, c.class_code, st.student_code;
+    `;
+    try {
+      const [rows] = await db.query(query, [subjectId]);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 
 module.exports = gradeModel;

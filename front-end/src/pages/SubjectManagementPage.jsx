@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import subjectService from '../services/subjectService'; // <-- Service mới
+import subjectService from '../services/subjectService';
 import Modal from '../components/Modal';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
 
 const SubjectManagementPage = () => {
-  const [subjects, setSubjects] = useState([]); // <-- State mới
+  const [subjects, setSubjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,17 +14,16 @@ const SubjectManagementPage = () => {
     subject_code: '',
     subject_name: '',
     credits: '',
-  }); // <-- Form data mới
-  const [editingSubjectId, setEditingSubjectId] = useState(null); // <-- State mới
+  });
+  const [editingSubjectId, setEditingSubjectId] = useState(null);
   const [formError, setFormError] = useState(null);
 
-  // Hàm tải dữ liệu
   const fetchSubjects = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await subjectService.getAllSubjects(); // <-- Service mới
-      setSubjects(data); // <-- State mới
+      const data = await subjectService.getAllSubjects();
+      setSubjects(data);
     } catch (err) {
       setError(err.message || 'Không thể tải dữ liệu môn học.');
     } finally {
@@ -36,22 +35,20 @@ const SubjectManagementPage = () => {
     fetchSubjects();
   }, []);
 
-  // Mở modal "Thêm mới"
   const handleOpenAddModal = () => {
     setEditingSubjectId(null);
-    setFormData({ subject_code: '', subject_name: '', credits: '' }); // <-- Form data mới
+    setFormData({ subject_code: '', subject_name: '', credits: '' });
     setFormError(null);
     setIsModalOpen(true);
   };
 
-  // Mở modal "Sửa"
   const handleOpenEditModal = (subject) => {
     setEditingSubjectId(subject.subject_id);
     setFormData({
       subject_code: subject.subject_code,
       subject_name: subject.subject_name,
       credits: subject.credits,
-    }); // <-- Form data mới
+    });
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -68,12 +65,10 @@ const SubjectManagementPage = () => {
     }));
   };
 
-  // Xử lý "Lưu" form
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setFormError(null);
 
-    // Chuyển đổi credits sang số
     const dataToSubmit = {
       ...formData,
       credits: parseInt(formData.credits, 10),
@@ -86,32 +81,28 @@ const SubjectManagementPage = () => {
 
     try {
       if (editingSubjectId) {
-        // Sửa
-        await subjectService.updateSubject(editingSubjectId, dataToSubmit); // <-- Service mới
+        await subjectService.updateSubject(editingSubjectId, dataToSubmit);
       } else {
-        // Thêm mới
-        await subjectService.createSubject(dataToSubmit); // <-- Service mới
+        await subjectService.createSubject(dataToSubmit);
       }
-      fetchSubjects(); // Tải lại
+      fetchSubjects();
       handleCloseModal();
     } catch (err) {
       setFormError(err.message || 'Có lỗi xảy ra.');
     }
   };
 
-  // Xử lý "Xóa"
   const handleDelete = async (subjectId) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa môn học này?')) {
       try {
-        await subjectService.deleteSubject(subjectId); // <-- Service mới
-        fetchSubjects(); // Tải lại
+        await subjectService.deleteSubject(subjectId);
+        fetchSubjects();
       } catch (err) {
         alert('Lỗi khi xóa: ' + err.message);
       }
     }
   };
 
-  // === RENDER ===
   if (isLoading) {
     return <div className="loading-text">Đang tải dữ liệu...</div>;
   }

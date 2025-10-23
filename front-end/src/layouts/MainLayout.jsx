@@ -1,23 +1,36 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom'; // <-- Outlet rất quan trọng
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import '../assets/MainLayout.css'; // Import CSS chung
+import '../assets/MainLayout.css';
 
 const MainLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="main-layout">
-      {/* 1. Thanh bên */}
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       
-      {/* 2. Phần nội dung chính (gồm Navbar và nội dung trang) */}
+      {sidebarOpen && (
+        <div 
+          className="sidebar-overlay active"
+          onClick={closeSidebar}
+        />
+      )}
+      
       <div className="main-content">
-        {/* 2.1. Thanh trên */}
-        <Navbar />
+        <Navbar onMenuToggle={toggleSidebar} />
         
-        {/* 2.2. Nội dung trang (Dashboard, Student, Class...) sẽ được render ở đây */}
         <main className="page-content">
-          <Outlet /> {/* <-- Đây là nơi các component trang con sẽ được "bơm" vào */}
+          <Outlet />
         </main>
       </div>
     </div>

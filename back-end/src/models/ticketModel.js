@@ -1,14 +1,12 @@
 const db = require('../config/db');
 
 const ticketModel = {
-  // 1. (SV) Tạo Ticket mới
   create: async (student_id, subject_id, lecturer_id, message_text) => {
     const query = `
       INSERT INTO Tickets (student_id, subject_id, lecturer_id, message_text, status)
       VALUES (?, ?, ?, ?, 'Mới')
     `;
     try {
-      // lecturer_id có thể là null (nếu Admin chưa phân công)
       const [result] = await db.execute(query, [
         student_id,
         subject_id,
@@ -17,12 +15,10 @@ const ticketModel = {
       ]);
       return result.insertId;
     } catch (error) {
-      console.error('Lỗi khi tạo ticket:', error);
       throw error;
     }
   },
 
-  // 2. (SV) Xem các ticket mình đã gửi
   findByStudent: async (student_id) => {
     const query = `
       SELECT 
@@ -37,12 +33,10 @@ const ticketModel = {
       const [rows] = await db.query(query, [student_id]);
       return rows;
     } catch (error) {
-      console.error('Lỗi khi SV lấy tickets:', error);
       throw error;
     }
   },
 
-  // 3. (GV) Xem các ticket gửi đến mình
   findByLecturer: async (lecturer_id) => {
     const query = `
       SELECT 
@@ -62,12 +56,9 @@ const ticketModel = {
       const [rows] = await db.query(query, [lecturer_id]);
       return rows;
     } catch (error) {
-      console.error('Lỗi khi GV lấy tickets:', error);
       throw error;
     }
   },
-  
-  // (Chúng ta có thể thêm hàm updateStatus (GV) sau)
 };
 
 module.exports = ticketModel;

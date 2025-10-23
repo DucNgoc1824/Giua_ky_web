@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import studentService from '../services/studentService';
-import classService from '../services/classService'; // <-- Import service Lớp
+import classService from '../services/classService';
 import Modal from '../components/Modal';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
 
-// Dữ liệu ban đầu cho form
 const initialFormData = {
   username: '',
   password: '',
   full_name: '',
   email: '',
   student_code: '',
-  class_id: '', // Sẽ là số
-  date_of_birth: '', // Sẽ là string YYYY-MM-DD
+  class_id: '',
+  date_of_birth: '',
   address: '',
 };
 
 const StudentManagementPage = () => {
   const [students, setStudents] = useState([]);
-  const [classes, setClasses] = useState([]); // <-- State cho danh sách Lớp
+  const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [editingStudentId, setEditingStudentId] = useState(null); // <-- ID của Student
+  const [editingStudentId, setEditingStudentId] = useState(null);
   const [formError, setFormError] = useState(null);
 
-  // Hàm tải DỮ LIỆU (cả SV và Lớp)
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Dùng Promise.all để tải song song 2 API
       const [studentsData, classesData] = await Promise.all([
         studentService.getAllStudents(),
         classService.getAllClasses(),
@@ -42,7 +39,6 @@ const StudentManagementPage = () => {
       setClasses(classesData);
     } catch (err) {
       const errorMsg = err.message || 'Không thể tải dữ liệu.';
-      console.error(err);
       setError(errorMsg);
     } finally {
       setIsLoading(false);
@@ -53,31 +49,27 @@ const StudentManagementPage = () => {
     fetchData();
   }, []);
 
-  // Mở modal "Thêm mới"
   const handleOpenAddModal = () => {
     setEditingStudentId(null);
-    setFormData(initialFormData); // Reset form
+    setFormData(initialFormData);
     setFormError(null);
     setIsModalOpen(true);
   };
 
-  // Mở modal "Sửa"
   const handleOpenEditModal = async (student) => {
-    // Khi sửa, chúng ta không sửa username/password
-    // Chúng ta cần lấy chi tiết SV (vì bảng JOIN thiếu 1 vài cột)
     try {
-       setIsLoading(true); // Hiển thị loading tạm thời
+       setIsLoading(true);
        const studentDetails = await studentService.getStudentById(student.student_id);
        setEditingStudentId(student.student_id);
        setFormData({
-         username: studentDetails.username, // Hiển thị, nhưng không cho sửa
+         username: studentDetails.username,
          full_name: studentDetails.full_name,
          email: studentDetails.email,
-         student_code: studentDetails.student_code, // Hiển thị, không cho sửa
-         class_id: studentDetails.class_id, // Lớp hiện tại
-         date_of_birth: studentDetails.date_of_birth ? studentDetails.date_of_birth.split('T')[0] : '', // Format YYYY-MM-DD
+         student_code: studentDetails.student_code,
+         class_id: studentDetails.class_id,
+         date_of_birth: studentDetails.date_of_birth ? studentDetails.date_of_birth.split('T')[0] : '',
          address: studentDetails.address || '',
-         password: '', // Để trống
+         password: '',
        });
        setFormError(null);
        setIsModalOpen(true);
@@ -100,25 +92,21 @@ const StudentManagementPage = () => {
     }));
   };
 
-  // Xử lý "Lưu" form
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setFormError(null);
 
     try {
       if (editingStudentId) {
-        // --- Chế độ Sửa ---
-        // Khi Sửa, ta chỉ gửi các trường được phép sửa
         const dataToUpdate = {
           full_name: formData.full_name,
           email: formData.email,
           date_of_birth: formData.date_of_birth || null,
           address: formData.address || null,
-          // (Backend của chúng ta chưa hỗ trợ đổi Lớp, nên ta không gửi class_id)
         };
         await studentService.updateStudent(editingStudentId, dataToUpdate);
       } else {
-        // --- Chế độ Thêm mới ---
         if (!formData.password) {
           setFormError('Mật khẩu là bắt buộc khi tạo mới.');
           return;
@@ -129,17 +117,16 @@ const StudentManagementPage = () => {
         }
         await studentService.createStudent({
           ...formData,
-          class_id: parseInt(formData.class_id, 10), // Đảm bảo class_id là số
+          class_id: parseInt(formData.class_id, 10),
         });
       }
-      fetchData(); // Tải lại (cả SV và Lớp)
+      fetchData();
       handleCloseModal();
     } catch (err) {
       setFormError(err.message || 'Có lỗi xảy ra.');
     }
   };
 
-  // Xử lý "Xóa"
   const handleDelete = async (studentId) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sinh viên này? (Hành động này sẽ xóa cả tài khoản đăng nhập và không thể hoàn tác)')) {
       try {
@@ -151,8 +138,7 @@ const StudentManagementPage = () => {
     }
   };
 
-  // === RENDER ===
-  if (isLoading && !isModalOpen) { // Chỉ show loading chính khi không ở trong modal
+  if (isLoading && !isModalOpen) {
     return <div className="loading-text">Đang tải dữ liệu...</div>;
   }
   if (error) {

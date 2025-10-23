@@ -1,10 +1,8 @@
 const dashboardModel = require('../models/dashboardModel');
 
 const dashboardController = {
-  // Chỉ Admin mới được xem thống kê
   getAdminStats: async (req, res) => {
     try {
-      // Gọi song song 4 hàm đếm
       const [studentCount, lecturerCount, classCount, subjectCount] =
         await Promise.all([
           dashboardModel.getStudentCount(),
@@ -23,8 +21,6 @@ const dashboardController = {
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   },
-  
-  // (Bạn có thể thêm hàm thống kê cho GV, SV nếu muốn)
 };
 
 module.exports = dashboardController;

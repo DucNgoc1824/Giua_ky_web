@@ -1,10 +1,11 @@
 const assignmentModel = require('../models/assignmentModel');
 
 const assignmentController = {
-  // 1. (Admin) Tạo phân công
   createAssignment: async (req, res) => {
     try {
       const { lecturer_id, subject_id, class_id, semester } = req.body;
+
+      console.log('📝 Assignment Request:', { lecturer_id, subject_id, class_id, semester });
 
       if (!lecturer_id || !subject_id || !class_id || !semester) {
         return res
@@ -18,11 +19,18 @@ const assignmentController = {
         class_id,
         semester
       );
+      
+      console.log('✅ Assignment created successfully:', newAssignmentId);
+      
       res.status(201).json({
         message: 'Phân công giảng dạy thành công!',
         assignmentId: newAssignmentId,
       });
     } catch (error) {
+      console.error('❌ Assignment Error:', error.message);
+      console.error('Error Code:', error.code);
+      console.error('Stack:', error.stack);
+      
       if (error.code === 'ER_DUP_ENTRY') {
         return res
           .status(409)
@@ -37,20 +45,21 @@ const assignmentController = {
     }
   },
 
-  // 2. (Admin) Lấy tất cả phân công
   getAllAssignments: async (req, res) => {
     try {
+      console.log('📋 Fetching all assignments...');
       const assignments = await assignmentModel.getAll();
+      console.log(`✅ Found ${assignments.length} assignments`);
       res.status(200).json(assignments);
     } catch (error) {
+      console.error('❌ Get Assignments Error:', error.message);
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   },
 
-  // 3. (Admin) Xóa phân công
   deleteAssignment: async (req, res) => {
     try {
-      const { id } = req.params; // assignment_id
+      const { id } = req.params;
       const affectedRows = await assignmentModel.delete(id);
       if (affectedRows === 0) {
         return res.status(404).json({ message: 'Không tìm thấy phân công.' });

@@ -8,9 +8,9 @@ import StudentManagementPage from './pages/StudentManagementPage';
 import LecturerManagementPage from './pages/LecturerManagementPage';
 import MyGradesPage from './pages/MyGradesPage';
 import ManageGradesPage from './pages/ManageGradesPage';
+import ViewGradesPage from './pages/ViewGradesPage';
 import DashboardPage from './pages/DashboardPage';
 import CourseMaterialPage from './pages/CourseMaterialPage';
-import AssignmentPage from './pages/AssignmentPage';
 import TicketInboxPage from './pages/TicketInboxPage';
 
 function App() {
@@ -43,7 +43,6 @@ function App() {
             <Route path="classes" element={<ClassManagementPage />} />
             <Route path="subjects" element={<SubjectManagementPage />} />
             <Route path="materials" element={<CourseMaterialPage />} />
-            <Route path="assignments" element={<AssignmentPage />} />
           </>
         )}
 
@@ -51,6 +50,7 @@ function App() {
         {user?.roleId === 2 && (
           <>
             <Route path="manage-grades" element={<ManageGradesPage />} />
+            <Route path="view-grades" element={<ViewGradesPage />} />
             <Route path="materials" element={<CourseMaterialPage />} />
             <Route path="tickets-inbox" element={<TicketInboxPage />} />
           </>

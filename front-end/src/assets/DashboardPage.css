@@ -1,62 +1,265 @@
-/* /src/assets/DashboardPage.css */
+/* DashboardPage.css - Simple & Clean Dashboard */
 
-.dashboard-page .page-header h1 {
-  color: var(--text-color); /* Trang chủ không cần màu đỏ */
+.dashboard-page {
+  animation: fadeIn 0.4s ease;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== WELCOME BANNER ==================== */
 .welcome-banner {
-  background-color: var(--ptit-red);
+  background: linear-gradient(135deg, var(--ptit-red) 0%, var(--ptit-red-dark) 100%);
   color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 16px rgba(226, 33, 28, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-banner::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
 }
 
 .welcome-banner h2 {
   margin: 0 0 0.5rem 0;
-  font-size: 2.2rem;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .welcome-banner p {
   margin: 0;
-  font-size: 1.2rem;
-  opacity: 0.9;
+  font-size: 1.1rem;
+  opacity: 0.95;
+  font-weight: 400;
 }
 
-/* Grid cho các thẻ thống kê */
+/* ==================== STATS GRID ==================== */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .stat-card {
-  background-color: #fff;
-  padding: 1.5rem 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid var(--ptit-red);
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
-  color: #555;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  color: #6b7280;
   text-transform: uppercase;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .stat-card .stat-number {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: var(--ptit-red);
+  line-height: 1;
+  margin-bottom: 0.5rem;
 }
 
-/* CSS cho Dashboard của SV/GV */
-.user-dashboard {
+.stat-card .stat-label {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.stat-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  font-size: 2.5rem;
+  opacity: 0.15;
+}
+
+/* Different colors for stat cards */
+.stat-students .stat-number { color: #3b82f6; }
+.stat-lecturers .stat-number { color: #10b981; }
+.stat-classes .stat-number { color: #f59e0b; }
+.stat-subjects .stat-number { color: #8b5cf6; }
+
+/* ==================== DASHBOARD FEATURES ==================== */
+.dashboard-features {
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-features h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: var(--ptit-red);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.feature-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ==================== TIPS SECTION ==================== */
+.tips-section {
+  margin-top: 2.5rem;
+}
+
+.tips-section h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.tip-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid #f59e0b;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tip-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.tip-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #78350f;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* ==================== RESPONSIVE - TABLET ==================== */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==================== RESPONSIVE - MOBILE ==================== */
+@media (max-width: 768px) {
+  .welcome-banner {
+    padding: 2rem 1.5rem;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-banner p {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-features h3,
+  .tips-section h3 {
+    font-size: 1.15rem;
+  }
 }

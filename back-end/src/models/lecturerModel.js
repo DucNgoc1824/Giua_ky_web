@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 const lecturerModel = {
-  // 1. Lấy tất cả giảng viên (JOIN 2 bảng)
   getAll: async () => {
     const query = `
       SELECT 
@@ -15,12 +14,10 @@ const lecturerModel = {
       const [rows] = await db.query(query);
       return rows;
     } catch (error) {
-      console.error('Lỗi khi lấy danh sách giảng viên:', error);
       throw error;
     }
   },
 
-  // 2. Lấy 1 giảng viên (chi tiết)
   getById: async (lecturerId) => {
     const query = `
       SELECT 
@@ -34,22 +31,18 @@ const lecturerModel = {
       const [rows] = await db.query(query, [lecturerId]);
       return rows[0];
     } catch (error) {
-      console.error('Lỗi khi tìm giảng viên:', error);
       throw error;
     }
   },
 
-  // 3. Cập nhật thông tin giảng viên (cả bảng Users và Lecturers)
   update: async (lecturerId, userId, lecturerData) => {
     const connection = await db.getConnection();
     try {
       await connection.beginTransaction();
 
-      // SỬA DÒNG NÀY:
       const { full_name, email, department } = lecturerData;
       
       const userQuery = 'UPDATE Users SET full_name = ?, email = ? WHERE user_id = ?';
-      // SỬA DÒNG NÀY:
       await connection.execute(userQuery, [full_name, email, userId]);
 
       const lecturerQuery = 'UPDATE Lecturers SET department = ? WHERE lecturer_id = ?';
@@ -59,7 +52,6 @@ const lecturerModel = {
       return true;
     } catch (error) {
       await connection.rollback();
-      console.error('Lỗi transaction khi cập nhật lecturer:', error);
       throw error;
     } finally {
       connection.release();
@@ -71,21 +63,74 @@ const lecturerModel = {
       const [rows] = await db.query(query, [userId]);
       return rows[0];
     } catch (error) {
-      console.error('Lỗi khi tìm lecturer by user_id:', error);
       throw error;
     }
   },
   
-  // 4. Xóa giảng viên (Chỉ cần xóa User, bảng Lecturer sẽ tự xóa theo)
   delete: async (userId) => {
      const query = 'DELETE FROM Users WHERE user_id = ?';
     try {
-      // 'ON DELETE CASCADE' sẽ tự động xóa hàng trong Lecturers
       const [result] = await db.execute(query, [userId]);
       return result.affectedRows;
     } catch (error)
     {
-      console.error('Lỗi khi xóa giảng viên (user):', error);
+      throw error;
+    }
+  },
+
+  getSubjectsByLecturerId: async (lecturerId) => {
+    const query = `
+      SELECT DISTINCT
+        s.subject_id,
+        s.subject_code,
+        s.subject_name,
+        s.credits
+      FROM Subjects s
+      JOIN Lecturer_Assignments la ON s.subject_id = la.subject_id
+      WHERE la.lecturer_id = ?
+      ORDER BY s.subject_code;
+    `;
+    try {
+      const [rows] = await db.query(query, [lecturerId]);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addSubjectToLecturer: async (lecturerId, subjectId) => {
+    const checkQuery = `
+      SELECT * FROM Lecturer_Assignments 
+      WHERE lecturer_id = ? AND subject_id = ?
+    `;
+    const insertQuery = `
+      INSERT INTO Lecturer_Assignments (lecturer_id, subject_id)
+      VALUES (?, ?)
+    `;
+    
+    try {
+      const [existing] = await db.query(checkQuery, [lecturerId, subjectId]);
+      
+      if (existing.length > 0) {
+        throw new Error('Giảng viên đã được phân môn này rồi');
+      }
+      
+      const [result] = await db.execute(insertQuery, [lecturerId, subjectId]);
+      return result.insertId;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  removeSubjectFromLecturer: async (lecturerId, subjectId) => {
+    const query = `
+      DELETE FROM Lecturer_Assignments 
+      WHERE lecturer_id = ? AND subject_id = ?
+    `;
+    try {
+      const [result] = await db.execute(query, [lecturerId, subjectId]);
+      return result.affectedRows;
+    } catch (error) {
       throw error;
     }
   }

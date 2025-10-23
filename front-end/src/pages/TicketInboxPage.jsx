@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import ticketService from '../services/ticketService'; // Import service
+import ticketService from '../services/ticketService';
 import { useAuth } from '../context/AuthContext';
-import '../assets/ManagementPage.css'; // Dùng chung CSS bảng
+import '../assets/ManagementPage.css';
 
 const TicketInboxPage = () => {
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useAuth(); // Lấy thông tin GV
+  const { user } = useAuth();
 
-  // Hàm tải dữ liệu (Hòm thư)
   const fetchInbox = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Gọi API lấy hòm thư (backend tự lọc theo GV)
       const data = await ticketService.getTicketInbox();
       setTickets(data);
     } catch (err) {
@@ -24,15 +22,10 @@ const TicketInboxPage = () => {
     }
   };
 
-  // Tải hòm thư khi trang được mở
   useEffect(() => {
     fetchInbox();
   }, []);
-  
-  // (Chúng ta có thể thêm hàm xử lý "Đánh dấu đã đọc" ở đây)
-  // const handleMarkAsRead = async (ticketId) => { ... }
 
-  // === RENDER ===
   if (isLoading) {
     return <div className="loading-text">Đang tải hòm thư...</div>;
   }
@@ -59,7 +52,6 @@ const TicketInboxPage = () => {
             <th>Lớp</th>
             <th>Môn học</th>
             <th>Nội dung</th>
-            {/* <th>Hành động</th> */}
           </tr>
         </thead>
         <tbody>
@@ -81,9 +73,6 @@ const TicketInboxPage = () => {
                 <td style={{ maxWidth: '300px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
                   {ticket.message_text}
                 </td>
-                {/* <td className="actions">
-                  <button className="btn btn-secondary">Đã xem</button>
-                </td> */}
               </tr>
             ))
           ) : (

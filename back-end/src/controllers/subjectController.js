@@ -1,19 +1,17 @@
 const subjectModel = require('../models/subjectModel');
 
 const subjectController = {
-  // 1. Tạo môn học mới
   createSubject: async (req, res) => {
     try {
-      // SỬA DÒNG NÀY:
       const { subject_code, subject_name, credits } = req.body;
-      if (!subject_code || !subject_name || !credits) { // SỬA DÒNG NÀY
+      if (!subject_code || !subject_name || !credits) {
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập đủ mã, tên và số tín chỉ.' });
       }
       const newSubjectId = await subjectModel.create(
-        subject_code, // SỬA DÒNG NÀY
-        subject_name, // SỬA DÒNG NÀY
+        subject_code,
+        subject_name,
         credits
       );
       res
@@ -27,7 +25,6 @@ const subjectController = {
     }
   },
 
-  // 2. Lấy tất cả môn học
   getAllSubjects: async (req, res) => {
     try {
       const subjects = await subjectModel.getAll();
@@ -37,7 +34,6 @@ const subjectController = {
     }
   },
 
-  // 3. Lấy 1 môn học
   getSubjectById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -51,21 +47,19 @@ const subjectController = {
     }
   },
 
-  // 4. Cập nhật môn học
   updateSubject: async (req, res) => {
     try {
       const { id } = req.params;
-      // SỬA DÒNG NÀY:
       const { subject_code, subject_name, credits } = req.body;
-      if (!subject_code || !subject_name || !credits) { // SỬA DÒNG NÀY
+      if (!subject_code || !subject_name || !credits) {
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập đủ thông tin.' });
       }
       const affectedRows = await subjectModel.update(
         id,
-        subject_code, // SỬA DÒNG NÀY
-        subject_name, // SỬA DÒNG NÀY
+        subject_code,
+        subject_name,
         credits
       );
       if (affectedRows === 0) {
@@ -80,7 +74,6 @@ const subjectController = {
     }
   },
 
-  // 5. Xóa môn học
   deleteSubject: async (req, res) => {
     try {
       const { id } = req.params;
@@ -90,7 +83,6 @@ const subjectController = {
       }
       res.status(200).json({ message: 'Xóa môn học thành công.' });
     } catch (error) {
-       // Xử lý lỗi nếu xóa môn đang có điểm (lỗi Foreign Key)
       if (error.code === 'ER_ROW_IS_REFERENCED_2') {
          return res.status(400).json({ message: 'Không thể xóa môn học này vì đã có sinh viên được nhập điểm.' });
       }

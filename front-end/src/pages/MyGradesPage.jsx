@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import gradeService from '../services/gradeService';
 import courseMaterialService from '../services/courseMaterialService';
-import ticketService from '../services/ticketService'; // <--- 1. Import service mới
+import ticketService from '../services/ticketService';
 import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 import '../assets/ManagementPage.css';
@@ -13,21 +13,18 @@ const MyGradesPage = () => {
   const [error, setError] = useState(null);
   const { user } = useAuth(); 
 
-  // State cho Modal Tài liệu (giữ nguyên)
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [isLoadingMaterials, setIsLoadingMaterials] = useState(false);
   const [modalMaterialError, setModalMaterialError] = useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = useState('');
   
-  // === STATE MỚI CHO MODAL HỎI ĐÁP ===
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [ticketMessage, setTicketMessage] = useState('');
-  const [selectedGradeInfo, setSelectedGradeInfo] = useState(null); // Lưu thông tin môn/kỳ
+  const [selectedGradeInfo, setSelectedGradeInfo] = useState(null);
   const [formError, setFormError] = useState(null);
   const [formSuccess, setFormSuccess] = useState('');
 
-  // Hàm tải điểm (Giữ nguyên)
   const fetchMyGrades = async () => {
     setIsLoading(true);
     setError(null);
@@ -45,9 +42,6 @@ const MyGradesPage = () => {
     fetchMyGrades();
   }, []);
 
-  // === HÀM XỬ LÝ MODAL TÀI LIỆU (Giữ nguyên) ===
-  // === HÀM XỬ LÝ MODAL TÀI LIỆU (ĐÃ SỬA LỖI) ===
-  // === HÀM MỚI: XỬ LÝ MỞ MODAL TÀI LIỆU (ĐÃ SỬA LỖI) ===
   const handleViewMaterials = async (subjectId, subjectName) => {
     setIsMaterialModalOpen(true);
     setIsLoadingMaterials(true);
@@ -55,10 +49,9 @@ const MyGradesPage = () => {
     setSelectedSubjectName(subjectName);
     
     try {
-      // Gọi API lấy tài liệu cho môn học này
       const data = await courseMaterialService.getMaterialsBySubject(subjectId);
       setSelectedMaterials(data);
-    } catch (err) { // <--- SỬA LỖI Ở ĐÂY: dùng { thay vì _
+    } catch (err) {
       setModalMaterialError(err.message || 'Không thể tải tài liệu.');
     } finally {
       setIsLoadingMaterials(false);
@@ -66,10 +59,9 @@ const MyGradesPage = () => {
   };
   const handleCloseMaterialModal = () => setIsMaterialModalOpen(false);
 
-  // === HÀM MỚI: XỬ LÝ MODAL HỎI ĐÁP ===
   const handleOpenTicketModal = (grade) => {
-    setSelectedGradeInfo(grade); // Lưu cả hàng điểm
-    setTicketMessage(''); // Reset tin nhắn
+    setSelectedGradeInfo(grade);
+    setTicketMessage('');
     setFormError(null);
     setFormSuccess(null);
     setIsTicketModalOpen(true);
@@ -101,16 +93,13 @@ const MyGradesPage = () => {
       
       const response = await ticketService.createTicket(ticketData);
       setFormSuccess(response.message);
-      setTicketMessage(''); // Xóa form
-      // (Không cần đóng modal ngay để SV đọc thông báo)
+      setTicketMessage('');
       
     } catch (err) {
       setFormError(err.message || 'Lỗi khi gửi ticket.');
     }
   };
 
-
-  // === RENDER ===
   if (isLoading) return <div className="loading-text">Đang tải bảng điểm...</div>;
   if (error) return <div className="error-text">Lỗi: {error}</div>;
 
@@ -149,7 +138,7 @@ const MyGradesPage = () => {
                 </td>
                 <td>{grade.midterm_score}</td>
                 <td>{grade.final_score}</td>
-                <td className="actions" style={{minWidth: '220px'}}> {/* Cột Hành động */}
+                <td className="actions" style={{minWidth: '220px'}}>
                   <button 
                     className="btn btn-secondary" 
                     style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
@@ -158,7 +147,7 @@ const MyGradesPage = () => {
                     Xem Tài liệu
                   </button>
                   <button 
-                    className="btn btn-primary" // <--- NÚT MỚI
+                    className="btn btn-primary"
                     style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
                     onClick={() => handleOpenTicketModal(grade)}
                   >
@@ -169,7 +158,7 @@ const MyGradesPage = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}> {/* Sửa colSpan="5" */}
+              <td colSpan="5" style={{ textAlign: 'center' }}>
                 Bạn chưa có điểm nào.
               </td>
             </tr>
@@ -177,18 +166,20 @@ const MyGradesPage = () => {
         </tbody>
       </table>
 
-      {/* === MODAL TÀI LIỆU (Giữ nguyên) === */}
       <Modal 
         isOpen={isMaterialModalOpen} 
         onClose={handleCloseMaterialModal} 
         title={`Tài liệu môn: ${selectedSubjectName}`}
       >
-        {selectedMaterials.length > 0 ? (
+        {isLoadingMaterials ? (
+          <p>Đang tải...</p>
+        ) : modalMaterialError ? (
+          <p className="error-text">{modalMaterialError}</p>
+        ) : selectedMaterials.length > 0 ? (
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
             {selectedMaterials.map(material => (
               <li key={material.material_id} style={{ marginBottom: '1rem' }}>
                 <strong>
-                  {/* SỬA LẠI LINK NÀY */}
                   <a 
                     href={`${BACKEND_URL}${material.url}`} 
                     target="_blank" 
@@ -196,7 +187,6 @@ const MyGradesPage = () => {
                   >
                     {material.title}
                   </a>
-                  {/* KẾT THÚC SỬA */}
                 </strong>
                 <br />
                 <small style={{color: '#555'}}>

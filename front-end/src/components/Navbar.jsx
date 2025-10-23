@@ -1,17 +1,22 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import '../assets/MainLayout.css'; // Chúng ta sẽ tạo file CSS chung này ngay sau đây
+import '../assets/MainLayout.css';
 
-const Navbar = () => {
-  const { user, logout } = useAuth(); // Lấy user và hàm logout từ "kho"
+const Navbar = ({ onMenuToggle }) => {
+  const { user, logout } = useAuth();
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
-        Hệ thống Quản lý Sinh viên - PTIT
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button className="menu-toggle" onClick={onMenuToggle} aria-label="Toggle menu">
+          ☰
+        </button>
+        <div className="navbar-brand">
+          Hệ thống Quản lý Sinh viên - PTIT
+        </div>
       </div>
       <div className="navbar-user">
-        <span>Chào, {user?.fullName || user?.username}!</span>
+        <span>{user?.fullName || user?.username}</span>
         <button onClick={logout} className="logout-button">
           Đăng xuất
         </button>

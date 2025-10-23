@@ -1,35 +1,21 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext'; // Hook "kho"
-import { useNavigate } from 'react-router-dom';
-import '../assets/LoginPage.css'; // Import file CSS
+import { useAuth } from '../context/AuthContext';
+import '../assets/LoginPage.css';
 
 const LoginPage = () => {
-  // 1. State để lưu trữ username và password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // State để lưu thông báo lỗi
+  const [error, setError] = useState('');
 
-  // 2. Lấy hàm login từ "kho"
   const { login } = useAuth();
-  const navigate = useNavigate(); // Hook để chuyển trang
 
-  // 3. Hàm xử lý khi nhấn nút Đăng nhập
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn form reload lại trang
-    setError(''); // Xóa lỗi cũ
+    e.preventDefault();
+    setError('');
 
     try {
-      // Gọi hàm login từ "kho"
       await login(username, password);
-
-      // Nếu login thành công, AuthContext sẽ tự động
-      // cập nhật 'isAuthenticated' -> App.jsx sẽ tự động
-      // chuyển chúng ta đến trang Dashboard
-      // (Nhưng chúng ta cũng có thể điều hướng thủ công ở đây nếu muốn)
-      // navigate('/'); 
-
     } catch (err) {
-      // Nếu login thất bại (từ authService ném ra)
       setError(err.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
     }
   };
@@ -63,7 +49,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Hiển thị lỗi nếu có */}
           {error && <p className="error-message">{error}</p>}
 
           <button type="submit" className="login-button">

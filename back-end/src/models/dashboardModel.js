@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 const dashboardModel = {
-  // Đếm số lượng sinh viên
   getStudentCount: async () => {
     try {
       const [rows] = await db.query('SELECT COUNT(*) as count FROM Students');
@@ -11,7 +10,6 @@ const dashboardModel = {
     }
   },
 
-  // Đếm số lượng giảng viên
   getLecturerCount: async () => {
     try {
       const [rows] = await db.query('SELECT COUNT(*) as count FROM Lecturers');
@@ -21,7 +19,6 @@ const dashboardModel = {
     }
   },
 
-  // Đếm số lượng lớp học
   getClassCount: async () => {
     try {
       const [rows] = await db.query('SELECT COUNT(*) as count FROM Classes');
@@ -31,7 +28,6 @@ const dashboardModel = {
     }
   },
   
-  // Đếm số lượng môn học
   getSubjectCount: async () => {
     try {
       const [rows] = await db.query('SELECT COUNT(*) as count FROM Subjects');
