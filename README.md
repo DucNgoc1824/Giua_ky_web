@@ -214,7 +214,8 @@ Mở trình duyệt và truy cập: `http://localhost:5173`
 Giua_ky_web/
 ├── back-end/                   # Backend (Node.js + Express)
 │   ├── database/               # Database schemas
-│   │   └── schema.sql         # SQL schema file
+│   │   ├── schema.sql         # ⭐ SQL schema file (11 bảng)
+│   │   └── README.md          # Hướng dẫn import
 │   ├── scripts/               # Utility scripts
 │   ├── src/
 │   │   ├── config/            # Database config
@@ -241,6 +242,20 @@ Giua_ky_web/
 │
 └── README.md                   # This file
 ```
+
+### 📊 Database Schema (11 bảng)
+
+1. **Roles** - Định nghĩa vai trò (Admin, Lecturer, Student)
+2. **Users** - Tài khoản đăng nhập
+3. **Students** - Thông tin sinh viên
+4. **Lecturers** - Thông tin giảng viên
+5. **Classes** - Lớp học
+6. **Subjects** - Môn học
+7. **Grades** - Điểm số
+8. **Lecturer_Subjects** - Năng lực/chuyên môn GV (GV CÓ THỂ dạy môn nào)
+9. **Lecturer_Assignments** - Phân công thực tế (GV ĐANG DẠY gì, lớp nào, HK nào)
+10. **Course_Materials** - Tài liệu học tập
+11. **Tickets** - Hỏi đáp/Khiếu nại
 
 ---
 
