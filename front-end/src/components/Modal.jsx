@@ -33,8 +33,10 @@ const Modal = ({ isOpen, onClose, title, children }) => {
           </button>
         </div>
 
-        {/* 'children' sẽ là cái form ta truyền vào */}
-        {children} 
+        {/* Modal body với padding thoáng */}
+        <div className="modal-body">
+          {children}
+        </div>
 
       </div>
     </div>
