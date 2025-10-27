@@ -223,8 +223,7 @@ Mở trình duyệt và truy cập: `http://localhost:5173`
 Giua_ky_web/
 ├── back-end/                   # Backend (Node.js + Express)
 │   ├── database/               # Database schemas
-│   │   ├── schema.sql         # ⭐ SQL schema file (11 bảng)
-│   │   └── README.md          # Hướng dẫn import
+│   │   └── schema.sql         # ⭐ SQL schema file (11 bảng)
 │   ├── scripts/               # Utility scripts
 │   ├── src/
 │   │   ├── config/            # Database config
