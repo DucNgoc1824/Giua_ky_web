@@ -1,6 +1,6 @@
 // Script tự động hash và update mật khẩu cho TẤT CẢ users trong database
 const bcrypt = require('bcryptjs');
-const db = require('./src/config/db');
+const db = require('../src/config/db');
 
 async function updateAllPasswords() {
   let connection;

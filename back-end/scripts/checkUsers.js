@@ -17,34 +17,34 @@ async function checkUsers() {
   console.log('📋 USERS TABLE:');
   console.log('Total users:', users.length);
   users.forEach(user => {
-    console.log(`- ${user.username} (${user.role}) - ID: ${user.user_id}`);
+    console.log(`- ${user.username} (Role: ${user.role_id}) - ID: ${user.user_id}, Name: ${user.full_name}`);
   });
 
   console.log('\n👨‍🏫 LECTURERS:');
   const [lecturers] = await connection.execute(`
-    SELECT u.username, u.role, l.name, l.lecturer_id 
+    SELECT u.username, u.role_id, u.full_name, l.lecturer_id, l.lecturer_code, l.department
     FROM Users u 
     JOIN Lecturers l ON u.user_id = l.user_id 
     LIMIT 10
   `);
   lecturers.forEach(lec => {
-    console.log(`- Username: ${lec.username}, Name: ${lec.name}, Lecturer_ID: ${lec.lecturer_id}`);
+    console.log(`- Username: ${lec.username}, Name: ${lec.full_name}, ID: ${lec.lecturer_id}, Dept: ${lec.department}`);
   });
 
   console.log('\n👨‍🎓 STUDENTS:');
   const [students] = await connection.execute(`
-    SELECT u.username, u.role, s.name, s.student_id 
+    SELECT u.username, u.role_id, u.full_name, s.student_id, s.student_code, s.class_id
     FROM Users u 
     JOIN Students s ON u.user_id = s.user_id 
     LIMIT 10
   `);
   students.forEach(std => {
-    console.log(`- Username: ${std.username}, Name: ${std.name}, Student_ID: ${std.student_id}`);
+    console.log(`- Username: ${std.username}, Name: ${std.full_name}, ID: ${std.student_id}, Class: ${std.class_id}`);
   });
 
   console.log('\n👑 ADMINS:');
   const [admins] = await connection.execute(`
-    SELECT username, role FROM Users WHERE role = 'admin'
+    SELECT username, full_name FROM Users WHERE role_id = 1
   `);
   admins.forEach(admin => {
     console.log(`- ${admin.username}`);

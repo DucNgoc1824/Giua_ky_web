@@ -1,5 +1,5 @@
 // Script tự động gán môn học cho giảng viên
-const db = require('./src/config/db');
+const db = require('../src/config/db');
 
 async function assignSubjects() {
   try {

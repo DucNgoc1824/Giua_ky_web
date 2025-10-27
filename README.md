@@ -131,18 +131,27 @@ Sau đó import file `schema.sql` vào database vừa tạo.
 
 #### Bước 5: Tạo dữ liệu mẫu (Optional)
 
-Chạy các script trong thư mục `scripts/`:
+Chạy các script theo thứ tự sau:
 
 ```bash
-# Tạo tài khoản mẫu
-node scripts/checkUsers.js
+# 1. Tạo users, lớp học, môn học mẫu
+node scripts/createSampleUsers.js
 
-# Gán môn học cho giảng viên
+# 2. Gán môn học cho giảng viên (Lecturer_Subjects)
 node scripts/assignLecturerSubjects.js
 
-# Tạo phân công mẫu
+# 3. Tạo phân công giảng dạy (Lecturer_Assignments)
 node scripts/createSampleAssignments.js
+
+# 4. Kiểm tra dữ liệu đã tạo
+node scripts/checkUsers.js
 ```
+
+**Tài khoản test sau khi chạy script:**
+
+-   👑 Admin: `admin` / `123456`
+-   👨‍🏫 Giảng viên: `gv01` đến `gv10` / `123456`
+-   👨‍🎓 Sinh viên: `sv01` đến `sv40` / `123456`
 
 #### Bước 6: Chạy server
 
