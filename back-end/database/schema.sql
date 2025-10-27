@@ -1,164 +1,264 @@
--- ============================================-- ============================================
--- HỆ THỐNG QUẢN LÝ SINH VIÊN - DATABASE SCHEMA-- HỆ THỐNG QUẢN LÝ SINH VIÊN - DATABASE SCHEMA
--- ============================================-- ============================================
--- Khớp với sơ đồ MySQL Workbench-- Tạo database và các bảng cần thiết
--- Version: 1.0 -- Version: 1.0
--- Date: October 2024-- Date: 2024
--- ============================================-- ============================================
--- 1. TẠO DATABASE
--- 1. TẠO DATABASECREATE DATABASE IF NOT EXISTS qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE IF NOT EXISTS qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE qlsv;
 USE qlsv;
 -- ============================================
--- 2. BẢNG QUẢN LÝ NGƯỜI DÙNG
--- ============================================-- ============================================
--- 2. BẢNG QUẢN LÝ NGƯỜI DÙNG & VAI TRÒ-- Bảng Users: Tài khoản đăng nhập
+CREATE TABLE Roles (
+    -- 2. BẢNG QUẢN LÝ NGƯỜI DÙNG
+    role_id INT PRIMARY KEY,
+    -- ============================================-- ============================================
+    role_name VARCHAR(50) NOT NULL UNIQUE -- 2. BẢNG QUẢN LÝ NGƯỜI DÙNG & VAI TRÒ-- Bảng Users: Tài khoản đăng nhập
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 -- ============================================CREATE TABLE Users (
 user_id INT AUTO_INCREMENT PRIMARY KEY,
--- Bảng Roles: Định nghĩa vai trò    username VARCHAR(50) NOT NULL UNIQUE,
-CREATE TABLE Roles (
-    password VARCHAR(255) NOT NULL,
-    role_id INT AUTO_INCREMENT PRIMARY KEY,
-    role_id INT NOT NULL COMMENT '1=Admin, 2=Lecturer, 3=Student',
-    role_name VARCHAR(50) NOT NULL UNIQUE full_name VARCHAR(100) NOT NULL,
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-email VARCHAR(100),
-phone VARCHAR(20),
--- Thêm dữ liệu roles mặc định    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 INSERT INTO Roles (role_id, role_name)
-VALUES updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+VALUES -- Bảng Roles: Định nghĩa vai trò    username VARCHAR(50) NOT NULL UNIQUE,
     (1, 'Admin'),
-    INDEX idx_username (username),
-    (2, 'Lecturer'),
-    INDEX idx_role (role_id) (3, 'Student');
+    CREATE TABLE Roles (
+        (2, 'Lecturer'),
+        password VARCHAR(255) NOT NULL,
+        (3, 'Student');
+role_id INT AUTO_INCREMENT PRIMARY KEY,
+role_id INT NOT NULL COMMENT '1=Admin, 2=Lecturer, 3=Student',
+CREATE TABLE Users (
+    role_name VARCHAR(50) NOT NULL UNIQUE full_name VARCHAR(100) NOT NULL,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+username VARCHAR(100) NOT NULL UNIQUE,
+email VARCHAR(100),
+password_hash VARCHAR(255) NOT NULL,
+phone VARCHAR(20),
+full_name VARCHAR(100) NOT NULL,
+-- Thêm dữ liệu roles mặc định    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+email VARCHAR(100),
+INSERT INTO Roles (role_id, role_name) role_id INT NOT NULL,
+VALUES updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+(1, 'Admin'),
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+INDEX idx_username (username),
+FOREIGN KEY (role_id) REFERENCES Roles(role_id),
+(2, 'Lecturer'),
+INDEX idx_username (username),
+INDEX idx_role (role_id) (3, 'Student');
+INDEX idx_role (role_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 -- Bảng Users: Tài khoản đăng nhập-- Bảng Students: Thông tin sinh viên
 CREATE TABLE Users (
-    CREATE TABLE Students (
-        user_id INT AUTO_INCREMENT PRIMARY KEY,
-        student_id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(100) NOT NULL UNIQUE,
-        user_id INT NOT NULL UNIQUE,
-        password_hash VARCHAR(255) NOT NULL,
-        student_code VARCHAR(50) NOT NULL UNIQUE,
-        full_name VARCHAR(100) NOT NULL,
-        class_id INT,
-        email VARCHAR(100),
-        date_of_birth DATE,
-        role_id INT NOT NULL,
-        address VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (role_id) REFERENCES Roles(role_id),
-        INDEX idx_student_code (student_code),
-        INDEX idx_username (username),
-        INDEX idx_class (class_id) INDEX idx_role (role_id)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
--- Bảng Lecturers: Thông tin giảng viên
--- Bảng Students: Thông tin sinh viên  CREATE TABLE Lecturers (
+    CREATE TABLE Classes (
+        CREATE TABLE Students (
+            class_id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT AUTO_INCREMENT PRIMARY KEY,
+            class_code VARCHAR(50) NOT NULL UNIQUE,
+            student_id INT AUTO_INCREMENT PRIMARY KEY,
+            class_name VARCHAR(100) NOT NULL,
+            username VARCHAR(100) NOT NULL UNIQUE,
+            major VARCHAR(100),
+            user_id INT NOT NULL UNIQUE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            password_hash VARCHAR(255) NOT NULL,
+            INDEX idx_class_code (class_code) student_code VARCHAR(50) NOT NULL UNIQUE,
+        ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+full_name VARCHAR(100) NOT NULL,
+class_id INT,
 CREATE TABLE Students (
-    lecturer_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100),
     student_id INT AUTO_INCREMENT PRIMARY KEY,
+    date_of_birth DATE,
     user_id INT NOT NULL UNIQUE,
-    user_id INT NOT NULL UNIQUE,
-    lecturer_code VARCHAR(50) NOT NULL UNIQUE,
+    role_id INT NOT NULL,
     student_code VARCHAR(50) NOT NULL UNIQUE,
-    department VARCHAR(100),
+    address VARCHAR(255),
     class_id INT,
-    position VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_of_birth DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     address VARCHAR(255),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES Roles(role_id),
+    FOREIGN KEY (class_id) REFERENCES Classes(class_id) ON DELETE
+    SET NULL,
+        INDEX idx_student_code (student_code),
+        INDEX idx_student_code (student_code),
+        INDEX idx_username (username),
+        INDEX idx_class (class_id) INDEX idx_class (class_id) INDEX idx_role (role_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+CREATE TABLE Lecturers (
+    -- Bảng Lecturers: Thông tin giảng viên
+    lecturer_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Bảng Students: Thông tin sinh viên  CREATE TABLE Lecturers (
+    user_id INT NOT NULL UNIQUE,
+    CREATE TABLE Students (
+        lecturer_code VARCHAR(50) NOT NULL UNIQUE,
+        lecturer_id INT AUTO_INCREMENT PRIMARY KEY,
+        department VARCHAR(100),
+        student_id INT AUTO_INCREMENT PRIMARY KEY,
+        position VARCHAR(50),
+        user_id INT NOT NULL UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        user_id INT NOT NULL UNIQUE,
+        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+        lecturer_code VARCHAR(50) NOT NULL UNIQUE,
+        INDEX idx_lecturer_code (lecturer_code) student_code VARCHAR(50) NOT NULL UNIQUE,
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+department VARCHAR(100),
+class_id INT,
+CREATE TABLE Subjects (
+    position VARCHAR(50),
+    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    date_of_birth DATE,
+    subject_code VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    subject_name VARCHAR(150) NOT NULL,
+    address VARCHAR(255),
+    credits INT DEFAULT 3,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_lecturer_code (lecturer_code) FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_subject_code (subject_code) INDEX idx_lecturer_code (lecturer_code) FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 INDEX idx_student_code (student_code),
-INDEX idx_class (class_id) -- ============================================
+CREATE TABLE Grades (
+    INDEX idx_class (class_id) -- ============================================
+    grade_id INT AUTO_INCREMENT PRIMARY KEY,
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+student_id INT NOT NULL,
 -- 3. BẢNG QUẢN LÝ HỌC TẬP
+subject_id INT NOT NULL,
 -- ============================================
+midterm_score FLOAT,
 -- Bảng Lecturers: Thông tin giảng viên
+final_score FLOAT,
 CREATE TABLE Lecturers (
+    semester VARCHAR(50),
     -- Bảng Classes: Lớp học
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     lecturer_id INT AUTO_INCREMENT PRIMARY KEY,
+    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
     CREATE TABLE Classes (
+        FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
         user_id INT NOT NULL UNIQUE,
+        UNIQUE KEY unique_grade (student_id, subject_id, semester),
         class_id INT AUTO_INCREMENT PRIMARY KEY,
-        lecturer_code VARCHAR(50) NOT NULL UNIQUE,
-        class_code VARCHAR(50) NOT NULL UNIQUE,
-        department VARCHAR(100),
-        class_name VARCHAR(100) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        major VARCHAR(100),
-        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_lecturer_code (lecturer_code) INDEX idx_class_code (class_code)
+        INDEX idx_semester (semester) lecturer_code VARCHAR(50) NOT NULL UNIQUE,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+class_code VARCHAR(50) NOT NULL UNIQUE,
+department VARCHAR(100),
+CREATE TABLE Lecturer_Subjects (
+    class_name VARCHAR(100) NOT NULL,
+    lecturer_subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    lecturer_id INT NOT NULL,
+    major VARCHAR(100),
+    subject_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id) ON DELETE CASCADE,
+    INDEX idx_lecturer_code (lecturer_code) INDEX idx_class_code (class_code) FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+UNIQUE KEY unique_lecturer_subject (lecturer_id, subject_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 -- ============================================-- Bảng Subjects: Môn học
 -- 3. BẢNG QUẢN LÝ HỌC TẬPCREATE TABLE Subjects (
--- ============================================  subject_id INT AUTO_INCREMENT PRIMARY KEY,
-subject_code VARCHAR(50) NOT NULL UNIQUE,
--- Bảng Classes: Lớp học  subject_name VARCHAR(150) NOT NULL,
-CREATE TABLE Classes (
-    credits INT DEFAULT 3,
-    class_id INT AUTO_INCREMENT PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    class_code VARCHAR(50) NOT NULL UNIQUE,
-    INDEX idx_subject_code (subject_code) class_name VARCHAR(100),
+CREATE TABLE Lecturer_Assignments (
+    -- ============================================  subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_code VARCHAR(50) NOT NULL UNIQUE,
+    lecturer_id INT NOT NULL,
+    -- Bảng Classes: Lớp học  subject_name VARCHAR(150) NOT NULL,
+    subject_id INT NOT NULL,
+    CREATE TABLE Classes (
+        class_id INT NOT NULL,
+        credits INT DEFAULT 3,
+        semester VARCHAR(50),
+        class_id INT AUTO_INCREMENT PRIMARY KEY,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id) ON DELETE CASCADE,
+        class_code VARCHAR(50) NOT NULL UNIQUE,
+        FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+        INDEX idx_subject_code (subject_code) class_name VARCHAR(100),
+        FOREIGN KEY (class_id) REFERENCES Classes(class_id) ON DELETE CASCADE,
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+INDEX idx_semester_assignment (semester) major VARCHAR(100),
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-major VARCHAR(100),
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 -- Bảng Grades: Điểm số
-INDEX idx_class_code (class_code) CREATE TABLE Grades () ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+CREATE TABLE Course_Materials (
+    INDEX idx_class_code (class_code) CREATE TABLE Grades () ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+material_id INT AUTO_INCREMENT PRIMARY KEY,
 grade_id INT AUTO_INCREMENT PRIMARY KEY,
+subject_id INT NOT NULL,
 student_id INT NOT NULL,
+title VARCHAR(255) NOT NULL,
 -- Bảng Subjects: Môn học  subject_id INT NOT NULL,
+url TEXT,
 CREATE TABLE Subjects (
+    added_by_user_id INT,
     midterm_score FLOAT,
-    subject_id INT AUTO_INCREMENT PRIMARY KEY,
-    final_score FLOAT,
-    subject_code VARCHAR(50) NOT NULL UNIQUE,
-    semester VARCHAR(50),
-    subject_name VARCHAR(150) NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    credits INT DEFAULT 3,
-    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    subject_id INT AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
-    INDEX idx_subject_code (subject_code) UNIQUE KEY unique_grade (student_id, subject_id, semester),
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-INDEX idx_semester (semester)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
--- Bảng Grades: Điểm số
-CREATE TABLE Grades (
-    -- ============================================
-    grade_id INT AUTO_INCREMENT PRIMARY KEY,
-    -- 4. BẢNG PHÂN CÔNG GIẢNG DẠY
-    student_id INT NOT NULL,
-    -- ============================================
-    subject_id INT NOT NULL,
-    midterm_score FLOAT,
-    -- Bảng Lecturer_Subjects: Năng lực/Chuyên môn giảng viên (GV CÓ THỂ dạy môn nào)
     final_score FLOAT,
-    CREATE TABLE Lecturer_Subjects (
-        semester VARCHAR(50),
-        lecturer_subject_id INT AUTO_INCREMENT PRIMARY KEY,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        lecturer_id INT NOT NULL,
-        FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
-        subject_id INT NOT NULL,
-        FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE KEY unique_grade (student_id, subject_id, semester),
-        FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id) ON DELETE CASCADE,
-        INDEX idx_semester (semester) FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+    INDEX idx_subject_material (subject_id) subject_code VARCHAR(50) NOT NULL UNIQUE,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+semester VARCHAR(50),
+subject_name VARCHAR(150) NOT NULL,
+CREATE TABLE Tickets (
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    ticket_id INT AUTO_INCREMENT PRIMARY KEY,
+    credits INT DEFAULT 3,
+    student_id INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
+    subject_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    lecturer_id INT,
+    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+    message_text TEXT NOT NULL,
+    INDEX idx_subject_code (subject_code) UNIQUE KEY unique_grade (student_id, subject_id, semester),
+    status VARCHAR(50) DEFAULT 'pending',
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+INDEX idx_semester (semester) FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+-- Bảng Grades: Điểm số
+FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id) ON DELETE
+SET NULL,
+    CREATE TABLE Grades (
+        INDEX idx_status (status),
+        -- ============================================
+        INDEX idx_student_ticket (student_id) grade_id INT AUTO_INCREMENT PRIMARY KEY,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+-- 4. BẢNG PHÂN CÔNG GIẢNG DẠY
+student_id INT NOT NULL,
+-- ============================================
+subject_id INT NOT NULL,
+midterm_score FLOAT,
+-- Bảng Lecturer_Subjects: Năng lực/Chuyên môn giảng viên (GV CÓ THỂ dạy môn nào)
+final_score FLOAT,
+CREATE TABLE Lecturer_Subjects (
+    semester VARCHAR(50),
+    lecturer_subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    lecturer_id INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
+    subject_id INT NOT NULL,
+    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_grade (student_id, subject_id, semester),
+    FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id) ON DELETE CASCADE,
+    INDEX idx_semester (semester) FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id) ON DELETE CASCADE,
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 UNIQUE KEY unique_lecturer_subject (lecturer_id, subject_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 -- ============================================
