@@ -1,4 +1,4 @@
-/* Modal.css - Simple & Clean Modal Design */
+/* Modal.css - Enhanced Modern Modal Design with Floating Labels */
 
 .modal-backdrop {
   position: fixed;
@@ -6,12 +6,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s ease;
   padding: 1rem;
 }
 
@@ -27,24 +29,24 @@
 .modal-content {
   background-color: white;
   padding: 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
   z-index: 1001;
   position: relative;
-  animation: slideUp 0.3s ease;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(30px);
+    transform: translateY(40px) scale(0.96);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
@@ -54,9 +56,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 2rem 2.5rem;
-  background: linear-gradient(135deg, var(--ptit-red) 0%, var(--ptit-red-dark) 100%);
-  border-radius: 12px 12px 0 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px 16px 0 0;
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
 }
 
 .modal-header h2 {
@@ -64,25 +79,30 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: white;
+  position: relative;
+  z-index: 1;
 }
 
 .modal-close-btn {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
   color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .modal-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
 }
 
 .modal-body {
@@ -94,39 +114,96 @@
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
 .form-group {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0;
   margin-bottom: 0;
 }
 
-.form-group label {
+/* Floating Label Style */
+.form-group.floating-label {
+  position: relative;
+}
+
+.form-group.floating-label input,
+.form-group.floating-label select,
+.form-group.floating-label textarea {
+  padding: 1.2rem 1rem 0.6rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group.floating-label label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   font-weight: 500;
-  color: #2c3e50;
+  color: #6b7280;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  background-color: transparent;
+  padding: 0 0.25rem;
+}
+
+.form-group.floating-label textarea ~ label {
+  top: 1.5rem;
+  transform: translateY(0);
+}
+
+/* When input is focused or has value */
+.form-group.floating-label input:focus ~ label,
+.form-group.floating-label input:not(:placeholder-shown) ~ label,
+.form-group.floating-label select:focus ~ label,
+.form-group.floating-label select:not([value=""]) ~ label,
+.form-group.floating-label textarea:focus ~ label,
+.form-group.floating-label textarea:not(:placeholder-shown) ~ label {
+  top: 0.5rem;
+  font-size: 0.75rem;
+  color: #667eea;
+  font-weight: 600;
+  background-color: white;
+  padding: 0 0.5rem;
+  transform: translateY(0);
+}
+
+/* Regular Label Style (non-floating) */
+.form-group:not(.floating-label) label {
+  font-weight: 600;
+  color: #374151;
   font-size: 0.95rem;
   display: block;
   letter-spacing: 0.2px;
+  margin-bottom: 0.5rem;
 }
 
 .form-group label.required::after {
   content: " *";
-  color: var(--ptit-red);
+  color: #ef4444;
   font-weight: 600;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.form-group:not(.floating-label) input,
+.form-group:not(.floating-label) select,
+.form-group:not(.floating-label) textarea {
   padding: 0.9rem 1.2rem;
-  border: 1.5px solid #ddd;
-  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
   font-size: 0.95rem;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   background-color: #fafafa;
   width: 100%;
   box-sizing: border-box;
@@ -136,18 +213,26 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--ptit-red);
-  box-shadow: 0 0 0 3px rgba(226, 33, 28, 0.08);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
   background-color: white;
+  transform: translateY(-1px);
+}
+
+.form-group input:hover:not(:focus),
+.form-group select:hover:not(:focus),
+.form-group textarea:hover:not(:focus) {
+  border-color: #c0c0c0;
 }
 
 .form-group input:disabled,
 .form-group select:disabled,
 .form-group textarea:disabled {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.6;
   color: #999;
+  border-color: #e8e8e8;
 }
 
 .form-group textarea {
@@ -160,14 +245,45 @@
 .form-group small {
   color: #6b7280;
   font-size: 0.85rem;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
+  display: block;
 }
 
 .form-error {
-  color: #dc2626;
-  font-size: 0.9rem;
+  color: #ef4444;
+  font-size: 0.875rem;
   margin-top: 0.5rem;
-  font-weight: 400;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-error::before {
+  content: '⚠';
+  font-size: 1rem;
+}
+
+/* Success state */
+.form-group.success input,
+.form-group.success select,
+.form-group.success textarea {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+/* Error state */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.form-group.error input:focus,
+.form-group.error select:focus,
+.form-group.error textarea:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 .modal-footer {
@@ -175,21 +291,80 @@
   justify-content: flex-end;
   gap: 1rem;
   padding: 2rem 2.5rem;
-  border-top: 1px solid #e8e8e8;
-  background-color: white;
-  border-radius: 0 0 12px 12px;
+  border-top: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  border-radius: 0 0 16px 16px;
   margin-top: 0.5rem;
 }
 
 .modal-footer .btn {
   min-width: 120px;
-  padding: 0.8rem 1.8rem;
+  padding: 0.85rem 2rem;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   text-align: center;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.modal-footer .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.modal-footer .btn-primary:active {
+  transform: translateY(0);
+}
+
+.modal-footer .btn-secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.modal-footer .btn-secondary:hover {
+  background: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Loading state for buttons */
+.btn.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  color: white;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==================== RESPONSIVE - MOBILE ==================== */

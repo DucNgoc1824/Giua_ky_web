@@ -74,14 +74,130 @@ CREATE TABLE IF NOT EXISTS Subjects (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_subject_code (subject_code)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
--- 7. Grades
+-- 7. Grades (Hệ thống điểm chuẩn PTIT)
 CREATE TABLE IF NOT EXISTS Grades (
     grade_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     subject_id INT NOT NULL,
     semester VARCHAR(50),
-    midterm_score FLOAT,
-    final_score FLOAT,
+    -- 4 cột điểm thành phần
+    attendance_score FLOAT CHECK (
+        attendance_score >= 0
+        AND attendance_score <= 10
+    ),
+    -- Chuyên cần (10%)
+    practice_score FLOAT CHECK (
+        practice_score >= 0
+        AND practice_score <= 10
+    ),
+    -- Thực hành (20%)
+    midterm_score FLOAT CHECK (
+        midterm_score >= 0
+        AND midterm_score <= 10
+    ),
+    -- Giữa kỳ (20%)
+    final_score FLOAT CHECK (
+        final_score >= 0
+        AND final_score <= 10
+    ),
+    -- Cuối kỳ (50%)
+    -- Điểm tổng kết (tính tự động)
+    total_score FLOAT GENERATED ALWAYS AS (
+        CASE
+            WHEN attendance_score IS NOT NULL
+            AND practice_score IS NOT NULL
+            AND midterm_score IS NOT NULL
+            AND final_score IS NOT NULL THEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            )
+            ELSE NULL
+        END
+    ) STORED,
+    -- Điểm chữ theo chuẩn PTIT (tính tự động)
+    letter_grade VARCHAR(5) GENERATED ALWAYS AS (
+        CASE
+            WHEN attendance_score IS NULL
+            OR practice_score IS NULL
+            OR midterm_score IS NULL
+            OR final_score IS NULL THEN NULL
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 9.5 THEN 'A+'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 8.5 THEN 'A'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 8.0 THEN 'B+'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 7.0 THEN 'B'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 6.5 THEN 'C+'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 5.5 THEN 'C'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 5.0 THEN 'D+'
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 4.0 THEN 'D'
+            ELSE 'F'
+        END
+    ) STORED,
+    -- Điểm hệ 4 theo chuẩn PTIT (tính tự động)
+    gpa_score FLOAT GENERATED ALWAYS AS (
+        CASE
+            WHEN attendance_score IS NULL
+            OR practice_score IS NULL
+            OR midterm_score IS NULL
+            OR final_score IS NULL THEN NULL
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 9.5 THEN 4.0
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 8.5 THEN 3.8
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 8.0 THEN 3.5
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 7.0 THEN 3.0
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 6.5 THEN 2.7
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 5.5 THEN 2.0
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 5.0 THEN 1.5
+            WHEN ROUND(
+                attendance_score * 0.1 + practice_score * 0.2 + midterm_score * 0.2 + final_score * 0.5,
+                2
+            ) >= 4.0 THEN 1.0
+            ELSE 0
+        END
+    ) STORED,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uq_grade (student_id, subject_id, semester),

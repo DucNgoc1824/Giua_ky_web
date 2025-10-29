@@ -12,7 +12,7 @@ router.use(verifyToken);
 
 router.post(
   '/',
-  [verifyToken, isLecturerOrAdmin, uploadMiddleware],
+  [verifyToken, isLecturerOrAdmin, uploadMiddleware.single('file')],
   courseMaterialController.addMaterial
 );
 router.get(

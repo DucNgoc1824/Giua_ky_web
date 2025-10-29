@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import Breadcrumb from '../components/Breadcrumb';
 import '../assets/MainLayout.css';
 
 const MainLayout = () => {
@@ -30,6 +31,7 @@ const MainLayout = () => {
         <Navbar onMenuToggle={toggleSidebar} />
         
         <main className="page-content">
+          <Breadcrumb />
           <Outlet />
         </main>
       </div>

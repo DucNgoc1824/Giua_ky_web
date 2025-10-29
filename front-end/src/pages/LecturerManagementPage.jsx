@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FaPlus, FaEdit, FaTrash, FaBook, FaSearch } from 'react-icons/fa';
+import ReactPaginate from 'react-paginate';
 import lecturerService from '../services/lecturerService';
 import subjectService from '../services/subjectService';
 import Modal from '../components/Modal';
+import LoadingSpinner from '../components/LoadingSpinner';
+import SearchBar from '../components/SearchBar';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
+import '../assets/Pagination.css';
 
 const initialFormData = {
   username: '',
@@ -16,8 +22,13 @@ const initialFormData = {
 
 const LecturerManagementPage = () => {
   const [lecturers, setLecturers] = useState([]);
+  const [filteredLecturers, setFilteredLecturers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const itemsPerPage = 10;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
@@ -32,15 +43,36 @@ const LecturerManagementPage = () => {
 
   const fetchLecturers = async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const data = await lecturerService.getAllLecturers();
       setLecturers(data);
+      setFilteredLecturers(data);
     } catch (err) {
-      setError(err.message || 'Không thể tải dữ liệu giảng viên.');
+      toast.error('❌ Lỗi khi tải danh sách giảng viên: ' + (err.message || 'Unknown'));
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Search handler
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(0);
+    
+    if (!query.trim()) {
+      setFilteredLecturers(lecturers);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const filtered = lecturers.filter(lecturer =>
+      lecturer.full_name?.toLowerCase().includes(lowerQuery) ||
+      lecturer.lecturer_code?.toLowerCase().includes(lowerQuery) ||
+      lecturer.email?.toLowerCase().includes(lowerQuery) ||
+      lecturer.department?.toLowerCase().includes(lowerQuery) ||
+      lecturer.username?.toLowerCase().includes(lowerQuery)
+    );
+    setFilteredLecturers(filtered);
   };
 
   useEffect(() => {
@@ -70,7 +102,7 @@ const LecturerManagementPage = () => {
       setFormError(null);
       setIsModalOpen(true);
     } catch (err) {
-      alert('Lỗi khi lấy chi tiết GV: ' + err.message);
+      toast.error('❌ Lỗi khi lấy chi tiết GV: ' + err.message);
     } finally {
       setIsLoading(false);
     }
@@ -101,16 +133,19 @@ const LecturerManagementPage = () => {
           department: formData.department,
         };
         await lecturerService.updateLecturer(editingLecturerId, dataToUpdate);
+        toast.success('✅ Cập nhật giảng viên thành công!');
       } else {
         if (!formData.password) {
           setFormError('Mật khẩu là bắt buộc khi tạo mới.');
           return;
         }
         await lecturerService.createLecturer(formData);
+        toast.success('✅ Thêm giảng viên thành công!');
       }
       fetchLecturers();
       handleCloseModal();
     } catch (err) {
+      toast.error('❌ Lỗi: ' + (err.message || 'Có lỗi xảy ra'));
       setFormError(err.message || 'Có lỗi xảy ra.');
     }
   };
@@ -119,9 +154,10 @@ const LecturerManagementPage = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa giảng viên này?')) {
       try {
         await lecturerService.deleteLecturer(lecturerId);
+        toast.success('✅ Xóa giảng viên thành công!');
         fetchLecturers();
       } catch (err) {
-        alert('Lỗi khi xóa: ' + err.message);
+        toast.error('❌ Lỗi khi xóa: ' + err.message);
       }
     }
   };
@@ -189,11 +225,13 @@ const LecturerManagementPage = () => {
     subject => !lecturerSubjects.find(ls => ls.subject_id === subject.subject_id)
   );
 
+  // Pagination calculations
+  const offset = currentPage * itemsPerPage;
+  const currentItems = filteredLecturers.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredLecturers.length / itemsPerPage);
+
   if (isLoading && !isModalOpen) {
-    return <div className="loading-text">Đang tải dữ liệu...</div>;
-  }
-  if (error) {
-    return <div className="error-text">Lỗi: {error}</div>;
+    return <LoadingSpinner message="Đang tải danh sách giảng viên..." />;
   }
 
   return (
@@ -201,63 +239,115 @@ const LecturerManagementPage = () => {
       <div className="page-header">
         <h1>Quản lý Giảng viên</h1>
         <button className="btn btn-primary" onClick={handleOpenAddModal}>
-          Thêm Giảng viên
+          <FaPlus /> Thêm GV
         </button>
       </div>
 
+      {/* Search Bar */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <SearchBar 
+          onSearch={handleSearch} 
+          placeholder="Tìm theo tên, mã GV, email, khoa..."
+        />
+      </div>
+
+      {filteredLecturers.length === 0 && searchQuery && (
+        <div className="no-results">
+          <FaSearch size={48} color="#999" />
+          <p>Không tìm thấy kết quả cho "{searchQuery}"</p>
+        </div>
+      )}
+
       {/* Bảng dữ liệu */}
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Mã GV</th>
-            <th>Họ và Tên</th>
-            <th>Email</th>
-            <th>Tên đăng nhập</th>
-            <th>Khoa/Bộ môn</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lecturers.length > 0 ? (
-            lecturers.map((lecturer) => (
-              <tr key={lecturer.lecturer_id}>
-                <td>{lecturer.lecturer_code}</td>
-                <td>{lecturer.full_name}</td>
-                <td>{lecturer.email}</td>
-                <td>{lecturer.username}</td>
-                <td>{lecturer.department}</td>
-                <td className="actions">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleOpenEditModal(lecturer)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleOpenSubjectModal(lecturer)}
-                    style={{ backgroundColor: '#28a745', borderColor: '#28a745' }}
-                  >
-                    Phân môn
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(lecturer.lecturer_id)}
-                  >
-                    Xóa
-                  </button>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Mã GV</th>
+              <th>Họ và Tên</th>
+              <th>Email</th>
+              <th>Tên đăng nhập</th>
+              <th>Khoa/Bộ môn</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.length > 0 ? (
+              currentItems.map((lecturer) => (
+                <tr key={lecturer.lecturer_id}>
+                  <td>{lecturer.lecturer_code}</td>
+                  <td>{lecturer.full_name}</td>
+                  <td>{lecturer.email}</td>
+                  <td>{lecturer.username}</td>
+                  <td>{lecturer.department}</td>
+                  <td className="actions">
+                    <div className="action-buttons" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', justifyContent: 'center' }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => handleOpenEditModal(lecturer)}
+                        title="Sửa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn btn-success btn-sm"
+                        onClick={() => handleOpenSubjectModal(lecturer)}
+                        title="Phân môn"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaBook />
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(lecturer.lecturer_id)}
+                        title="Xóa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>
+                  Chưa có giảng viên nào.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" style={{ textAlign: 'center' }}>
-                Chưa có giảng viên nào.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {pageCount > 1 && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          margin: '2rem 0 1rem 0',
+          padding: '1rem'
+        }}>
+          <ReactPaginate
+            previousLabel={'← Trước'}
+            nextLabel={'Sau →'}
+            breakLabel={'...'}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={({ selected }) => setCurrentPage(selected)}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+            previousClassName={'page-item'}
+            nextClassName={'page-item'}
+            pageClassName={'page-item'}
+            breakClassName={'page-item'}
+            disabledClassName={'disabled'}
+            forcePage={currentPage}
+          />
+        </div>
+      )}
 
       {/* === MODAL THÊM/SỬA === */}
       <Modal

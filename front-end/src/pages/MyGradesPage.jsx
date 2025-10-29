@@ -1,29 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import gradeService from '../services/gradeService';
-import courseMaterialService from '../services/courseMaterialService';
-import ticketService from '../services/ticketService';
 import { useAuth } from '../context/AuthContext';
-import Modal from '../components/Modal';
 import '../assets/ManagementPage.css';
-import '../assets/Modal.css';
 
 const MyGradesPage = () => {
   const [grades, setGrades] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth(); 
-
-  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
-  const [selectedMaterials, setSelectedMaterials] = useState([]);
-  const [isLoadingMaterials, setIsLoadingMaterials] = useState(false);
-  const [modalMaterialError, setModalMaterialError] = useState(null);
-  const [selectedSubjectName, setSelectedSubjectName] = useState('');
-  
-  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
-  const [ticketMessage, setTicketMessage] = useState('');
-  const [selectedGradeInfo, setSelectedGradeInfo] = useState(null);
-  const [formError, setFormError] = useState(null);
-  const [formSuccess, setFormSuccess] = useState('');
 
   const fetchMyGrades = async () => {
     setIsLoading(true);
@@ -41,64 +25,6 @@ const MyGradesPage = () => {
   useEffect(() => {
     fetchMyGrades();
   }, []);
-
-  const handleViewMaterials = async (subjectId, subjectName) => {
-    setIsMaterialModalOpen(true);
-    setIsLoadingMaterials(true);
-    setModalMaterialError(null);
-    setSelectedSubjectName(subjectName);
-    
-    try {
-      const data = await courseMaterialService.getMaterialsBySubject(subjectId);
-      setSelectedMaterials(data);
-    } catch (err) {
-      setModalMaterialError(err.message || 'Không thể tải tài liệu.');
-    } finally {
-      setIsLoadingMaterials(false);
-    }
-  };
-  const handleCloseMaterialModal = () => setIsMaterialModalOpen(false);
-
-  const handleOpenTicketModal = (grade) => {
-    setSelectedGradeInfo(grade);
-    setTicketMessage('');
-    setFormError(null);
-    setFormSuccess(null);
-    setIsTicketModalOpen(true);
-  };
-  
-  const handleCloseTicketModal = () => setIsTicketModalOpen(false);
-
-  const handleTicketSubmit = async (e) => {
-    e.preventDefault();
-    setFormError(null);
-    setFormSuccess(null);
-
-    if (!ticketMessage) {
-      setFormError('Vui lòng nhập nội dung thắc mắc.');
-      return;
-    }
-    
-    if (ticketMessage.length > 255) {
-       setFormError('Tin nhắn không được quá 255 ký tự.');
-       return;
-    }
-
-    try {
-      const ticketData = {
-        subject_id: selectedGradeInfo.subject_id,
-        semester: selectedGradeInfo.semester,
-        message_text: ticketMessage,
-      };
-      
-      const response = await ticketService.createTicket(ticketData);
-      setFormSuccess(response.message);
-      setTicketMessage('');
-      
-    } catch (err) {
-      setFormError(err.message || 'Lỗi khi gửi ticket.');
-    }
-  };
 
   if (isLoading) return <div className="loading-text">Đang tải bảng điểm...</div>;
   if (error) return <div className="error-text">Lỗi: {error}</div>;
@@ -121,9 +47,12 @@ const MyGradesPage = () => {
           <tr>
             <th>Học kỳ</th>
             <th>Môn học</th>
-            <th>Điểm GK</th>
-            <th>Điểm CK</th>
-            <th>Hành động</th>
+            <th>CC (10%)</th>
+            <th>TH (20%)</th>
+            <th>GK (20%)</th>
+            <th>CK (50%)</th>
+            <th>Tổng</th>
+            <th>Điểm chữ</th>
           </tr>
         </thead>
         <tbody>
@@ -136,113 +65,34 @@ const MyGradesPage = () => {
                   <br/>
                   <small style={{color: '#555'}}>({grade.subject_code})</small>
                 </td>
-                <td>{grade.midterm_score}</td>
-                <td>{grade.final_score}</td>
-                <td className="actions" style={{minWidth: '220px'}}>
-                  <button 
-                    className="btn btn-secondary" 
-                    style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
-                    onClick={() => handleViewMaterials(grade.subject_id, grade.subject_name)}
-                  >
-                    Xem Tài liệu
-                  </button>
-                  <button 
-                    className="btn btn-primary"
-                    style={{padding: '0.3rem 0.6rem', fontSize: '0.9rem'}}
-                    onClick={() => handleOpenTicketModal(grade)}
-                  >
-                    Hỏi đáp
-                  </button>
+                <td>{grade.attendance_score !== null ? grade.attendance_score : '-'}</td>
+                <td>{grade.practice_score !== null ? grade.practice_score : '-'}</td>
+                <td>{grade.midterm_score !== null ? grade.midterm_score : '-'}</td>
+                <td>{grade.final_score !== null ? grade.final_score : '-'}</td>
+                <td>
+                  <strong>{grade.total_score !== null ? grade.total_score : '-'}</strong>
+                </td>
+                <td>
+                  <strong style={{ 
+                    color: grade.letter_grade && grade.letter_grade.startsWith('A') ? '#10b981' : 
+                           grade.letter_grade && grade.letter_grade.startsWith('B') ? '#3b82f6' :
+                           grade.letter_grade && grade.letter_grade.startsWith('C') ? '#f59e0b' :
+                           grade.letter_grade && grade.letter_grade === 'F' ? '#ef4444' : '#666'
+                  }}>
+                    {grade.letter_grade || '-'}
+                  </strong>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}>
+              <td colSpan="8" style={{ textAlign: 'center' }}>
                 Bạn chưa có điểm nào.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-
-      <Modal 
-        isOpen={isMaterialModalOpen} 
-        onClose={handleCloseMaterialModal} 
-        title={`Tài liệu môn: ${selectedSubjectName}`}
-      >
-        {isLoadingMaterials ? (
-          <p>Đang tải...</p>
-        ) : modalMaterialError ? (
-          <p className="error-text">{modalMaterialError}</p>
-        ) : selectedMaterials.length > 0 ? (
-          <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-            {selectedMaterials.map(material => (
-              <li key={material.material_id} style={{ marginBottom: '1rem' }}>
-                <strong>
-                  <a 
-                    href={`${BACKEND_URL}${material.url}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
-                    {material.title}
-                  </a>
-                </strong>
-                <br />
-                <small style={{color: '#555'}}>
-                  {/* ... (thông tin người thêm) ... */}
-                </small>
-              </li>
-            ))}
-          </ul>
-        ) : (<p>Không có tài liệu nào cho môn học này.</p>)}
-        {/* ... (Code của Modal Tài liệu giữ nguyên) ... */}
-        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
-          <button type="button" className="btn btn-secondary" onClick={handleCloseMaterialModal}>
-            Đóng
-          </button>
-        </div>
-      </Modal>
-
-      {/* === MODAL HỎI ĐÁP (MỚI) === */}
-      <Modal 
-        isOpen={isTicketModalOpen} 
-        onClose={handleCloseTicketModal} 
-        title={`Hỏi đáp/Khiếu nại: ${selectedGradeInfo?.subject_name}`}
-      >
-        <form className="modal-form" onSubmit={handleTicketSubmit}>
-          <p>
-            Gửi thắc mắc về môn học 
-            <strong> {selectedGradeInfo?.subject_name} </strong>
-            (Học kỳ: {selectedGradeInfo?.semester})
-          </p>
-          <div className="form-group">
-            <label htmlFor="message_text">Nội dung (tối đa 255 ký tự):</label>
-            <textarea
-              id="message_text"
-              name="message_text"
-              rows="4"
-              value={ticketMessage}
-              onChange={(e) => setTicketMessage(e.target.value)}
-              required
-              maxLength="255"
-              style={{ padding: '0.5rem', fontSize: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}
-            />
-          </div>
-          
-          {formError && <p className="error-text" style={{marginTop: 0}}>{formError}</p>}
-          {formSuccess && <p style={{color: 'green', textAlign: 'center', marginTop: 0}}>{formSuccess}</p>}
-
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={handleCloseTicketModal}>
-              Hủy
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Gửi
-            </button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 };

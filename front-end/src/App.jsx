@@ -1,6 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import MainLayout from './layouts/MainLayout';
 import ClassManagementPage from './pages/ClassManagementPage';
 import SubjectManagementPage from './pages/SubjectManagementPage';
@@ -12,6 +16,8 @@ import ViewGradesPage from './pages/ViewGradesPage';
 import DashboardPage from './pages/DashboardPage';
 import CourseMaterialPage from './pages/CourseMaterialPage';
 import TicketInboxPage from './pages/TicketInboxPage';
+import ManageAssignmentsPage from './pages/ManageAssignmentsPage';
+import ViewAssignmentsPage from './pages/ViewAssignmentsPage';
 
 function App() {
   const { isAuthenticated, user } = useAuth();
@@ -23,6 +29,12 @@ function App() {
         path="/login"
         element={
           isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          isAuthenticated ? <Navigate to="/" replace /> : <ForgotPasswordPage />
         }
       />
       <Route
@@ -53,12 +65,18 @@ function App() {
             <Route path="view-grades" element={<ViewGradesPage />} />
             <Route path="materials" element={<CourseMaterialPage />} />
             <Route path="tickets-inbox" element={<TicketInboxPage />} />
+            <Route path="assignments" element={<ManageAssignmentsPage />} />
           </>
         )}
         
         {/* === ROUTES CỦA SINH VIÊN (roleId === 3) === */}
         {user?.roleId === 3 && (
-          <Route path="my-grades" element={<MyGradesPage />} />
+          <>
+            <Route path="my-grades" element={<MyGradesPage />} />
+            <Route path="materials" element={<CourseMaterialPage />} />
+            <Route path="tickets-inbox" element={<TicketInboxPage />} />
+            <Route path="assignments" element={<ViewAssignmentsPage />} />
+          </>
         )}
         
       </Route>  
@@ -69,4 +87,24 @@ function App() {
   );
 }
 
-export default App;
+function AppWrapper() {
+  return (
+    <ThemeProvider>
+      <App />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </ThemeProvider>
+  );
+}
+
+export default AppWrapper;

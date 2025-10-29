@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import ReactPaginate from 'react-paginate';
 import subjectService from '../services/subjectService';
 import Modal from '../components/Modal';
+import LoadingSpinner from '../components/LoadingSpinner';
+import SearchBar from '../components/SearchBar';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
+import '../assets/Pagination.css';
 
 const SubjectManagementPage = () => {
   const [subjects, setSubjects] = useState([]);
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const itemsPerPage = 10;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,15 +31,33 @@ const SubjectManagementPage = () => {
 
   const fetchSubjects = async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const data = await subjectService.getAllSubjects();
       setSubjects(data);
+      setFilteredSubjects(data);
     } catch (err) {
-      setError(err.message || 'Không thể tải dữ liệu môn học.');
+      toast.error('❌ Lỗi khi tải danh sách môn học: ' + (err.message || 'Unknown'));
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Search handler
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(0);
+    
+    if (!query.trim()) {
+      setFilteredSubjects(subjects);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const filtered = subjects.filter(subject =>
+      subject.subject_name?.toLowerCase().includes(lowerQuery) ||
+      subject.subject_code?.toLowerCase().includes(lowerQuery)
+    );
+    setFilteredSubjects(filtered);
   };
 
   useEffect(() => {
@@ -82,12 +111,15 @@ const SubjectManagementPage = () => {
     try {
       if (editingSubjectId) {
         await subjectService.updateSubject(editingSubjectId, dataToSubmit);
+        toast.success('✅ Cập nhật môn học thành công!');
       } else {
         await subjectService.createSubject(dataToSubmit);
+        toast.success('✅ Thêm môn học thành công!');
       }
       fetchSubjects();
       handleCloseModal();
     } catch (err) {
+      toast.error('❌ Lỗi: ' + (err.message || 'Có lỗi xảy ra'));
       setFormError(err.message || 'Có lỗi xảy ra.');
     }
   };
@@ -96,19 +128,21 @@ const SubjectManagementPage = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa môn học này?')) {
       try {
         await subjectService.deleteSubject(subjectId);
+        toast.success('✅ Xóa môn học thành công!');
         fetchSubjects();
       } catch (err) {
-        alert('Lỗi khi xóa: ' + err.message);
+        toast.error('❌ Lỗi khi xóa: ' + err.message);
       }
     }
   };
 
-  if (isLoading) {
-    return <div className="loading-text">Đang tải dữ liệu...</div>;
-  }
+  // Pagination calculations
+  const offset = currentPage * itemsPerPage;
+  const currentItems = filteredSubjects.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredSubjects.length / itemsPerPage);
 
-  if (error) {
-    return <div className="error-text">Lỗi: {error}</div>;
+  if (isLoading) {
+    return <LoadingSpinner message="Đang tải danh sách môn học..." />;
   }
 
   return (
@@ -116,54 +150,105 @@ const SubjectManagementPage = () => {
       <div className="page-header">
         <h1>Quản lý Môn học</h1>
         <button className="btn btn-primary" onClick={handleOpenAddModal}>
-          Thêm Môn mới
+          <FaPlus /> Thêm Môn
         </button>
       </div>
 
+      {/* Search Bar */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <SearchBar 
+          onSearch={handleSearch} 
+          placeholder="Tìm theo tên, mã môn học..."
+        />
+      </div>
+
+      {filteredSubjects.length === 0 && searchQuery && (
+        <div className="no-results">
+          <FaSearch size={48} color="#999" />
+          <p>Không tìm thấy kết quả cho "{searchQuery}"</p>
+        </div>
+      )}
+
       {/* Bảng dữ liệu */}
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Mã môn học</th>
-            <th>Tên môn học</th>
-            <th>Số tín chỉ</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {subjects.length > 0 ? (
-            subjects.map((subject) => (
-              <tr key={subject.subject_id}>
-                <td>{subject.subject_id}</td>
-                <td>{subject.subject_code}</td>
-                <td>{subject.subject_name}</td>
-                <td>{subject.credits}</td>
-                <td className="actions">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleOpenEditModal(subject)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(subject.subject_id)}
-                  >
-                    Xóa
-                  </button>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Mã môn học</th>
+              <th>Tên môn học</th>
+              <th>Số tín chỉ</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.length > 0 ? (
+              currentItems.map((subject) => (
+                <tr key={subject.subject_id}>
+                  <td>{subject.subject_id}</td>
+                  <td>{subject.subject_code}</td>
+                  <td>{subject.subject_name}</td>
+                  <td>{subject.credits}</td>
+                  <td className="actions">
+                    <div className="action-buttons" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', justifyContent: 'center' }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => handleOpenEditModal(subject)}
+                        title="Sửa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(subject.subject_id)}
+                        title="Xóa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>
+                  Chưa có môn học nào.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}>
-                Chưa có môn học nào.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {pageCount > 1 && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          margin: '2rem 0 1rem 0',
+          padding: '1rem'
+        }}>
+          <ReactPaginate
+            previousLabel={'← Trước'}
+            nextLabel={'Sau →'}
+            breakLabel={'...'}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={({ selected }) => setCurrentPage(selected)}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+            previousClassName={'page-item'}
+            nextClassName={'page-item'}
+            pageClassName={'page-item'}
+            breakClassName={'page-item'}
+            disabledClassName={'disabled'}
+            forcePage={currentPage}
+          />
+        </div>
+      )}
 
       {/* === MODAL THÊM/SỬA === */}
       <Modal

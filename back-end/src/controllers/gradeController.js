@@ -3,10 +3,10 @@ const gradeModel = require('../models/gradeModel');
 const gradeController = {
   upsertGrade: async (req, res) => {
     try {
-      const { student_id, subject_id, semester, midterm_score, final_score } =
+      const { student_id, subject_id, semester, attendance_score, practice_score, midterm_score, final_score } =
         req.body;
 
-      console.log('📝 Grade Request:', { student_id, subject_id, semester, midterm_score, final_score });
+      console.log('📝 Grade Request:', { student_id, subject_id, semester, attendance_score, practice_score, midterm_score, final_score });
       console.log('👤 User:', req.user);
 
       if (!student_id || !subject_id || !semester) {
@@ -15,6 +15,8 @@ const gradeController = {
           .json({ message: 'Cần đủ thông tin SV, Môn học và Học kỳ.' });
       }
       
+      const attScore = attendance_score !== undefined ? attendance_score : null;
+      const pracScore = practice_score !== undefined ? practice_score : null;
       const midScore = midterm_score !== undefined ? midterm_score : null;
       const finScore = final_score !== undefined ? final_score : null;
 
@@ -22,6 +24,8 @@ const gradeController = {
         student_id,
         subject_id,
         semester,
+        attScore,
+        pracScore,
         midScore,
         finScore
       );

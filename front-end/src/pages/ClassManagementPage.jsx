@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import ReactPaginate from 'react-paginate';
 import classService from '../services/classService';
 import Modal from '../components/Modal';
+import LoadingSpinner from '../components/LoadingSpinner';
+import SearchBar from '../components/SearchBar';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
+import '../assets/Pagination.css';
 
 const ClassManagementPage = () => {
   const [classes, setClasses] = useState([]);
+  const [filteredClasses, setFilteredClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const itemsPerPage = 10;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,15 +30,33 @@ const ClassManagementPage = () => {
 
   const fetchClasses = async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const data = await classService.getAllClasses();
       setClasses(data);
+      setFilteredClasses(data);
     } catch (err) {
-      setError(err.message || 'Không thể tải dữ liệu lớp học.');
+      toast.error('❌ Lỗi khi tải danh sách lớp học: ' + (err.message || 'Unknown'));
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Search handler
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(0);
+    
+    if (!query.trim()) {
+      setFilteredClasses(classes);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const filtered = classes.filter(cls =>
+      cls.class_code?.toLowerCase().includes(lowerQuery) ||
+      cls.major?.toLowerCase().includes(lowerQuery)
+    );
+    setFilteredClasses(filtered);
   };
 
   useEffect(() => {
@@ -67,14 +96,17 @@ const ClassManagementPage = () => {
     try {
       if (editingClassId) {
         await classService.updateClass(editingClassId, formData);
+        toast.success('✅ Cập nhật lớp học thành công!');
       } else {
         await classService.createClass(formData);
+        toast.success('✅ Thêm lớp học thành công!');
       }
       
       fetchClasses();
       handleCloseModal();
       
     } catch (err) {
+      toast.error('❌ Lỗi: ' + (err.message || 'Có lỗi xảy ra'));
       setFormError(err.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
     }
   };
@@ -83,19 +115,25 @@ const ClassManagementPage = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa lớp học này?')) {
       try {
         await classService.deleteClass(classId);
+        toast.success('✅ Xóa lớp học thành công!');
         fetchClasses();
       } catch (err) {
-        alert('Lỗi khi xóa: ' + err.message);
+        toast.error('❌ Lỗi khi xóa: ' + err.message);
       }
     }
   };
 
+  // Pagination calculations
+  const offset = currentPage * itemsPerPage;
+  const currentItems = filteredClasses.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredClasses.length / itemsPerPage);
+
   if (isLoading) {
-    return <div className="loading-text">Đang tải dữ liệu...</div>;
+    return <LoadingSpinner message="Đang tải danh sách lớp học..." />;
   }
 
-  if (error) {
-    return <div className="error-text">Lỗi: {error}</div>;
+  if (isLoading) {
+    return <LoadingSpinner message="Đang tải danh sách lớp học..." />;
   }
 
   return (
@@ -103,51 +141,102 @@ const ClassManagementPage = () => {
       <div className="page-header">
         <h1>Quản lý Lớp học</h1>
         <button className="btn btn-primary" onClick={handleOpenAddModal}>
-          Thêm Lớp mới
+          <FaPlus /> Thêm Lớp
         </button>
       </div>
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Mã lớp</th>
-            <th>Ngành học</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classes.length > 0 ? (
-            classes.map((lop) => (
-              <tr key={lop.class_id}>
-                <td>{lop.class_id}</td>
-                <td>{lop.class_code}</td>
-                <td>{lop.major}</td>
-                <td className="actions">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleOpenEditModal(lop)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(lop.class_id)}
-                  >
-                    Xóa
-                  </button>
+      {/* Search Bar */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <SearchBar 
+          onSearch={handleSearch} 
+          placeholder="Tìm theo mã lớp, ngành..."
+        />
+      </div>
+
+      {filteredClasses.length === 0 && searchQuery && (
+        <div className="no-results">
+          <FaSearch size={48} color="#999" />
+          <p>Không tìm thấy kết quả cho "{searchQuery}"</p>
+        </div>
+      )}
+
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Mã lớp</th>
+              <th>Ngành học</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.length > 0 ? (
+              currentItems.map((lop) => (
+                <tr key={lop.class_id}>
+                  <td>{lop.class_id}</td>
+                  <td>{lop.class_code}</td>
+                  <td>{lop.major}</td>
+                  <td className="actions">
+                    <div className="action-buttons" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', justifyContent: 'center' }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => handleOpenEditModal(lop)}
+                        title="Sửa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(lop.class_id)}
+                        title="Xóa"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>
+                  Chưa có lớp học nào.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" style={{ textAlign: 'center' }}>
-                Chưa có lớp học nào.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {pageCount > 1 && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          margin: '2rem 0 1rem 0',
+          padding: '1rem'
+        }}>
+          <ReactPaginate
+            previousLabel={'← Trước'}
+            nextLabel={'Sau →'}
+            breakLabel={'...'}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={({ selected }) => setCurrentPage(selected)}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+            previousClassName={'page-item'}
+            nextClassName={'page-item'}
+            pageClassName={'page-item'}
+            breakClassName={'page-item'}
+            disabledClassName={'disabled'}
+            forcePage={currentPage}
+          />
+        </div>
+      )}
 
       <Modal
         isOpen={isModalOpen}

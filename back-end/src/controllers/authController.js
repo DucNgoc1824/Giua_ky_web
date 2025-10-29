@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const otpManager = require('../utils/otpStore');
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -110,6 +111,80 @@ const authController = {
       };
       res.status(200).json(userInfo);
     } catch (error) {
+      res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
+  },
+
+  // Step 1: Request OTP (forgot password)
+  requestPasswordReset: async (req, res) => {
+    try {
+      const { username } = req.body;
+
+      if (!username) {
+        return res.status(400).json({ message: 'Vui lòng nhập tên đăng nhập.' });
+      }
+
+      // Check if user exists
+      const user = await userModel.findUserByUsername(username);
+      if (!user) {
+        return res.status(404).json({ message: 'Tên đăng nhập không tồn tại.' });
+      }
+
+      // Get email (masked for privacy)
+      const email = user.email;
+      const maskedEmail = email.replace(/(.{2})(.*)(@.*)/, (match, p1, p2, p3) => {
+        return p1 + '*'.repeat(p2.length) + p3;
+      });
+
+      // Generate OTP
+      const otp = otpManager.generateOTP();
+      otpManager.storeOTP(username, otp);
+
+      // In production: Send email with OTP
+      // For now: Return OTP in response (ONLY FOR DEVELOPMENT)
+      console.log(`📧 OTP for ${username}: ${otp}`);
+
+      res.status(200).json({
+        message: 'Mã OTP đã được tạo thành công.',
+        maskedEmail,
+        otp // REMOVE THIS IN PRODUCTION!
+      });
+    } catch (error) {
+      console.error('❌ Lỗi request password reset:', error);
+      res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
+  },
+
+  // Step 2: Verify OTP and reset password
+  resetPassword: async (req, res) => {
+    try {
+      const { username, otp, newPassword } = req.body;
+
+      if (!username || !otp || !newPassword) {
+        return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin.' });
+      }
+
+      // Verify OTP
+      const otpResult = otpManager.verifyOTP(username, otp);
+      if (!otpResult.success) {
+        return res.status(400).json({ message: otpResult.message });
+      }
+
+      // Hash new password
+      const salt = await bcrypt.genSalt(10);
+      const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+      // Update password
+      const affectedRows = await userModel.updatePassword(username, newPasswordHash);
+      
+      if (affectedRows === 0) {
+        return res.status(404).json({ message: 'Không thể cập nhật mật khẩu.' });
+      }
+
+      console.log(`✅ Password reset successful for: ${username}`);
+      res.status(200).json({ message: 'Đặt lại mật khẩu thành công!' });
+    } catch (error) {
+      console.error('❌ Lỗi reset password:', error);
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   },

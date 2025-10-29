@@ -1,0 +1,157 @@
+/* ActivityTimeline.css */
+
+.activity-timeline {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+
+.activity-timeline h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-container {
+  position: relative;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  opacity: 0.2;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  animation: slideInLeft 0.4s ease;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.timeline-marker {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  padding: 0.25rem;
+  border-radius: 50%;
+  background: white;
+}
+
+.activity-icon.success {
+  color: #10b981;
+}
+
+.activity-icon.info {
+  color: #3b82f6;
+}
+
+.activity-icon.warning {
+  color: #f59e0b;
+}
+
+.activity-icon.primary {
+  color: #667eea;
+}
+
+.activity-icon.secondary {
+  color: #764ba2;
+}
+
+.timeline-content {
+  flex: 1;
+  background: #f9fafb;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border-left: 3px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+  background: #f3f4f6;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.activity-text {
+  margin: 0 0 0.5rem 0;
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.activity-time {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.no-activities {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #9ca3af;
+}
+
+.no-activities p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .activity-timeline {
+    padding: 1.5rem;
+  }
+
+  .timeline-container::before {
+    left: 10px;
+  }
+
+  .timeline-item {
+    gap: 0.75rem;
+  }
+
+  .activity-icon {
+    font-size: 1.25rem;
+  }
+
+  .timeline-content {
+    padding: 0.875rem 1rem;
+  }
+}

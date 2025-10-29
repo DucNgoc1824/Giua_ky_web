@@ -135,15 +135,17 @@ const CourseMaterialPage = () => {
   return (
     <div className="course-material-page">
       <div className="page-header">
-        <h1>📚 Quản lý Tài liệu Môn học</h1>
-        <button 
-          className="btn btn-primary" 
-          onClick={handleOpenAddModal} 
-          disabled={!selectedSubjectId}
-          title={!selectedSubjectId ? "Vui lòng chọn môn học trước" : "Thêm tài liệu mới"}
-        >
-          ➕ Thêm Tài liệu mới
-        </button>
+        <h1>📚 {user?.roleId === 3 ? 'Tài liệu Học tập' : 'Quản lý Tài liệu Môn học'}</h1>
+        {(user?.roleId === 1 || user?.roleId === 2) && (
+          <button 
+            className="btn btn-primary" 
+            onClick={handleOpenAddModal} 
+            disabled={!selectedSubjectId}
+            title={!selectedSubjectId ? "Vui lòng chọn môn học trước" : "Thêm tài liệu mới"}
+          >
+            ➕ Thêm Tài liệu mới
+          </button>
+        )}
       </div>
 
       {!selectedSubjectId && (
@@ -159,12 +161,14 @@ const CourseMaterialPage = () => {
           gap: '0.75rem'
         }}>
           <span style={{ fontSize: '1.5rem' }}>💡</span>
-          <span style={{ fontWeight: '500' }}>Chọn một môn học bên dưới để xem và quản lý tài liệu</span>
+          <span style={{ fontWeight: '500' }}>
+            {user?.roleId === 3 ? 'Chọn một môn học bên dưới để xem tài liệu' : 'Chọn một môn học bên dưới để xem và quản lý tài liệu'}
+          </span>
         </div>
       )}
 
       <div className="form-group" style={{ maxWidth: '400px', marginBottom: '2rem' }}>
-        <label htmlFor="subject_select" style={{ fontWeight: '600' }}>Chọn Môn học để quản lý:</label>
+        <label htmlFor="subject_select" style={{ fontWeight: '600' }}>Chọn Môn học:</label>
         <select
           id="subject_select"
           value={selectedSubjectId}
@@ -189,7 +193,7 @@ const CourseMaterialPage = () => {
               <th>Tiêu đề</th>
               <th>Người thêm</th>
               <th>Ngày thêm</th>
-              <th>Hành động</th>
+              {(user?.roleId === 1 || user?.roleId === 2) && <th>Hành động</th>}
             </tr>
           </thead>
           <tbody>
@@ -209,19 +213,21 @@ const CourseMaterialPage = () => {
 
                   <td>{material.added_by}</td>
                   <td>{new Date(material.created_at).toLocaleDateString()}</td>
-                  <td className="actions">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(material.material_id)}
-                    >
-                      Xóa
-                    </button>
-                  </td>
+                  {(user?.roleId === 1 || user?.roleId === 2) && (
+                    <td className="actions">
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(material.material_id)}
+                      >
+                        Xóa
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4" style={{ textAlign: 'center' }}>
+                <td colSpan={user?.roleId === 3 ? "3" : "4"} style={{ textAlign: 'center' }}>
                   {selectedSubjectId ? 'Chưa có tài liệu nào cho môn này.' : 'Vui lòng chọn môn học.'}
                 </td>
               </tr>

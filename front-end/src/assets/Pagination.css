@@ -1,0 +1,82 @@
+/* Pagination Component Styles */
+.pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  flex-wrap: wrap !important;
+}
+
+.pagination li {
+  display: inline-block !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+.pagination li a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  color: #333333 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.pagination li a:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-color: #667eea !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+}
+
+.pagination li.active a {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border-color: #667eea !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.pagination li.disabled a {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+  background-color: #f5f5f5 !important;
+}
+
+.pagination li.disabled a:hover {
+  transform: none !important;
+  background-color: #f5f5f5 !important;
+  color: #333333 !important;
+}
+
+.pagination li.previous a,
+.pagination li.next a {
+  padding: 0.5rem 1rem !important;
+}
+
+.pagination li.break a {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  cursor: default !important;
+}
+
+.pagination li.break a:hover {
+  background: transparent !important;
+  transform: none !important;
+  color: #333333 !important;
+}

@@ -85,7 +85,7 @@ const studentModel = {
   getClassId: async (student_id) => {
     const query = 'SELECT class_id FROM Students WHERE student_id = ?';
     try {
-      const [rows] = await db.query(query, [studentId]);
+      const [rows] = await db.query(query, [student_id]);
       return rows[0]?.class_id || null;
     } catch (error) {
       throw error;

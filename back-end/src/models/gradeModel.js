@@ -1,11 +1,13 @@
 const db = require('../config/db');
 
 const gradeModel = {
-  upsert: async (student_id, subject_id, semester, midtermScore, finalScore) => {
+  upsert: async (student_id, subject_id, semester, attendanceScore, practiceScore, midtermScore, finalScore) => {
     const query = `
-      INSERT INTO Grades (student_id, subject_id, semester, midterm_score, final_score)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO Grades (student_id, subject_id, semester, attendance_score, practice_score, midterm_score, final_score)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
+        attendance_score = VALUES(attendance_score),
+        practice_score = VALUES(practice_score),
         midterm_score = VALUES(midterm_score),
         final_score = VALUES(final_score);
     `;
@@ -14,6 +16,8 @@ const gradeModel = {
         student_id,
         subject_id,
         semester,
+        attendanceScore,
+        practiceScore,
         midtermScore,
         finalScore,
       ]);
@@ -31,8 +35,13 @@ const gradeModel = {
         s.subject_code,
         s.subject_name,
         s.credits,
+        g.attendance_score,
+        g.practice_score,
         g.midterm_score,
-        g.final_score
+        g.final_score,
+        g.total_score,
+        g.letter_grade,
+        g.gpa_score
       FROM Grades g
       JOIN Subjects s ON g.subject_id = s.subject_id
       WHERE g.student_id = ?
@@ -53,9 +62,13 @@ const gradeModel = {
         st.student_code,
         u.full_name AS student_name,
         c.class_code,
+        g.attendance_score,
+        g.practice_score,
         g.midterm_score,
         g.final_score,
-        ROUND((COALESCE(g.midterm_score, 0) * 0.4 + COALESCE(g.final_score, 0) * 0.6), 2) AS average_score
+        g.total_score,
+        g.letter_grade,
+        g.gpa_score
       FROM Students st
       JOIN Users u ON st.user_id = u.user_id
       JOIN Classes c ON st.class_id = c.class_id
@@ -80,9 +93,13 @@ const gradeModel = {
         st.student_code,
         u.full_name AS student_name,
         c.class_code,
+        g.attendance_score,
+        g.practice_score,
         g.midterm_score,
         g.final_score,
-        ROUND((COALESCE(g.midterm_score, 0) * 0.4 + COALESCE(g.final_score, 0) * 0.6), 2) AS average_score
+        g.total_score,
+        g.letter_grade,
+        g.gpa_score
       FROM Grades g
       JOIN Students st ON g.student_id = st.student_id
       JOIN Users u ON st.user_id = u.user_id
@@ -96,7 +113,9 @@ const gradeModel = {
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
+
+module.exports = gradeModel;
 
 module.exports = gradeModel;

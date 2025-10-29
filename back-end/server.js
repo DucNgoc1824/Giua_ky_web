@@ -12,7 +12,7 @@ const lecturerRoutes = require('./src/routes/lecturerRoutes');
 const gradeRoutes = require('./src/routes/gradeRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const courseMaterialRoutes = require('./src/routes/courseMaterialRoutes');
-const assignmentRoutes = require('./src/routes/assignmentRoutes');
+const assignmentRoutes = require('./src/routes/assignmentRoutesNew');
 const ticketRoutes = require('./src/routes/ticketRoutes');
 
 const app = express();

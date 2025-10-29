@@ -13,4 +13,8 @@ router.post('/', isStudent, ticketController.createTicket);
 router.get('/my-tickets', isStudent, ticketController.getMyTickets);
 router.get('/inbox', isLecturerOrAdmin, ticketController.getTicketInbox);
 
+// Routes mới
+router.get('/:ticket_id', ticketController.getTicketById);
+router.put('/:ticket_id/respond', isLecturerOrAdmin, ticketController.respondToTicket);
+
 module.exports = router;

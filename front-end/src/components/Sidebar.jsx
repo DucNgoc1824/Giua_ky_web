@@ -1,6 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { 
+  FaTachometerAlt, 
+  FaUserGraduate, 
+  FaChalkboardTeacher, 
+  FaSchool, 
+  FaBook, 
+  FaFolderOpen,
+  FaPencilAlt,
+  FaClipboardList,
+  FaInbox,
+  FaTrophy,
+  FaTasks
+} from 'react-icons/fa';
 import '../assets/MainLayout.css';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -20,7 +33,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
         onClick={handleLinkClick}
       >
-        📊 Dashboard
+        <FaTachometerAlt className="nav-icon" />
+        <span>Dashboard</span>
       </NavLink>
     </li>
   );
@@ -33,7 +47,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          👨‍🎓 Quản lý Sinh viên
+          <FaUserGraduate className="nav-icon" />
+          <span>Quản lý Sinh viên</span>
         </NavLink>
       </li>
       <li>
@@ -42,7 +57,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          👨‍🏫 Quản lý Giảng viên
+          <FaChalkboardTeacher className="nav-icon" />
+          <span>Quản lý Giảng viên</span>
         </NavLink>
       </li>
       <li>
@@ -51,7 +67,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          🏫 Quản lý Lớp học
+          <FaSchool className="nav-icon" />
+          <span>Quản lý Lớp học</span>
         </NavLink>
       </li>
       <li>
@@ -60,7 +77,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          📚 Quản lý Môn học
+          <FaBook className="nav-icon" />
+          <span>Quản lý Môn học</span>
         </NavLink>
       </li>
       <li>
@@ -69,7 +87,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          📁 Quản lý Tài liệu
+          <FaFolderOpen className="nav-icon" />
+          <span>Quản lý Tài liệu</span>
         </NavLink>
       </li>
     </>
@@ -83,7 +102,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          ✏️ Nhập/Sửa Điểm
+          <FaPencilAlt className="nav-icon" />
+          <span>Nhập/Sửa Điểm</span>
         </NavLink>
       </li>
       <li>
@@ -92,7 +112,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          📋 Xem Điểm
+          <FaClipboardList className="nav-icon" />
+          <span>Xem Điểm</span>
         </NavLink>
       </li>
       <li>
@@ -101,7 +122,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          📬 Hòm thư Hỏi đáp
+          <FaInbox className="nav-icon" />
+          <span>Hòm thư Hỏi đáp</span>
         </NavLink>
       </li>
       <li>
@@ -110,28 +132,73 @@ const Sidebar = ({ isOpen, onClose }) => {
           className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
           onClick={handleLinkClick}
         >
-          📁 Quản lý Tài liệu
+          <FaFolderOpen className="nav-icon" />
+          <span>Quản lý Tài liệu</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink 
+          to="/assignments"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+          onClick={handleLinkClick}
+        >
+          <FaTasks className="nav-icon" />
+          <span>Quản lý Bài tập</span>
         </NavLink>
       </li>
     </>
   );
 
   const studentLinks = (
-    <li>
-      <NavLink 
-        to="/my-grades"
-        className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-        onClick={handleLinkClick}
-      >
-        🎯 Xem điểm
-      </NavLink>
-    </li>
+    <>
+      <li>
+        <NavLink 
+          to="/my-grades"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+          onClick={handleLinkClick}
+        >
+          <FaTrophy className="nav-icon" />
+          <span>Xem điểm</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink 
+          to="/materials"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+          onClick={handleLinkClick}
+        >
+          <FaFolderOpen className="nav-icon" />
+          <span>Tài liệu học tập</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink 
+          to="/tickets-inbox"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+          onClick={handleLinkClick}
+        >
+          <FaInbox className="nav-icon" />
+          <span>Hỏi đáp</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink 
+          to="/assignments"
+          className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+          onClick={handleLinkClick}
+        >
+          <FaTasks className="nav-icon" />
+          <span>Bài tập</span>
+        </NavLink>
+      </li>
+    </>
   );
 
   return (
     <aside className={`sidebar ${isOpen ? 'active' : ''}`}>
       <div className="sidebar-header">
-        <h3>📚 Menu</h3>
+        <FaBook className="sidebar-logo" />
+        <h3>Menu</h3>
       </div>
       <ul className="sidebar-nav">
         {commonLinks}

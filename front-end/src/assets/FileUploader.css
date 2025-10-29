@@ -1,0 +1,138 @@
+.file-uploader {
+  width: 100%;
+}
+
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.dropzone:hover {
+  border-color: #2196F3;
+  background: #f0f8ff;
+}
+
+.dropzone.active {
+  border-color: #2196F3;
+  background: #e3f2fd;
+  transform: scale(1.02);
+}
+
+.dropzone.reject {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.upload-icon {
+  color: #2196F3;
+  margin-bottom: 1rem;
+}
+
+.dropzone-text {
+  margin: 0.5rem 0;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.dropzone-hint {
+  margin: 0.5rem 0 0;
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.file-list {
+  margin-top: 1.5rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.file-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.file-icon {
+  color: #2196F3;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  text-align: left;
+}
+
+.file-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  word-break: break-word;
+}
+
+.file-size {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.remove-file-btn {
+  background: none;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-file-btn:hover {
+  background: #ffebee;
+  transform: scale(1.1);
+}
+
+/* Dark mode */
+body.dark-mode .dropzone {
+  background: #2d2d2d;
+  border-color: #444;
+}
+
+body.dark-mode .dropzone:hover,
+body.dark-mode .dropzone.active {
+  background: #3d3d3d;
+}
+
+body.dark-mode .dropzone-text {
+  color: #fff;
+}
+
+body.dark-mode .dropzone-hint {
+  color: #888;
+}
+
+body.dark-mode .file-item {
+  background: #2d2d2d;
+  border-color: #444;
+}
+
+body.dark-mode .file-name {
+  color: #fff;
+}

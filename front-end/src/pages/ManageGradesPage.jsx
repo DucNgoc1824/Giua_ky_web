@@ -10,6 +10,8 @@ const initialFormData = {
   student_id: '',
   subject_id: '',
   semester: '',
+  attendance_score: '',
+  practice_score: '',
   midterm_score: '',
   final_score: '',
 };
@@ -108,6 +110,8 @@ const ManageGradesPage = () => {
         ...formData,
         student_id: parseInt(formData.student_id, 10),
         subject_id: parseInt(formData.subject_id, 10),
+        attendance_score: formData.attendance_score ? parseFloat(formData.attendance_score) : null,
+        practice_score: formData.practice_score ? parseFloat(formData.practice_score) : null,
         midterm_score: formData.midterm_score ? parseFloat(formData.midterm_score) : null,
         final_score: formData.final_score ? parseFloat(formData.final_score) : null,
       };
@@ -221,10 +225,42 @@ const ManageGradesPage = () => {
             )}
           </div>
 
-          {/* Row 3: Điểm số */}
+          {/* Row 3: Điểm số (4 cột điểm theo chuẩn PTIT) */}
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="midterm_score">Điểm giữa kỳ</label>
+              <label htmlFor="attendance_score">Chuyên cần (10%)</label>
+              <input
+                type="number"
+                id="attendance_score" 
+                name="attendance_score"
+                value={formData.attendance_score}
+                onChange={handleFormChange}
+                step="0.1" 
+                min="0" 
+                max="10"
+                placeholder="0 - 10"
+                className="form-input"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="practice_score">Thực hành (20%)</label>
+              <input
+                type="number"
+                id="practice_score" 
+                name="practice_score"
+                value={formData.practice_score}
+                onChange={handleFormChange}
+                step="0.1" 
+                min="0" 
+                max="10"
+                placeholder="0 - 10"
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="midterm_score">Giữa kỳ (20%)</label>
               <input
                 type="number"
                 id="midterm_score" 
@@ -234,13 +270,13 @@ const ManageGradesPage = () => {
                 step="0.1" 
                 min="0" 
                 max="10"
-                placeholder="Nhập điểm (0 - 10)"
+                placeholder="0 - 10"
                 className="form-input"
               />
             </div>
             
             <div className="form-group">
-              <label htmlFor="final_score">Điểm cuối kỳ</label>
+              <label htmlFor="final_score">Cuối kỳ (50%)</label>
               <input
                 type="number"
                 id="final_score" 
@@ -250,7 +286,7 @@ const ManageGradesPage = () => {
                 step="0.1" 
                 min="0" 
                 max="10"
-                placeholder="Nhập điểm (0 - 10)"
+                placeholder="0 - 10"
                 className="form-input"
               />
             </div>

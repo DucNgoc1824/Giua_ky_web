@@ -110,7 +110,29 @@ const userModel = {
     } finally {
       connection.release();
     }
-  },  
+  },
+
+  // Get user email (masked) by username
+  getEmailByUsername: async (username) => {
+    const query = 'SELECT email FROM Users WHERE username = ?';
+    try {
+      const [rows] = await db.query(query, [username]);
+      return rows[0]?.email || null;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Update password
+  updatePassword: async (username, newPasswordHash) => {
+    const query = 'UPDATE Users SET password_hash = ? WHERE username = ?';
+    try {
+      const [result] = await db.execute(query, [newPasswordHash, username]);
+      return result.affectedRows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = userModel;

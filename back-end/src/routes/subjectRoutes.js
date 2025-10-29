@@ -9,8 +9,9 @@ const {
 
 router.use(verifyToken);
 
-router.get('/', isLecturerOrAdmin, subjectController.getAllSubjects);
-router.get('/:id', isLecturerOrAdmin, subjectController.getSubjectById);
+// Cho phép tất cả user đã login xem danh sách môn học
+router.get('/', subjectController.getAllSubjects);
+router.get('/:id', subjectController.getSubjectById);
 router.post('/', isAdmin, subjectController.createSubject);
 router.put('/:id', isAdmin, subjectController.updateSubject);
 router.delete('/:id', isAdmin, subjectController.deleteSubject);

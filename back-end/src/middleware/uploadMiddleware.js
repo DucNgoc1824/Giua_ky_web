@@ -25,4 +25,4 @@ const upload = multer({
   limits: limits,
 });
 
-module.exports = upload.single('file');
+module.exports = upload;

@@ -27,6 +27,28 @@ const ticketService = {
       throw error.response.data;
     }
   },
+
+  // Lấy chi tiết ticket
+  getTicketById: async (ticketId) => {
+    try {
+      const response = await api.get(`/tickets/${ticketId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
+
+  // Phản hồi ticket (Giảng viên)
+  respondToTicket: async (ticketId, responseText) => {
+    try {
+      const response = await api.put(`/tickets/${ticketId}/respond`, {
+        response_text: responseText
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
 };
 
 export default ticketService;

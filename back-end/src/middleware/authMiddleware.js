@@ -27,6 +27,16 @@ const authMiddleware = {
       return res.status(403).json({ message: 'Yêu cầu quyền Admin.' });
     }
   },
+
+  // Middleware kiểm tra vai trò Giảng viên
+  isLecturer: (req, res, next) => {
+    if (req.user && req.user.roleId === 2) {
+      next();
+    } else {
+      return res.status(403).json({ message: 'Yêu cầu quyền Giảng viên.' });
+    }
+  },
+
   isLecturerOrAdmin: (req, res, next) => {
     if (req.user && (req.user.roleId === 2 || req.user.roleId === 1)) {
       next();
@@ -37,14 +47,12 @@ const authMiddleware = {
 
   // Middleware kiểm tra vai trò Sinh viên
   isStudent: (req, res, next) => {
-    // roleId = 3 (Sinh viên)
     if (req.user && req.user.roleId === 3) {
       next();
     } else {
       return res.status(403).json({ message: 'Yêu cầu quyền Sinh viên.' });
     }
   },
-   // (Tương tự, bạn có thể tạo isLecturer, isStudent nếu cần)
 };
 
 module.exports = authMiddleware;

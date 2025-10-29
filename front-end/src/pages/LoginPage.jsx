@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../assets/LoginPage.css';
 
@@ -23,6 +24,17 @@ const LoginPage = () => {
   return (
     <div className="login-page">
       <div className="login-container">
+        <div style={{
+          fontSize: '5rem',
+          fontWeight: 'bold',
+          color: '#c41e3a',
+          marginBottom: '1rem',
+          textAlign: 'center',
+          fontFamily: 'Arial, sans-serif',
+          letterSpacing: '0.1em'
+        }}>
+          PTIT
+        </div>
         <h1 className="login-title">Đăng nhập</h1>
         <h2 style={{textAlign: 'center', color: '#555', marginTop: '-1rem', marginBottom: '1.5rem'}}>Hệ thống Quản lý Sinh viên</h2>
 
@@ -54,6 +66,19 @@ const LoginPage = () => {
           <button type="submit" className="login-button">
             Đăng nhập
           </button>
+
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <Link 
+              to="/forgot-password" 
+              style={{ 
+                color: '#c41e3a', 
+                textDecoration: 'none',
+                fontSize: '0.95rem'
+              }}
+            >
+              Quên mật khẩu?
+            </Link>
+          </div>
         </form>
       </div>
     </div>

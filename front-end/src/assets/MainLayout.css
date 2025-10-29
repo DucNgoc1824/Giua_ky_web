@@ -111,48 +111,158 @@ body {
   transform: scale(0.95);
 }
 
-.navbar-user {
+/* Navbar Actions */
+.navbar-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-weight: 500;
-  color: var(--text-color);
 }
 
-.navbar-user span {
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--ptit-red-lighter);
-  border-radius: 20px;
-  font-size: 0.95rem;
-}
-
-.navbar-user span::before {
-  content: "👤";
-}
-
-.logout-button {
-  background: linear-gradient(135deg, var(--ptit-red) 0%, var(--ptit-red-dark) 100%);
-  color: white;
+  gap: 0.75rem;
+  background: none;
   border: none;
-  padding: 0.6rem 1.5rem;
-  border-radius: 25px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
   transition: all var(--transition-speed) ease;
-  box-shadow: var(--shadow-sm);
 }
 
-.logout-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+.user-menu-button:hover {
+  background-color: var(--ptit-red-lighter);
 }
 
-.logout-button:active {
-  transform: translateY(0);
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.dropdown-icon {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: transform var(--transition-speed) ease;
+}
+
+.dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+/* User Dropdown */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  min-width: 250px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.dropdown-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.dropdown-name {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.dropdown-email {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0.5rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--ptit-red-lighter);
+  color: var(--ptit-red);
+}
+
+.dropdown-item svg {
+  font-size: 1rem;
 }
 
 /* ==================== SIDEBAR ==================== */
@@ -178,13 +288,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.75rem;
+}
+
+.sidebar-header .sidebar-logo {
+  font-size: 1.5rem;
+  color: var(--ptit-red);
 }
 
 .sidebar-header h3 {
   margin: 0;
   color: var(--ptit-red);
   font-size: 1.1rem;
-  text-align: center;
   font-weight: 700;
 }
 
@@ -214,6 +329,16 @@ body {
   overflow: hidden;
 }
 
+.nav-link .nav-icon {
+  font-size: 1.1rem;
+  min-width: 20px;
+  transition: all var(--transition-speed) ease;
+}
+
+.nav-link span {
+  flex: 1;
+}
+
 .nav-link::before {
   content: "";
   position: absolute;
@@ -235,12 +360,20 @@ body {
   transform: translateX(5px);
 }
 
+.nav-link:hover .nav-icon {
+  transform: scale(1.2);
+}
+
 .nav-link.active {
   color: var(--ptit-red);
   font-weight: 700;
   background: linear-gradient(90deg, var(--ptit-red-lighter) 0%, transparent 100%);
   border-left: 4px solid var(--ptit-red);
   box-shadow: var(--shadow-sm);
+}
+
+.nav-link.active .nav-icon {
+  transform: scale(1.1);
 }
 
 .nav-link.active::after {

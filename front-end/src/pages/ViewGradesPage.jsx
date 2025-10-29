@@ -17,6 +17,7 @@ const ViewGradesPage = () => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedSemester, setSelectedSemester] = useState('');
   const [grades, setGrades] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -90,6 +91,20 @@ const ViewGradesPage = () => {
     }
   }, [selectedSubject, selectedSemester]);
 
+  // Lọc danh sách sinh viên theo từ khóa tìm kiếm
+  const filteredGrades = grades.filter(grade => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    const studentName = (grade.student_name || '').toLowerCase();
+    const studentCode = (grade.student_code || '').toLowerCase();
+    const classCode = (grade.class_code || '').toLowerCase();
+    
+    return studentName.includes(searchLower) || 
+           studentCode.includes(searchLower) ||
+           classCode.includes(searchLower);
+  });
+
   if (isLoading && subjects.length === 0) {
     return <div className="loading-text">Đang tải dữ liệu...</div>;
   }
@@ -151,6 +166,26 @@ const ViewGradesPage = () => {
             ))}
           </select>
         </div>
+
+        <div style={{ flex: 1 }}>
+          <label htmlFor="search-filter" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            Tìm kiếm:
+          </label>
+          <input
+            type="text"
+            id="search-filter"
+            placeholder="Tìm theo tên, mã SV, lớp..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ 
+              width: '100%', 
+              padding: '0.5rem', 
+              borderRadius: '4px', 
+              border: '1px solid #ddd',
+              fontSize: '14px'
+            }}
+          />
+        </div>
       </div>
 
       {/* Thông báo lỗi */}
@@ -174,41 +209,71 @@ const ViewGradesPage = () => {
       ) : (
         <>
           <div style={{ marginBottom: '1rem', fontSize: '14px', color: '#666' }}>
-            Tìm thấy <strong>{grades.length}</strong> sinh viên
+            {searchTerm ? (
+              <>
+                Tìm thấy <strong>{filteredGrades.length}</strong> sinh viên 
+                (trong tổng số <strong>{grades.length}</strong>)
+              </>
+            ) : (
+              <>
+                Tổng số: <strong>{grades.length}</strong> sinh viên
+              </>
+            )}
           </div>
           
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Mã SV</th>
-                <th>Họ tên</th>
-                <th>Lớp</th>
-                {!selectedSemester && <th>Học kỳ</th>}
-                <th>Điểm GK</th>
-                <th>Điểm CK</th>
-                <th>Điểm TB</th>
-              </tr>
-            </thead>
-            <tbody>
-              {grades.map((grade, index) => (
-                <tr key={`${grade.student_id}-${grade.semester || 'all'}`}>
-                  <td>{index + 1}</td>
-                  <td>{grade.student_code}</td>
-                  <td>{grade.student_name}</td>
-                  <td>{grade.class_code}</td>
-                  {!selectedSemester && <td>{grade.semester}</td>}
-                  <td>{grade.midterm_score !== null ? grade.midterm_score : '-'}</td>
-                  <td>{grade.final_score !== null ? grade.final_score : '-'}</td>
-                  <td>
-                    <strong>
-                      {grade.average_score !== null ? grade.average_score : '-'}
-                    </strong>
-                  </td>
+          {filteredGrades.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+              Không tìm thấy sinh viên nào phù hợp với từ khóa "{searchTerm}"
+            </div>
+          ) : (
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Mã SV</th>
+                  <th>Họ tên</th>
+                  <th>Lớp</th>
+                  {!selectedSemester && <th>Học kỳ</th>}
+                  <th>CC (10%)</th>
+                  <th>TH (20%)</th>
+                  <th>GK (20%)</th>
+                  <th>CK (50%)</th>
+                  <th>Tổng</th>
+                  <th>Điểm chữ</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredGrades.map((grade, index) => (
+                  <tr key={`${grade.student_id}-${grade.semester || 'all'}`}>
+                    <td>{index + 1}</td>
+                    <td>{grade.student_code}</td>
+                    <td>{grade.student_name}</td>
+                    <td>{grade.class_code}</td>
+                    {!selectedSemester && <td>{grade.semester}</td>}
+                    <td>{grade.attendance_score !== null ? grade.attendance_score : '-'}</td>
+                    <td>{grade.practice_score !== null ? grade.practice_score : '-'}</td>
+                    <td>{grade.midterm_score !== null ? grade.midterm_score : '-'}</td>
+                    <td>{grade.final_score !== null ? grade.final_score : '-'}</td>
+                    <td>
+                      <strong>
+                        {grade.total_score !== null ? grade.total_score : '-'}
+                      </strong>
+                    </td>
+                    <td>
+                      <strong style={{ 
+                        color: grade.letter_grade && grade.letter_grade.startsWith('A') ? '#10b981' : 
+                               grade.letter_grade && grade.letter_grade.startsWith('B') ? '#3b82f6' :
+                               grade.letter_grade && grade.letter_grade.startsWith('C') ? '#f59e0b' :
+                               grade.letter_grade && grade.letter_grade === 'F' ? '#ef4444' : '#666'
+                      }}>
+                        {grade.letter_grade || '-'}
+                      </strong>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </>
       )}
     </div>

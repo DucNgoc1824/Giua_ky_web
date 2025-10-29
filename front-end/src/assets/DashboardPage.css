@@ -61,60 +61,68 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
-.stat-card {
+/* Quick Actions positioned after stats */
+.admin-dashboard > .quick-actions {
+  margin-bottom: 2rem;
+}
+
+/* Activity Timeline positioned at the bottom */
+.admin-dashboard > .activity-timeline {
+  margin-top: 2rem;
+}
+
+/* ==================== CHARTS GRID ==================== */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
   transition: all 0.3s ease;
-  position: relative;
 }
 
-.stat-card:hover {
+.chart-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #667eea;
 }
 
-.stat-card h3 {
-  margin: 0 0 1rem 0;
-  font-size: 0.9rem;
-  color: #6b7280;
-  text-transform: uppercase;
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.chart-header svg {
+  font-size: 1.5rem;
+  color: #667eea;
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  color: #374151;
 }
-
-.stat-card .stat-number {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--ptit-red);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.stat-card .stat-label {
-  color: #6b7280;
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.stat-icon {
-  position: absolute;
-  right: 1.5rem;
-  top: 1.5rem;
-  font-size: 2.5rem;
-  opacity: 0.15;
-}
-
-/* Different colors for stat cards */
-.stat-students .stat-number { color: #3b82f6; }
-.stat-lecturers .stat-number { color: #10b981; }
-.stat-classes .stat-number { color: #f59e0b; }
-.stat-subjects .stat-number { color: #8b5cf6; }
 
 /* ==================== DASHBOARD FEATURES ==================== */
 .dashboard-features {
@@ -217,6 +225,10 @@
     grid-template-columns: repeat(2, 1fr);
   }
   
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -239,6 +251,15 @@
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .chart-card {
+    padding: 1.5rem;
   }
 
   .features-grid {
