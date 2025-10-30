@@ -10,58 +10,64 @@
 ## ✨ Tính năng chính
 
 ### 🎯 Quản lý & Thống kê
-- 🔐 **Đăng nhập phân quyền** - Admin, Giảng viên, Sinh viên với JWT authentication
-- 📊 **Dashboard thống kê** - Biểu đồ trực quan, phân tích dữ liệu theo thời gian thực
-- 👥 **Quản lý người dùng** - CRUD đầy đủ cho sinh viên, giảng viên
-- � **Quản lý lớp học & môn học** - Tổ chức lớp, phân công giảng viên
+
+-   🔐 **Đăng nhập phân quyền** - Admin, Giảng viên, Sinh viên với JWT authentication
+-   📊 **Dashboard thống kê** - Biểu đồ trực quan, phân tích dữ liệu theo thời gian thực
+-   👥 **Quản lý người dùng** - CRUD đầy đủ cho sinh viên, giảng viên
+-   � **Quản lý lớp học & môn học** - Tổ chức lớp, phân công giảng viên
 
 ### 📝 Học tập & Đánh giá
-- 📝 **Quản lý điểm** - Hệ thống tính điểm tự động (CC 10%, TH 20%, GK 20%, CK 50%)
-- � **Bài tập trực tuyến** - Giao bài, nộp bài, chấm điểm online
-- 📚 **Tài liệu học tập** - Upload/Download tài liệu theo môn học
-- 💬 **Hệ thống hỏi đáp** - Gửi thắc mắc, nhận phản hồi từ giảng viên
+
+-   📝 **Quản lý điểm** - Hệ thống tính điểm tự động (CC 10%, TH 20%, GK 20%, CK 50%)
+-   � **Bài tập trực tuyến** - Giao bài, nộp bài, chấm điểm online
+-   📚 **Tài liệu học tập** - Upload/Download tài liệu theo môn học
+-   💬 **Hệ thống hỏi đáp** - Gửi thắc mắc, nhận phản hồi từ giảng viên
 
 ### 🤖 AI & Tự động hóa
-- 🤖 **AI Chatbot (Google Gemini)** - Trợ lý ảo trả lời thắc mắc tự động
-- 🔍 **RAG System** - Tìm kiếm thông tin từ lịch sử tickets, bài tập, tài liệu
-- 📊 **Confidence Scoring** - Tự động đề xuất tạo ticket khi AI không chắc chắn
-- � **Chat History** - Lưu trữ lịch sử hội thoại với AI
+
+-   🤖 **AI Chatbot (Google Gemini)** - Trợ lý ảo trả lời thắc mắc tự động
+-   🔍 **RAG System** - Tìm kiếm thông tin từ lịch sử tickets, bài tập, tài liệu
+-   📊 **Confidence Scoring** - Tự động đề xuất tạo ticket khi AI không chắc chắn
+-   � **Chat History** - Lưu trữ lịch sử hội thoại với AI
 
 ### 🎨 Trải nghiệm người dùng
-- 🌙 **Dark Mode** - Chế độ tối bảo vệ mắt
-- 📱 **Responsive Design** - Hoạt động mượt mà trên mọi thiết bị
-- 🔑 **Quên mật khẩu** - Xác thực OTP qua email
-- ⚡ **Real-time Updates** - Cập nhật dữ liệu theo thời gian thực
+
+-   🌙 **Dark Mode** - Chế độ tối bảo vệ mắt
+-   📱 **Responsive Design** - Hoạt động mượt mà trên mọi thiết bị
+-   🔑 **Quên mật khẩu** - Xác thực OTP qua email
+-   ⚡ **Real-time Updates** - Cập nhật dữ liệu theo thời gian thực
 
 ## 🛠️ Công nghệ sử dụng
 
 ### Backend
-- **Node.js** v16+ - JavaScript runtime
-- **Express.js** v5 - Web framework
-- **MySQL** v8.0 - Relational database
-- **JWT** - Xác thực & phân quyền
-- **bcryptjs** - Mã hóa mật khẩu
-- **Multer** - Upload files
-- **Google Gemini AI** - AI chatbot engine
-- **@google/generative-ai** - Gemini API client
+
+-   **Node.js** v16+ - JavaScript runtime
+-   **Express.js** v5 - Web framework
+-   **MySQL** v8.0 - Relational database
+-   **JWT** - Xác thực & phân quyền
+-   **bcryptjs** - Mã hóa mật khẩu
+-   **Multer** - Upload files
+-   **Google Gemini AI** - AI chatbot engine
+-   **@google/generative-ai** - Gemini API client
 
 ### Frontend
-- **React** v18.3 - UI library
-- **Vite** - Build tool & dev server
-- **React Router** v6 - Client-side routing
-- **Axios** - HTTP client
-- **React Toastify** - Notifications
-- **React Icons** - Icon library
-- **React Select** - Custom dropdown component
-- **Recharts** - Data visualization
+
+-   **React** v18.3 - UI library
+-   **Vite** - Build tool & dev server
+-   **React Router** v6 - Client-side routing
+-   **Axios** - HTTP client
+-   **React Toastify** - Notifications
+-   **React Icons** - Icon library
+-   **React Select** - Custom dropdown component
+-   **Recharts** - Data visualization
 
 ## � Yêu cầu hệ thống
 
-- **Node.js** >= 16.x ([Download](https://nodejs.org/))
-- **MySQL** >= 8.0 ([Download](https://dev.mysql.com/downloads/mysql/))
-- **npm** hoặc **yarn**
-- **Git** ([Download](https://git-scm.com/))
-- **Google Gemini API Key** (Miễn phí tại [Google AI Studio](https://aistudio.google.com/app/apikey))
+-   **Node.js** >= 16.x ([Download](https://nodejs.org/))
+-   **MySQL** >= 8.0 ([Download](https://dev.mysql.com/downloads/mysql/))
+-   **npm** hoặc **yarn**
+-   **Git** ([Download](https://git-scm.com/))
+-   **Google Gemini API Key** (Miễn phí tại [Google AI Studio](https://aistudio.google.com/app/apikey))
 
 ## 🚀 Hướng dẫn cài đặt
 
@@ -134,7 +140,7 @@ mysql -u root -p qlsv < database/sample_grades_80.sql
 # Tạo bảng Chatbot_Logs
 mysql -u root -p qlsv < database/create_chatbot_logs.sql
 
-````
+```
 
 ### 4. Cài đặt Frontend**Trên Linux/Mac:**
 
@@ -148,7 +154,7 @@ npm install```
 
 ````
 
-```
+````
 
 ### Bước 5: Cài đặt Frontend
 
@@ -157,7 +163,7 @@ Mở terminal mới:
 ```bash
 cd front-end
 npm install
-```
+````
 
 ### Bước 6: Lấy Google Gemini API Key (Miễn phí)
 
@@ -194,16 +200,17 @@ Mở trình duyệt và truy cập: `http://localhost:5173`
 
 ## 👤 Tài khoản demo
 
-| Role       | Username | Password | Mô tả |
-|------------|----------|----------|-------|
-| 👨‍💼 Admin      | `admin`    | `password` | Quản trị viên - Full quyền |
-| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm, phản hồi |
+| Role          | Username          | Password   | Mô tả                                   |
+| ------------- | ----------------- | ---------- | --------------------------------------- |
+| 👨‍💼 Admin      | `admin`           | `password` | Quản trị viên - Full quyền              |
+| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm, phản hồi        |
 | 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password` | Xem điểm, nộp bài, hỏi đáp, **chat AI** |
 
 **Ví dụ đăng nhập:**
-- Admin: `admin` / `password`
-- Giảng viên: `gv001` / `password`
-- Sinh viên: `sv001` / `password` ⭐ (Có AI Chatbot)
+
+-   Admin: `admin` / `password`
+-   Giảng viên: `gv001` / `password`
+-   Sinh viên: `sv001` / `password` ⭐ (Có AI Chatbot)
 
 ## 🤖 Hướng dẫn sử dụng AI Chatbot
 
@@ -225,15 +232,16 @@ Mở trình duyệt và truy cập: `http://localhost:5173`
 ```
 
 ### Tính năng:
-- ✅ Trả lời dựa trên lịch sử tickets, bài tập, tài liệu
-- ✅ Tự động đề xuất "Gửi ticket" nếu AI không chắc chắn
-- ✅ Lưu lịch sử chat
-- ✅ Có thể search môn học
-- ✅ Responsive trên mobile
+
+-   ✅ Trả lời dựa trên lịch sử tickets, bài tập, tài liệu
+-   ✅ Tự động đề xuất "Gửi ticket" nếu AI không chắc chắn
+-   ✅ Lưu lịch sử chat
+-   ✅ Có thể search môn học
+-   ✅ Responsive trên mobile
 
 ## 📁 Cấu trúc dự án
 
-```bash
+````bash
 Giua_ky_web/
 ├── back-end/
 │   ├── database/
@@ -293,7 +301,7 @@ Giua_ky_web/
 
     └── App.jsx```
 
-```````
+````
 
 ## 👤 Tài khoản mẫu
 
@@ -315,11 +323,12 @@ Giua_ky_web/
 12. **Chatbot_Logs** 🤖 - Lịch sử chat AI (mới)
 
 ### Dữ liệu mẫu có sẵn:
-- ✅ 80 sinh viên (sv001-sv080)
-- ✅ 3 giảng viên (gv001-gv003)
-- ✅ 1 admin
-- ✅ 240+ điểm số mẫu
-- ✅ Dữ liệu tickets, assignments, course materials
+
+-   ✅ 80 sinh viên (sv001-sv080)
+-   ✅ 3 giảng viên (gv001-gv003)
+-   ✅ 1 admin
+-   ✅ 240+ điểm số mẫu
+-   ✅ Dữ liệu tickets, assignments, course materials
 
 ## 🐛 Troubleshooting (Xử lý lỗi)
 
@@ -328,6 +337,7 @@ Giua_ky_web/
 **Triệu chứng:** `Error: Access denied for user 'root'@'localhost'`
 
 **Giải pháp:**
+
 ```bash
 # Kiểm tra MySQL đang chạy
 mysql -u root -p
@@ -341,6 +351,7 @@ DB_NAME=qlsv
 ### ❌ Lỗi "Database qlsv does not exist"
 
 **Giải pháp:**
+
 ```sql
 CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
@@ -350,6 +361,7 @@ CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 **Triệu chứng:** `ENOENT: no such file or directory, open 'uploads/...'`
 
 **Giải pháp:**
+
 ```bash
 # Tạo thư mục uploads
 mkdir back-end\uploads
@@ -360,14 +372,16 @@ mkdir back-end\uploads
 **Triệu chứng:** `JsonWebTokenError: invalid signature`
 
 **Giải pháp:**
-- Đảm bảo `JWT_SECRET` trong `.env` có **ít nhất 32 ký tự**
-- Đăng xuất và đăng nhập lại
+
+-   Đảm bảo `JWT_SECRET` trong `.env` có **ít nhất 32 ký tự**
+-   Đăng xuất và đăng nhập lại
 
 ### ❌ Lỗi AI Chatbot không hoạt động
 
 **Triệu chứng:** `Error: API key not valid`
 
 **Giải pháp:**
+
 1. Lấy API key mới tại: https://aistudio.google.com/app/apikey
 2. Thêm vào `.env`: `GEMINI_API_KEY=your_key_here`
 3. Restart backend: `npm start`
@@ -377,6 +391,7 @@ mkdir back-end\uploads
 **Triệu chứng:** `Error: listen EADDRINUSE: address already in use :::8080`
 
 **Giải pháp:**
+
 ```powershell
 # Tìm process đang dùng port 8080
 netstat -ano | findstr :8080
@@ -388,65 +403,73 @@ taskkill /PID <PID> /F
 ## 📚 API Documentation
 
 ### Authentication
-- `POST /api/auth/login` - Đăng nhập
-- `POST /api/auth/forgot-password` - Quên mật khẩu
-- `POST /api/auth/verify-otp` - Xác thực OTP
-- `POST /api/auth/reset-password` - Đặt lại mật khẩu
+
+-   `POST /api/auth/login` - Đăng nhập
+-   `POST /api/auth/forgot-password` - Quên mật khẩu
+-   `POST /api/auth/verify-otp` - Xác thực OTP
+-   `POST /api/auth/reset-password` - Đặt lại mật khẩu
 
 ### Chatbot 🤖 (Mới)
-- `POST /api/chatbot/ask` - Gửi câu hỏi cho AI
-- `GET /api/chatbot/history` - Lấy lịch sử chat
+
+-   `POST /api/chatbot/ask` - Gửi câu hỏi cho AI
+-   `GET /api/chatbot/history` - Lấy lịch sử chat
 
 ### Grades
-- `GET /api/grades/student/:id` - Xem điểm sinh viên
-- `POST /api/grades` - Nhập điểm (Giảng viên)
-- `PUT /api/grades/:id` - Sửa điểm
+
+-   `GET /api/grades/student/:id` - Xem điểm sinh viên
+-   `POST /api/grades` - Nhập điểm (Giảng viên)
+-   `PUT /api/grades/:id` - Sửa điểm
 
 ### Tickets
-- `GET /api/tickets` - Danh sách tickets
-- `POST /api/tickets` - Tạo ticket mới
-- `PUT /api/tickets/:id/respond` - Phản hồi ticket
+
+-   `GET /api/tickets` - Danh sách tickets
+-   `POST /api/tickets` - Tạo ticket mới
+-   `PUT /api/tickets/:id/respond` - Phản hồi ticket
 
 ### Assignments
-- `GET /api/assignments` - Danh sách bài tập
-- `POST /api/assignments` - Tạo bài tập (Giảng viên)
-- `POST /api/submissions` - Nộp bài (Sinh viên)
+
+-   `GET /api/assignments` - Danh sách bài tập
+-   `POST /api/assignments` - Tạo bài tập (Giảng viên)
+-   `POST /api/submissions` - Nộp bài (Sinh viên)
 
 > 📖 **Chi tiết đầy đủ:** Xem file `back-end/src/routes/` để biết thêm endpoints
 
 ## ⚠️ Lưu ý quan trọng
 
 ### Bảo mật:
-- 🔒 **KHÔNG push file `.env` lên Git** (đã có trong `.gitignore`)
-- 🔑 Đổi `JWT_SECRET` thành chuỗi phức tạp trước khi deploy production
-- 🔐 Đổi mật khẩu mặc định của tài khoản admin
-- 🚫 KHÔNG share `GEMINI_API_KEY` công khai
+
+-   🔒 **KHÔNG push file `.env` lên Git** (đã có trong `.gitignore`)
+-   🔑 Đổi `JWT_SECRET` thành chuỗi phức tạp trước khi deploy production
+-   🔐 Đổi mật khẩu mặc định của tài khoản admin
+-   🚫 KHÔNG share `GEMINI_API_KEY` công khai
 
 ### Production:
-- ☁️ File upload nên dùng **Cloud Storage** (AWS S3, Cloudinary) thay vì lưu local
-- 🗄️ OTP hiện lưu trong memory, nên chuyển sang **Redis** cho production
-- 🔄 Cấu hình **CORS** phù hợp với domain thực tế
-- 🚀 Sử dụng **PM2** để chạy Node.js ổn định
+
+-   ☁️ File upload nên dùng **Cloud Storage** (AWS S3, Cloudinary) thay vì lưu local
+-   🗄️ OTP hiện lưu trong memory, nên chuyển sang **Redis** cho production
+-   🔄 Cấu hình **CORS** phù hợp với domain thực tế
+-   🚀 Sử dụng **PM2** để chạy Node.js ổn định
 
 ### Giới hạn:
-- 📊 Gemini API Free: **60 requests/phút** (đủ cho học tập)
-- 💾 Upload file tối đa: **10MB** (có thể tăng trong `uploadMiddleware.js`)
-- 🔐 OTP hết hiệu lực sau: **5 phút**
+
+-   📊 Gemini API Free: **60 requests/phút** (đủ cho học tập)
+-   💾 Upload file tối đa: **10MB** (có thể tăng trong `uploadMiddleware.js`)
+-   🔐 OTP hết hiệu lực sau: **5 phút**
 
 ## 🎯 Roadmap & Tính năng tương lai
 
-- [ ] 📧 Gửi email thông báo điểm, deadline
-- [ ] 📱 Mobile app (React Native)
-- [ ] 🔔 Hệ thống notification real-time (Socket.io)
-- [ ] 📊 Thêm biểu đồ phân tích nâng cao
-- [ ] 🎤 Voice input cho AI chatbot
-- [ ] 🌐 Multi-language support
-- [ ] 📄 Export điểm ra Excel/PDF
-- [ ] 🤝 Tích hợp Microsoft Teams/Google Classroom
+-   [ ] 📧 Gửi email thông báo điểm, deadline
+-   [ ] 📱 Mobile app (React Native)
+-   [ ] 🔔 Hệ thống notification real-time (Socket.io)
+-   [ ] 📊 Thêm biểu đồ phân tích nâng cao
+-   [ ] 🎤 Voice input cho AI chatbot
+-   [ ] 🌐 Multi-language support
+-   [ ] 📄 Export điểm ra Excel/PDF
+-   [ ] 🤝 Tích hợp Microsoft Teams/Google Classroom
 
 ## 🤝 Đóng góp (Contributing)
 
-Mọi đóng góp đều được chào đón! 
+Mọi đóng góp đều được chào đón!
 
 1. Fork dự án
 2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
@@ -460,16 +483,16 @@ MIT License - Dự án học tập tại **Học viện Công nghệ Bưu chính
 
 ## 👨‍💻 Tác giả
 
-- **GitHub:** [@DucNgoc1824](https://github.com/DucNgoc1824)
-- **Repository:** [Giua_ky_web](https://github.com/DucNgoc1824/Giua_ky_web)
-- **Email:** ducngoc1824@ptit.edu.vn
+-   **GitHub:** [@DucNgoc1824](https://github.com/DucNgoc1824)
+-   **Repository:** [Giua_ky_web](https://github.com/DucNgoc1824/Giua_ky_web)
+-   **Email:** ducngoc1824@ptit.edu.vn
 
 ## 🙏 Acknowledgments
 
-- 🎓 **PTIT** - Học viện Công nghệ Bưu chính Viễn thông
-- 🤖 **Google Gemini AI** - AI chatbot engine
-- 🎨 **React Icons** - Beautiful icons
-- 📊 **Recharts** - Chart library
+-   🎓 **PTIT** - Học viện Công nghệ Bưu chính Viễn thông
+-   🤖 **Google Gemini AI** - AI chatbot engine
+-   🎨 **React Icons** - Beautiful icons
+-   📊 **Recharts** - Chart library
 
 ---
 
@@ -719,3 +742,4 @@ Nếu có vấn đề, tạo [Issue](https://github.com/DucNgoc1824/Giua_ky_web/
 ---
 
 **⭐ Nếu bạn thấy dự án hữu ích, hãy cho một star nhé!**
+````
