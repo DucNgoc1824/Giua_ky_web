@@ -14,6 +14,7 @@ const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const courseMaterialRoutes = require('./src/routes/courseMaterialRoutes');
 const assignmentRoutes = require('./src/routes/assignmentRoutesNew');
 const ticketRoutes = require('./src/routes/ticketRoutes');
+const chatbotRoutes = require('./src/routes/chatbotRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -42,6 +43,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/materials', courseMaterialRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 app.use('/uploads', express.static('uploads'));
 
 app.listen(PORT, () => {

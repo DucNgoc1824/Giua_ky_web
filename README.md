@@ -1,130 +1,138 @@
-# 🎓 Hệ Thống Quản Lý Sinh Viên PTIT# 🎓 Hệ Thống Quản Lý Sinh Viên PTIT
+# 🎓 Hệ Thống Quản Lý Sinh Viên PTIT
 
-Ứng dụng web full-stack quản lý sinh viên với React, Node.js và MySQL.Ứng dụng web full-stack quản lý sinh viên với React, Node.js và MySQL.
+> Ứng dụng web full-stack quản lý sinh viên với React, Node.js, MySQL và AI Chatbot 🤖
 
-## ✨ Tính năng## ✨ Tính năng
+[![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
--   🔐 Đăng nhập phân quyền (Admin, Giảng viên, Sinh viên)- 🔐 Đăng nhập phân quyền (Admin, Giảng viên, Sinh viên)
+## ✨ Tính năng chính
 
--   📊 Dashboard thống kê với biểu đồ- 📊 Dashboard thống kê với biểu đồ
+### 🎯 Quản lý & Thống kê
+- 🔐 **Đăng nhập phân quyền** - Admin, Giảng viên, Sinh viên với JWT authentication
+- 📊 **Dashboard thống kê** - Biểu đồ trực quan, phân tích dữ liệu theo thời gian thực
+- 👥 **Quản lý người dùng** - CRUD đầy đủ cho sinh viên, giảng viên
+- � **Quản lý lớp học & môn học** - Tổ chức lớp, phân công giảng viên
 
--   📝 Quản lý điểm (CC 10%, TH 20%, GK 20%, CK 50%)- 📝 Quản lý điểm (CC 10%, TH 20%, GK 20%, CK 50%)
+### 📝 Học tập & Đánh giá
+- 📝 **Quản lý điểm** - Hệ thống tính điểm tự động (CC 10%, TH 20%, GK 20%, CK 50%)
+- � **Bài tập trực tuyến** - Giao bài, nộp bài, chấm điểm online
+- 📚 **Tài liệu học tập** - Upload/Download tài liệu theo môn học
+- 💬 **Hệ thống hỏi đáp** - Gửi thắc mắc, nhận phản hồi từ giảng viên
 
--   📚 Upload/Download tài liệu học tập- 📚 Upload/Download tài liệu học tập
+### 🤖 AI & Tự động hóa
+- 🤖 **AI Chatbot (Google Gemini)** - Trợ lý ảo trả lời thắc mắc tự động
+- 🔍 **RAG System** - Tìm kiếm thông tin từ lịch sử tickets, bài tập, tài liệu
+- 📊 **Confidence Scoring** - Tự động đề xuất tạo ticket khi AI không chắc chắn
+- � **Chat History** - Lưu trữ lịch sử hội thoại với AI
 
--   💬 Hệ thống hỏi đáp với phản hồi- 💬 Hệ thống hỏi đáp với phản hồi
+### 🎨 Trải nghiệm người dùng
+- 🌙 **Dark Mode** - Chế độ tối bảo vệ mắt
+- 📱 **Responsive Design** - Hoạt động mượt mà trên mọi thiết bị
+- 🔑 **Quên mật khẩu** - Xác thực OTP qua email
+- ⚡ **Real-time Updates** - Cập nhật dữ liệu theo thời gian thực
 
--   📋 Quản lý bài tập và nộp bài- 📋 Quản lý bài tập và nộp bài
+## 🛠️ Công nghệ sử dụng
 
--   🔑 Quên mật khẩu (OTP)- 🔑 Quên mật khẩu (OTP)
+### Backend
+- **Node.js** v16+ - JavaScript runtime
+- **Express.js** v5 - Web framework
+- **MySQL** v8.0 - Relational database
+- **JWT** - Xác thực & phân quyền
+- **bcryptjs** - Mã hóa mật khẩu
+- **Multer** - Upload files
+- **Google Gemini AI** - AI chatbot engine
+- **@google/generative-ai** - Gemini API client
 
--   🌙 Dark mode- 🌙 Dark mode
+### Frontend
+- **React** v18.3 - UI library
+- **Vite** - Build tool & dev server
+- **React Router** v6 - Client-side routing
+- **Axios** - HTTP client
+- **React Toastify** - Notifications
+- **React Icons** - Icon library
+- **React Select** - Custom dropdown component
+- **Recharts** - Data visualization
 
-## 🛠️ Công nghệ## 🛠️ Công nghệ
+## � Yêu cầu hệ thống
 
-**Backend:** Node.js, Express, MySQL, JWT, bcrypt, Multer **Backend:** Node.js, Express, MySQL, JWT, bcrypt, Multer
-
-**Frontend:** React 18, Vite, React Router, Axios, React Toastify**Frontend:** React 18, Vite, React Router, Axios, React Toastify
-
-## 📦 Yêu cầu### Backend
-
--   Node.js >= 16.x- **Node.js** - Runtime Environment
-
--   MySQL >= 8.0- **Express.js 5** - Web Framework
-
--   npm hoặc yarn- **MySQL** - Database
-
--   **JWT** - Authentication
-
-## 🚀 Cài đặt- **bcryptjs** - Password Hashing
-
--   **Multer** - File Upload
-
-### 1. Clone repository
-
-## 💻 Yêu cầu hệ thống
-
-````bash
-
-git clone https://github.com/DucNgoc1824/Giua_ky_web.git-   **Node.js** >= 16.x
-
-cd Giua_ky_web-   **MySQL** >= 8.0
-
-```-   **npm** hoặc **yarn**
-
-
-
-### 2. Cài đặt Backend## 📦 Yêu cầu hệ thống
-
-
-
-```bash- **Node.js**: >= 16.x
-
-cd back-end- **MySQL**: >= 8.0
-
-npm install- **npm** hoặc **yarn**
-
-````
+- **Node.js** >= 16.x ([Download](https://nodejs.org/))
+- **MySQL** >= 8.0 ([Download](https://dev.mysql.com/downloads/mysql/))
+- **npm** hoặc **yarn**
+- **Git** ([Download](https://git-scm.com/))
+- **Google Gemini API Key** (Miễn phí tại [Google AI Studio](https://aistudio.google.com/app/apikey))
 
 ## 🚀 Hướng dẫn cài đặt
 
-**Tạo file `.env`:**
+### Bước 1: Clone repository
 
-````env### 1. Clone repository
+```bash
+git clone https://github.com/DucNgoc1824/Giua_ky_web.git
 
+cd Giua_ky_web
+```
+
+### Bước 2: Cài đặt Backend
+
+```bash
+cd back-end
+npm install
+```
+
+Tạo file `.env` trong thư mục `back-end/`:
+
+```env
+# Database Configuration
 DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=qlsv
 
-DB_USER=root```bash
+# JWT Secret (tối thiểu 32 ký tự)
+JWT_SECRET=your_super_secret_jwt_key_min_32_chars
 
-DB_PASSWORD=your_passwordgit clone https://github.com/DucNgoc1824/Giua_ky_web.git
-
-DB_NAME=qlsvcd Giua_ky_web
-
-JWT_SECRET=your_secret_key_min_32_characters```
-
+# Server Port
 PORT=8080
 
-```### 2. Cài đặt Backend
+# Google Gemini AI API Key (Lấy miễn phí tại: https://aistudio.google.com/app/apikey)
+GEMINI_API_KEY=your_gemini_api_key_here
+```
 
+### Bước 3: Tạo Database
 
+Mở MySQL và chạy:
 
-### 3. Tạo Database```bash
-
-cd back-end
-
-**Tạo database:**npm install
-
-```sql```
-
+```sql
 CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-```### 3. Cấu hình Database
+### Bước 4: Import dữ liệu
 
+**Trên Windows (PowerShell):**
 
+```powershell
+# Import schema
+Get-Content database\schema.sql | mysql -u root -p qlsv
 
-**Import schema và dữ liệu:**#### 3.1. Tạo database MySQL
-
-
-
-Windows (PowerShell):```sql
-
-```powershellCREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-Get-Content database\schema.sql | mysql -u root -p qlsv```
-
+# Import dữ liệu mẫu (80 sinh viên)
 Get-Content database\sample_grades_80.sql | mysql -u root -p qlsv
 
-```#### 3.2. Import schema và dữ liệu mẫu
+# Tạo bảng Chatbot_Logs (cho AI chatbot)
+Get-Content database\create_chatbot_logs.sql | mysql -u root -p qlsv
+```
 
+**Trên Linux/Mac:**
 
+```bash
+# Import schema
+mysql -u root -p qlsv < database/schema.sql
 
-Linux/Mac:**Trên Windows (PowerShell):**
+# Import dữ liệu mẫu
+mysql -u root -p qlsv < database/sample_grades_80.sql
 
-```bash```powershell
-
-mysql -u root -p qlsv < database/schema.sqlGet-Content database\schema.sql | mysql -u root -p qlsv
-
-mysql -u root -p qlsv < database/sample_grades_80.sqlGet-Content database\sample_grades_80.sql | mysql -u root -p qlsv
+# Tạo bảng Chatbot_Logs
+mysql -u root -p qlsv < database/create_chatbot_logs.sql
 
 ````
 
@@ -140,97 +148,148 @@ npm install```
 
 ````
 
-#### 3.3. Chạy migrations (tùy chọn - nếu chưa có trong schema.sql)
+```
 
-### 5. Chạy ứng dụng
+### Bước 5: Cài đặt Frontend
 
-````powershell
+Mở terminal mới:
 
-**Terminal 1 - Backend:**Get-Content database\add_response_to_tickets.sql | mysql -u root -p qlsv
+```bash
+cd front-end
+npm install
+```
 
-```bashGet-Content database\create_assignments_tables.sql | mysql -u root -p qlsv
+### Bước 6: Lấy Google Gemini API Key (Miễn phí)
 
-cd back-end```
+1. Truy cập: https://aistudio.google.com/app/apikey
+2. Đăng nhập bằng tài khoản Google
+3. Click **"Create API Key"**
+4. Copy API key và paste vào file `.env` ở Backend (biến `GEMINI_API_KEY`)
 
+> 💡 **Lưu ý:** API key miễn phí với 60 requests/phút, đủ cho mục đích học tập!
+
+### Bước 7: Chạy ứng dụng
+
+**Terminal 1 - Backend:**
+
+```bash
+cd back-end
 npm start
+```
 
-# Chạy tại http://localhost:8080### 4. Cấu hình Backend Environment
-
-````
-
-Tạo file `.env` trong folder `back-end/`:
+✅ Backend chạy tại: `http://localhost:8080`
 
 **Terminal 2 - Frontend:**
 
-`bash`env
+```bash
+cd front-end
+npm run dev
+```
 
-cd front-end# Database
+✅ Frontend chạy tại: `http://localhost:5173`
 
-npm run devDB_HOST=localhost
+### Bước 8: Đăng nhập
 
-# Chạy tại http://localhost:5173DB_USER=root
+Mở trình duyệt và truy cập: `http://localhost:5173`
 
-```````DB_PASSWORD=your_mysql_password
+## 👤 Tài khoản demo
 
-DB_NAME=qlsv
+| Role       | Username | Password | Mô tả |
+|------------|----------|----------|-------|
+| 👨‍💼 Admin      | `admin`    | `password` | Quản trị viên - Full quyền |
+| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm, phản hồi |
+| 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password` | Xem điểm, nộp bài, hỏi đáp, **chat AI** |
 
-## 👤 Tài khoản mẫu
+**Ví dụ đăng nhập:**
+- Admin: `admin` / `password`
+- Giảng viên: `gv001` / `password`
+- Sinh viên: `sv001` / `password` ⭐ (Có AI Chatbot)
 
-# JWT
+## 🤖 Hướng dẫn sử dụng AI Chatbot
 
-| Role       | Username | Password |JWT_SECRET=your_super_secret_key_here_change_in_production
+### Dành cho Sinh viên:
 
-|------------|----------|----------|
+1. Đăng nhập bằng tài khoản sinh viên (`sv001` - `sv080`)
+2. Vào menu **"Hỏi đáp/Góp ý"**
+3. Click vào nút **🤖 Chatbot** màu tím ở góc dưới phải
+4. Chọn môn học từ dropdown
+5. Gõ câu hỏi và nhận câu trả lời từ AI
 
-| Admin      | admin    | password |# Server
+### Các câu hỏi ví dụ:
 
-| Giảng viên | gv001-gv003 | password |PORT=8080
+```
+- "Deadline nộp bài tập của môn Lập trình game cơ bản là khi nào?"
+- "Hướng dẫn cách làm bài tập về game"
+- "Tài liệu học tập môn này ở đâu?"
+- "Cách tính điểm môn học này như thế nào?"
+```
 
-| Sinh viên  | sv001-sv080 | password |```
+### Tính năng:
+- ✅ Trả lời dựa trên lịch sử tickets, bài tập, tài liệu
+- ✅ Tự động đề xuất "Gửi ticket" nếu AI không chắc chắn
+- ✅ Lưu lịch sử chat
+- ✅ Có thể search môn học
+- ✅ Responsive trên mobile
 
+## 📁 Cấu trúc dự án
 
-
-## 📁 Cấu trúc### 5. Cài đặt Frontend
-
-
-
-``````bash
-
-Giua_ky_web/cd ../front-end
-
-├── back-end/npm install
-
-│   ├── database/          # SQL schemas (schema.sql, sample_grades_80.sql)```
-
+```bash
+Giua_ky_web/
+├── back-end/
+│   ├── database/
+│   │   ├── schema.sql                    # Database schema
+│   │   ├── sample_grades_80.sql          # Dữ liệu mẫu 80 sinh viên
+│   │   └── create_chatbot_logs.sql       # Bảng lưu chat history
 │   ├── src/
-
-│   │   ├── config/        # Database config### 6. Chạy ứng dụng
-
-│   │   ├── controllers/   # Business logic
-
-│   │   ├── models/        # Database queries#### Terminal 1 - Backend:
-
-│   │   ├── routes/        # API endpoints```bash
-
-│   │   ├── middleware/    # Auth & uploadcd back-end
-
-│   │   └── utils/         # Helpers (OTP)npm start
-
-│   ├── uploads/           # Uploaded files# Server chạy tại: http://localhost:8080
-
-│   └── server.js```
-
+│   │   ├── config/
+│   │   │   └── db.js                     # Kết nối MySQL
+│   │   ├── controllers/
+│   │   │   ├── authController.js         # Login, forgot password
+│   │   │   ├── chatbotController.js      # 🤖 AI Chatbot logic
+│   │   │   ├── gradeController.js        # Quản lý điểm
+│   │   │   ├── assignmentController.js   # Quản lý bài tập
+│   │   │   └── ...
+│   │   ├── models/                       # Database queries
+│   │   ├── routes/
+│   │   │   ├── chatbotRoutes.js          # 🤖 API chatbot
+│   │   │   ├── authRoutes.js             # API auth
+│   │   │   └── ...
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js         # JWT verification
+│   │   │   └── uploadMiddleware.js       # File upload
+│   │   └── utils/
+│   │       └── otpStore.js               # OTP management
+│   ├── uploads/                          # Thư mục lưu files
+│   ├── .env                              # ⚠️ Environment variables (KHÔNG push lên Git)
+│   ├── package.json
+│   └── server.js                         # Entry point
+│
 └── front-end/
-
-    ├── src/#### Terminal 2 - Frontend:
-
-    │   ├── components/    # Reusable components```bash
-
-    │   ├── pages/         # Page componentscd front-end
-
-    │   ├── services/      # API callsnpm run dev
-
-    │   └── context/       # Auth & Theme# App chạy tại: http://localhost:5173
+    ├── src/
+    │   ├── components/
+    │   │   ├── ChatWidget.jsx            # 🤖 AI Chatbot UI
+    │   │   ├── Navbar.jsx                # Navigation bar
+    │   │   ├── Sidebar.jsx               # Sidebar menu
+    │   │   └── ...
+    │   ├── pages/
+    │   │   ├── LoginPage.jsx             # Trang đăng nhập
+    │   │   ├── DashboardPage.jsx         # Dashboard thống kê
+    │   │   ├── TicketInboxPage.jsx       # Hỏi đáp (có Chatbot)
+    │   │   └── ...
+    │   ├── services/
+    │   │   ├── api.js                    # Axios config
+    │   │   ├── chatbotService.js         # 🤖 Chatbot API calls
+    │   │   └── ...
+    │   ├── context/
+    │   │   ├── AuthContext.jsx           # Authentication state
+    │   │   └── ThemeContext.jsx          # Dark mode state
+    │   ├── assets/
+    │   │   ├── ChatWidget.css            # 🤖 Chatbot styles
+    │   │   └── ...
+    │   ├── App.jsx                       # Root component
+    │   └── main.jsx                      # Entry point
+    ├── package.json
+    └── vite.config.js                    # Vite configuration
 
     └── App.jsx```
 
@@ -238,89 +297,189 @@ Giua_ky_web/cd ../front-end
 
 ## 👤 Tài khoản mẫu
 
-## 🗄️ Database
+## 🗄️ Database Schema
 
-### Admin
+### Bảng chính (12 tables):
 
-11 bảng: Users, Roles, Students, Lecturers, Classes, Subjects, Grades, Tickets, Assignments, Submissions, Course_Materials, Lecturer_Assignments- **Username**: `admin`
+1. **Users** - Tài khoản người dùng
+2. **Roles** - Phân quyền (Admin, Giảng viên, Sinh viên)
+3. **Students** - Thông tin sinh viên
+4. **Lecturers** - Thông tin giảng viên
+5. **Classes** - Lớp học
+6. **Subjects** - Môn học
+7. **Grades** - Điểm số (CC, TH, GK, CK)
+8. **Tickets** - Hệ thống hỏi đáp
+9. **Assignments** - Bài tập
+10. **Submissions** - Bài nộp
+11. **Course_Materials** - Tài liệu học tập
+12. **Chatbot_Logs** 🤖 - Lịch sử chat AI (mới)
 
--   **Password**: `password`
+### Dữ liệu mẫu có sẵn:
+- ✅ 80 sinh viên (sv001-sv080)
+- ✅ 3 giảng viên (gv001-gv003)
+- ✅ 1 admin
+- ✅ 240+ điểm số mẫu
+- ✅ Dữ liệu tickets, assignments, course materials
 
-**Dữ liệu mẫu:**
+## 🐛 Troubleshooting (Xử lý lỗi)
 
--   80 sinh viên (sv001-sv080)### Giảng viên
+### ❌ Lỗi kết nối Database
 
--   3 giảng viên (gv001-gv003)- **Username**: `gv001`, `gv002`, `gv003`
+**Triệu chứng:** `Error: Access denied for user 'root'@'localhost'`
 
--   1 admin (admin)- **Password**: `password`
+**Giải pháp:**
+```bash
+# Kiểm tra MySQL đang chạy
+mysql -u root -p
 
--   240 điểm số
+# Kiểm tra lại thông tin trong .env
+DB_USER=root
+DB_PASSWORD=your_correct_password
+DB_NAME=qlsv
+```
 
-### Sinh viên
+### ❌ Lỗi "Database qlsv does not exist"
 
-## 🐛 Troubleshooting- **Username**: `sv001`, `sv002`, ..., `sv080`
+**Giải pháp:**
+```sql
+CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
--   **Password**: `password`
+### ❌ Lỗi Upload File
 
-**Lỗi kết nối database:**
+**Triệu chứng:** `ENOENT: no such file or directory, open 'uploads/...'`
 
--   Kiểm tra MySQL đang chạy: `mysql -u root -p`## 📁 Cấu trúc dự án
+**Giải pháp:**
+```bash
+# Tạo thư mục uploads
+mkdir back-end\uploads
+```
 
--   Kiểm tra thông tin trong `.env`
+### ❌ Lỗi JWT Invalid Token
 
--   Đảm bảo database `qlsv` đã tạo```
+**Triệu chứng:** `JsonWebTokenError: invalid signature`
 
-Giua_ky_web/
+**Giải pháp:**
+- Đảm bảo `JWT_SECRET` trong `.env` có **ít nhất 32 ký tự**
+- Đăng xuất và đăng nhập lại
 
-**Lỗi upload file:**├── back-end/
+### ❌ Lỗi AI Chatbot không hoạt động
 
-````bash│ ├── database/          # SQL schemas & migrations
+**Triệu chứng:** `Error: API key not valid`
 
-mkdir back-end\uploads│   ├── scripts/           # Utility scripts
+**Giải pháp:**
+1. Lấy API key mới tại: https://aistudio.google.com/app/apikey
+2. Thêm vào `.env`: `GEMINI_API_KEY=your_key_here`
+3. Restart backend: `npm start`
 
-```│   ├── src/
+### ❌ Lỗi Port đã được sử dụng
 
-│   │   ├── config/        # Database config
+**Triệu chứng:** `Error: listen EADDRINUSE: address already in use :::8080`
 
-**Lỗi JWT:**│   │   ├── controllers/   # Business logic
+**Giải pháp:**
+```powershell
+# Tìm process đang dùng port 8080
+netstat -ano | findstr :8080
 
-- Đảm bảo `JWT_SECRET` có ít nhất 32 ký tự│   │   ├── models/        # Database queries
+# Kill process (thay PID bằng số tìm được)
+taskkill /PID <PID> /F
+```
 
-│   │   ├── routes/        # API endpoints
+## 📚 API Documentation
 
-## ⚠️ Lưu ý│   │   ├── middleware/    # Auth & upload middleware
+### Authentication
+- `POST /api/auth/login` - Đăng nhập
+- `POST /api/auth/forgot-password` - Quên mật khẩu
+- `POST /api/auth/verify-otp` - Xác thực OTP
+- `POST /api/auth/reset-password` - Đặt lại mật khẩu
 
-│   │   └── utils/         # Helpers (OTP store)
+### Chatbot 🤖 (Mới)
+- `POST /api/chatbot/ask` - Gửi câu hỏi cho AI
+- `GET /api/chatbot/history` - Lấy lịch sử chat
 
-- ⚠️ **KHÔNG push file `.env` lên Git** (đã có trong .gitignore)│   ├── uploads/           # Uploaded files
+### Grades
+- `GET /api/grades/student/:id` - Xem điểm sinh viên
+- `POST /api/grades` - Nhập điểm (Giảng viên)
+- `PUT /api/grades/:id` - Sửa điểm
 
-- ⚠️ Đổi `JWT_SECRET` trước khi deploy production│   ├── .env               # Environment variables
+### Tickets
+- `GET /api/tickets` - Danh sách tickets
+- `POST /api/tickets` - Tạo ticket mới
+- `PUT /api/tickets/:id/respond` - Phản hồi ticket
 
-- ⚠️ OTP hiện tại lưu trong memory, production nên dùng Redis│   └── server.js          # Entry point
+### Assignments
+- `GET /api/assignments` - Danh sách bài tập
+- `POST /api/assignments` - Tạo bài tập (Giảng viên)
+- `POST /api/submissions` - Nộp bài (Sinh viên)
 
-- ⚠️ File upload hiện lưu local, production nên dùng Cloud Storage│
+> 📖 **Chi tiết đầy đủ:** Xem file `back-end/src/routes/` để biết thêm endpoints
 
-└── front-end/
+## ⚠️ Lưu ý quan trọng
 
-## 📄 License    ├── src/
+### Bảo mật:
+- 🔒 **KHÔNG push file `.env` lên Git** (đã có trong `.gitignore`)
+- 🔑 Đổi `JWT_SECRET` thành chuỗi phức tạp trước khi deploy production
+- 🔐 Đổi mật khẩu mặc định của tài khoản admin
+- 🚫 KHÔNG share `GEMINI_API_KEY` công khai
 
-    │   ├── assets/        # CSS files
+### Production:
+- ☁️ File upload nên dùng **Cloud Storage** (AWS S3, Cloudinary) thay vì lưu local
+- 🗄️ OTP hiện lưu trong memory, nên chuyển sang **Redis** cho production
+- 🔄 Cấu hình **CORS** phù hợp với domain thực tế
+- 🚀 Sử dụng **PM2** để chạy Node.js ổn định
 
-MIT License - Dự án học tập    │   ├── components/    # Reusable components
+### Giới hạn:
+- 📊 Gemini API Free: **60 requests/phút** (đủ cho học tập)
+- 💾 Upload file tối đa: **10MB** (có thể tăng trong `uploadMiddleware.js`)
+- 🔐 OTP hết hiệu lực sau: **5 phút**
 
-    │   ├── context/       # React Context (Auth, Theme)
+## 🎯 Roadmap & Tính năng tương lai
 
-## 👨‍💻 Liên hệ    │   ├── layouts/       # Layout components
+- [ ] 📧 Gửi email thông báo điểm, deadline
+- [ ] 📱 Mobile app (React Native)
+- [ ] 🔔 Hệ thống notification real-time (Socket.io)
+- [ ] 📊 Thêm biểu đồ phân tích nâng cao
+- [ ] 🎤 Voice input cho AI chatbot
+- [ ] 🌐 Multi-language support
+- [ ] 📄 Export điểm ra Excel/PDF
+- [ ] 🤝 Tích hợp Microsoft Teams/Google Classroom
 
-    │   ├── pages/         # Page components
+## 🤝 Đóng góp (Contributing)
 
-- GitHub: [@DucNgoc1824](https://github.com/DucNgoc1824)    │   ├── services/      # API services
+Mọi đóng góp đều được chào đón! 
 
-- Email: your.email@ptit.edu.vn    │   └── utils/         # Utility functions
+1. Fork dự án
+2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Mở Pull Request
 
-    ├── App.jsx            # Main app component
+## 📄 License
 
----    └── main.jsx           # Entry point
+MIT License - Dự án học tập tại **Học viện Công nghệ Bưu chính Viễn thông (PTIT)**
+
+## 👨‍💻 Tác giả
+
+- **GitHub:** [@DucNgoc1824](https://github.com/DucNgoc1824)
+- **Repository:** [Giua_ky_web](https://github.com/DucNgoc1824/Giua_ky_web)
+- **Email:** ducngoc1824@ptit.edu.vn
+
+## 🙏 Acknowledgments
+
+- 🎓 **PTIT** - Học viện Công nghệ Bưu chính Viễn thông
+- 🤖 **Google Gemini AI** - AI chatbot engine
+- 🎨 **React Icons** - Beautiful icons
+- 📊 **Recharts** - Chart library
+
+---
+
+<p align="center">
+  <strong>⭐ Nếu thấy project hữu ích, hãy cho 1 star nhé! ⭐</strong>
+</p>
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/DucNgoc1824">DucNgoc1824</a>
+</p>
 
 ````
 

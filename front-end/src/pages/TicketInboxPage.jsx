@@ -3,6 +3,7 @@ import ticketService from '../services/ticketService';
 import subjectService from '../services/subjectService';
 import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
+import ChatWidget from '../components/ChatWidget';
 import { toast } from 'react-toastify';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
@@ -467,6 +468,16 @@ const TicketInboxPage = () => {
             </div>
           </div>
         </Modal>
+      )}
+
+      {/* AI Chatbot Widget - Luôn hiện cho sinh viên */}
+      {user?.roleId === 3 && (
+        <ChatWidget
+          onCreateTicket={(question) => {
+            setFormData(prev => ({ ...prev, message_text: question }));
+            setIsModalOpen(true);
+          }}
+        />
       )}
     </div>
   );
