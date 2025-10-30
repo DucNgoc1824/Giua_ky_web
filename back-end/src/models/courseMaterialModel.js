@@ -1,10 +1,10 @@
 const db = require('../config/db');
 
 const courseMaterialModel = {
-  create: async (subject_id, title, url, added_by_user_id) => {
+  create: async (subject_id, title, url, added_by_user_id, file_type = null) => {
     const query = `
-      INSERT INTO Course_Materials (subject_id, title, url, added_by_user_id)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO Course_Materials (subject_id, title, url, added_by_user_id, file_type)
+      VALUES (?, ?, ?, ?, ?)
     `;
     try {
       const [result] = await db.execute(query, [
@@ -12,6 +12,7 @@ const courseMaterialModel = {
         title,
         url,
         added_by_user_id,
+        file_type
       ]);
       return result.insertId;
     } catch (error) {
@@ -21,7 +22,7 @@ const courseMaterialModel = {
 
   findBySubject: async (subject_id) => {
     const query = `
-      SELECT cm.material_id, cm.title, cm.url, cm.created_at, u.full_name as added_by
+      SELECT cm.material_id, cm.title, cm.url, cm.file_type, cm.created_at, u.full_name as added_by
       FROM Course_Materials cm
       JOIN Users u ON cm.added_by_user_id = u.user_id
       WHERE cm.subject_id = ?

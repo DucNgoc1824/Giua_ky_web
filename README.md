@@ -1,41 +1,46 @@
 # 🎓 Hệ Thống Quản Lý Sinh Viên PTIT
 
-> Ứng dụng web full-stack quản lý sinh viên với React, Node.js, MySQL và AI Chatbot 🤖
+> Ứng dụng web full-stack quản lý sinh viên với React, Node.js, Express, MySQL và tích hợp AI Chatbot
 
 [![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Express](https://img.shields.io/badge/Express-5.0-lightgrey.svg)](https://expressjs.com/)
 
 ## ✨ Tính năng chính
 
-### 🎯 Quản lý & Thống kê
+### 🔐 Phân quyền & Xác thực
 
--   🔐 **Đăng nhập phân quyền** - Admin, Giảng viên, Sinh viên với JWT authentication
--   📊 **Dashboard thống kê** - Biểu đồ trực quan, phân tích dữ liệu theo thời gian thực
--   👥 **Quản lý người dùng** - CRUD đầy đủ cho sinh viên, giảng viên
--   � **Quản lý lớp học & môn học** - Tổ chức lớp, phân công giảng viên
+-   Đăng nhập với JWT authentication
+-   3 roles: Admin, Giảng viên, Sinh viên
+-   Quên mật khẩu với OTP qua email
+
+### 📊 Quản lý & Thống kê
+
+-   Dashboard với biểu đồ trực quan (Recharts)
+-   Quản lý sinh viên, giảng viên, lớp học, môn học
+-   Thống kê điểm theo môn, lớp, học kỳ
 
 ### 📝 Học tập & Đánh giá
 
--   📝 **Quản lý điểm** - Hệ thống tính điểm tự động (CC 10%, TH 20%, GK 20%, CK 50%)
--   � **Bài tập trực tuyến** - Giao bài, nộp bài, chấm điểm online
--   📚 **Tài liệu học tập** - Upload/Download tài liệu theo môn học
--   💬 **Hệ thống hỏi đáp** - Gửi thắc mắc, nhận phản hồi từ giảng viên
+-   Quản lý điểm: CC (10%), TH (20%), GK (20%), CK (50%)
+-   Bài tập trực tuyến: Giao, nộp, chấm điểm
+-   Tài liệu học tập: Upload/Download file
+-   **3D Model Viewer**: Xem file .glb, .gltf tương tác (React Three Fiber)
+-   Hệ thống hỏi đáp (Tickets): Sinh viên gửi câu hỏi, giảng viên trả lời
 
-### 🤖 AI & Tự động hóa
+### 🤖 AI Chatbot (Google Gemini)
 
--   🤖 **AI Chatbot (Google Gemini)** - Trợ lý ảo trả lời thắc mắc tự động
--   🔍 **RAG System** - Tìm kiếm thông tin từ lịch sử tickets, bài tập, tài liệu
--   📊 **Confidence Scoring** - Tự động đề xuất tạo ticket khi AI không chắc chắn
--   � **Chat History** - Lưu trữ lịch sử hội thoại với AI
+-   Trợ lý ảo trả lời thắc mắc tự động
+-   RAG System: Tìm kiếm từ tickets, bài tập, tài liệu
+-   Confidence scoring: Đề xuất tạo ticket nếu AI không chắc chắn
+-   Lưu lịch sử chat theo môn học
 
-### 🎨 Trải nghiệm người dùng
+### 🎨 UI/UX
 
--   🌙 **Dark Mode** - Chế độ tối bảo vệ mắt
--   📱 **Responsive Design** - Hoạt động mượt mà trên mọi thiết bị
--   🔑 **Quên mật khẩu** - Xác thực OTP qua email
--   ⚡ **Real-time Updates** - Cập nhật dữ liệu theo thời gian thực
+-   Dark mode
+-   Responsive design
+-   Real-time updates
 
 ## 🛠️ Công nghệ sử dụng
 
@@ -60,6 +65,9 @@
 -   **React Icons** - Icon library
 -   **React Select** - Custom dropdown component
 -   **Recharts** - Data visualization
+-   **React Three Fiber** - 3D rendering với Three.js
+-   **@react-three/drei** - 3D helpers & components
+-   **@google/model-viewer** - AR/VR model viewer
 
 ## � Yêu cầu hệ thống
 
@@ -113,36 +121,25 @@ Mở MySQL và chạy:
 CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### Bước 4: Import dữ liệu
+### Bước 4: Import Database Schema
 
-**Trên Windows (PowerShell):**
+Sử dụng **MySQL Workbench** hoặc **command line**:
 
-```powershell
-# Import schema
-Get-Content database\schema.sql | mysql -u root -p qlsv
+```sql
+-- Mở MySQL Workbench, connect vào localhost
+-- Chạy file: back-end/database/schema.sql
+-- File này sẽ tạo:
+--   • 12 bảng (Users, Students, Grades, Assignments, etc.)
+--   • Dữ liệu mẫu: 1 admin, 3 giảng viên, 80 sinh viên, 10 môn học
+--   • Bảng Chatbot_Logs (cho AI)
 
-# Import dữ liệu mẫu (80 sinh viên)
-Get-Content database\sample_grades_80.sql | mysql -u root -p qlsv
-
-# Tạo bảng Chatbot_Logs (cho AI chatbot)
-Get-Content database\create_chatbot_logs.sql | mysql -u root -p qlsv
+-- Tùy chọn: Import thêm điểm mẫu
+-- Chạy file: back-end/database/sample_grades_80.sql
 ```
 
-**Trên Linux/Mac:**
+**Lưu ý:** Đảm bảo đã tạo database `qlsv` trước khi import.
 
-```bash
-# Import schema
-mysql -u root -p qlsv < database/schema.sql
-
-# Import dữ liệu mẫu
-mysql -u root -p qlsv < database/sample_grades_80.sql
-
-# Tạo bảng Chatbot_Logs
-mysql -u root -p qlsv < database/create_chatbot_logs.sql
-
-```
-
-### 4. Cài đặt Frontend**Trên Linux/Mac:**
+### Bước 5: Cài đặt Frontend
 
 ````bash
 
@@ -165,16 +162,7 @@ cd front-end
 npm install
 ````
 
-### Bước 6: Lấy Google Gemini API Key (Miễn phí)
-
-1. Truy cập: https://aistudio.google.com/app/apikey
-2. Đăng nhập bằng tài khoản Google
-3. Click **"Create API Key"**
-4. Copy API key và paste vào file `.env` ở Backend (biến `GEMINI_API_KEY`)
-
-> 💡 **Lưu ý:** API key miễn phí với 60 requests/phút, đủ cho mục đích học tập!
-
-### Bước 7: Chạy ứng dụng
+### Bước 6: Chạy ứng dụng
 
 **Terminal 1 - Backend:**
 
@@ -194,17 +182,17 @@ npm run dev
 
 ✅ Frontend chạy tại: `http://localhost:5173`
 
-### Bước 8: Đăng nhập
+### Bước 7: Đăng nhập
 
-Mở trình duyệt và truy cập: `http://localhost:5173`
+Mở trình duyệt: `http://localhost:5173`
 
 ## 👤 Tài khoản demo
 
-| Role          | Username          | Password   | Mô tả                                   |
-| ------------- | ----------------- | ---------- | --------------------------------------- |
-| 👨‍💼 Admin      | `admin`           | `password` | Quản trị viên - Full quyền              |
-| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm, phản hồi        |
-| 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password` | Xem điểm, nộp bài, hỏi đáp, **chat AI** |
+| Role          | Username          | Password   | Mô tả                      |
+| ------------- | ----------------- | ---------- | -------------------------- |
+| 👨‍💼 Admin      | `admin`           | `password` | Quản trị viên              |
+| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm     |
+| 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password` | Xem điểm, nộp bài, chat AI |
 
 **Ví dụ đăng nhập:**
 
@@ -670,76 +658,40 @@ GET    /api/dashboard/student     - Dashboard sinh viên
 
 ## 🐛 Troubleshooting
 
-### Lỗi kết nối database
-
+### ❌ Lỗi kết nối database
 ```bash
-# Kiểm tra MySQL đang chạy
-mysql -u root -p
+mysql -u root -p  # Kiểm tra MySQL đang chạy
+```
+- Đảm bảo `.env` có `DB_PASSWORD` đúng
 
-# Kiểm tra .env file
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=<your_password>
-DB_NAME=qlsv
+### ❌ Lỗi CORS
+- Backend phải chạy port **8080**
+- Frontend proxy đã config trong `vite.config.js`
+
+### ❌ Lỗi upload file
+```bash
+mkdir back-end\uploads  # Tạo thư mục
 ```
 
-### Lỗi CORS
+### ❌ Lỗi JWT "Invalid token"
+- Kiểm tra `JWT_SECRET` trong `.env`
+- Token hết hạn sau 1 giờ → Đăng nhập lại
 
--   Đảm bảo backend chạy port 8080
--   Frontend config proxy trong vite.config.js
+---
 
-### Lỗi upload file
+## 📄 License
 
-```bash
-# Tạo folder uploads nếu chưa có
-mkdir back-end\uploads
-```
-
-### Lỗi JWT
-
--   Đảm bảo JWT_SECRET trong .env không rỗng
--   Token hết hạn sau 1 giờ
-
-## 🚧 Tính năng sắp tới
-
--   [ ] Email integration (gửi OTP thật qua email)
--   [ ] Export Excel/PDF
--   [ ] Import sinh viên/điểm từ Excel
--   [ ] Schedule & Calendar
--   [ ] Notifications realtime
--   [ ] Chat giữa giảng viên - sinh viên
-
-## � Đóng góp
-
-Mọi đóng góp đều được chào đón! Vui lòng:
-
-1. Fork repo
-2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Tạo Pull Request
-
-## � License
-
-MIT License - Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
+MIT License - Dự án mã nguồn mở dành cho mục đích học tập
 
 ## 📞 Liên hệ
 
--   **Email**: your.email@ptit.edu.vn
--   **GitHub**: [@DucNgoc1824](https://github.com/DucNgoc1824)
--   **Project Link**: [https://github.com/DucNgoc1824/Giua_ky_web](https://github.com/DucNgoc1824/Giua_ky_web)
+- **GitHub**: [@DucNgoc1824](https://github.com/DucNgoc1824)
+- **Issues**: [Report Bug](https://github.com/DucNgoc1824/Giua_ky_web/issues)
 
 ---
 
-Made with ❤️ by PTIT Students
-
----
-
-## 📞 Liên hệ
-
-Nếu có vấn đề, tạo [Issue](https://github.com/DucNgoc1824/Giua_ky_web/issues) trên GitHub.
-
----
-
-**⭐ Nếu bạn thấy dự án hữu ích, hãy cho một star nhé!**
+<p align="center">
+  <strong>⭐ Nếu thấy hữu ích, hãy cho một star nhé!</strong><br>
+  Made with ❤️ by PTIT Students
+</p>
 ````

@@ -22,11 +22,29 @@ const courseMaterialController = {
           .json({ message: 'Vui lòng nhập đủ Môn học và Tiêu đề.' });
       }
 
+      // Detect file type based on extension
+      const path = require('path');
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      let file_type = 'document'; // default
+      
+      if (['.glb', '.gltf'].includes(ext)) {
+        file_type = '3d_model';
+      } else if (['.jpg', '.jpeg', '.png', '.gif'].includes(ext)) {
+        file_type = 'image';
+      } else if (['.pdf'].includes(ext)) {
+        file_type = 'pdf';
+      } else if (['.zip'].includes(ext)) {
+        file_type = 'archive';
+      }
+
+      console.log('🔍 Detected file type:', file_type);
+
       const newMaterialId = await materialModel.create(
         subject_id,
         title,
         fileUrl,
-        added_by_user_id
+        added_by_user_id,
+        file_type
       );
       
       console.log('✅ Material uploaded successfully:', newMaterialId);

@@ -4,6 +4,8 @@ import lecturerService from '../services/lecturerService';
 import courseMaterialService from '../services/courseMaterialService';
 import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
+import Model3DViewer from '../components/Model3DViewer';
+import { FiEye, FiDownload, FiBox } from 'react-icons/fi';
 import '../assets/ManagementPage.css';
 import '../assets/Modal.css';
 const BACKEND_URL = 'http://localhost:8080';
@@ -22,6 +24,10 @@ const CourseMaterialPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ title: '', file: null }); 
   const [formError, setFormError] = useState(null);
+
+  // 3D Viewer state
+  const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
+  const [current3DModel, setCurrent3DModel] = useState(null);
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -125,6 +131,27 @@ const CourseMaterialPage = () => {
     }
   };
 
+  // Handle 3D model view
+  const handle3DView = (material) => {
+    setCurrent3DModel({
+      url: `${BACKEND_URL}${material.url}`,
+      title: material.title
+    });
+    setIs3DViewerOpen(true);
+  };
+
+  const handleClose3DViewer = () => {
+    setIs3DViewerOpen(false);
+    setCurrent3DModel(null);
+  };
+
+  // Check if file is 3D model
+  const is3DModel = (material) => {
+    return material.file_type === '3d_model' || 
+           material.url?.toLowerCase().endsWith('.glb') || 
+           material.url?.toLowerCase().endsWith('.gltf');
+  };
+
   if (isLoading) {
     return <div className="loading-text">Đang tải trang...</div>;
   }
@@ -194,6 +221,7 @@ const CourseMaterialPage = () => {
               <th>Người thêm</th>
               <th>Ngày thêm</th>
               {(user?.roleId === 1 || user?.roleId === 2) && <th>Hành động</th>}
+              {user?.roleId === 3 && materials.some(m => is3DModel(m)) && <th>Xem</th>}
             </tr>
           </thead>
           <tbody>
@@ -201,26 +229,91 @@ const CourseMaterialPage = () => {
               materials.map((material) => (
                 <tr key={material.material_id}>
                   <td>
-                    <a 
-                      href={`${BACKEND_URL}${material.url}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      style={{fontWeight: '600', textDecoration: 'none'}}
-                    >
-                      {material.title}
-                    </a>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      {/* Icon for 3D models */}
+                      {is3DModel(material) && (
+                        <FiBox style={{ color: '#667eea', fontSize: '20px' }} />
+                      )}
+                      
+                      {/* Title with appropriate link/button */}
+                      {is3DModel(material) ? (
+                        <button
+                          onClick={() => handle3DView(material)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#667eea',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            fontSize: '1rem',
+                            padding: 0
+                          }}
+                          title="Xem mô hình 3D"
+                        >
+                          {material.title}
+                        </button>
+                      ) : (
+                        <a 
+                          href={`${BACKEND_URL}${material.url}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{fontWeight: '600', textDecoration: 'none'}}
+                        >
+                          {material.title}
+                        </a>
+                      )}
+                    </div>
                   </td>
 
                   <td>{material.added_by}</td>
                   <td>{new Date(material.created_at).toLocaleDateString()}</td>
                   {(user?.roleId === 1 || user?.roleId === 2) && (
                     <td className="actions">
+                      {/* View button for 3D models */}
+                      {is3DModel(material) && (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handle3DView(material)}
+                          style={{ marginRight: '8px' }}
+                          title="Xem 3D"
+                        >
+                          <FiEye /> Xem 3D
+                        </button>
+                      )}
+                      
+                      {/* Delete button */}
                       <button
                         className="btn btn-danger"
                         onClick={() => handleDelete(material.material_id)}
                       >
                         Xóa
                       </button>
+                    </td>
+                  )}
+                  
+                  {/* Student view - show view and download buttons for 3D */}
+                  {user?.roleId === 3 && is3DModel(material) && (
+                    <td className="actions">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handle3DView(material)}
+                        style={{ marginRight: '8px' }}
+                        title="Xem mô hình 3D"
+                      >
+                        <FiEye /> Xem 3D
+                      </button>
+                      
+                      {/* Download button for students */}
+                      <a
+                        href={`${BACKEND_URL}${material.url}`}
+                        download
+                        className="btn btn-secondary"
+                        style={{ textDecoration: 'none' }}
+                        title="Tải xuống"
+                      >
+                        <FiDownload /> Tải về
+                      </a>
                     </td>
                   )}
                 </tr>
@@ -260,6 +353,15 @@ const CourseMaterialPage = () => {
           </div>
         </form>
       </Modal>
+
+      {/* 3D Model Viewer */}
+      {is3DViewerOpen && current3DModel && (
+        <Model3DViewer 
+          modelUrl={current3DModel.url}
+          title={current3DModel.title}
+          onClose={handleClose3DViewer}
+        />
+      )}
     </div>
   );
 };

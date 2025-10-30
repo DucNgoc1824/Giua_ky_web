@@ -1,0 +1,316 @@
+/* Model3DViewer.css - 3D Model Viewer Styling */
+
+/* Overlay background */
+.model3d-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Main container */
+.model3d-viewer-container {
+  background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 1200px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Fullscreen mode */
+.model3d-viewer-container:fullscreen {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  border-radius: 0;
+}
+
+/* Header */
+.model3d-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.model3d-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Canvas wrapper */
+.model3d-canvas-wrapper {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  overflow: hidden;
+}
+
+/* Loading spinner */
+.model3d-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 100;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.model3d-loading p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Controls bar */
+.model3d-controls {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.control-btn:active {
+  transform: translateY(0);
+}
+
+.control-btn svg {
+  font-size: 18px;
+}
+
+/* Instructions */
+.model3d-instructions {
+  padding: 12px 24px;
+  background: rgba(102, 126, 234, 0.1);
+  border-top: 1px solid rgba(102, 126, 234, 0.2);
+  text-align: center;
+}
+
+.model3d-instructions p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.model3d-instructions strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .model3d-viewer-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+[data-theme='dark'] .model3d-canvas-wrapper {
+  background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+}
+
+/* Error display */
+.model3d-error-display {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: white;
+}
+
+.model3d-error-display h3 {
+  margin: 20px 0 10px;
+  font-size: 1.5rem;
+  color: #ff6b6b;
+}
+
+.error-message {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.error-suggestions {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: left;
+  max-width: 500px;
+}
+
+.error-suggestions p {
+  margin: 0 0 12px;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.error-suggestions ul {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.error-suggestions li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.btn-close-error {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-close-error:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .model3d-viewer-container {
+    width: 95%;
+    height: 80vh;
+  }
+
+  .model3d-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .model3d-controls {
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .control-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .control-btn svg {
+    font-size: 16px;
+  }
+
+  .model3d-instructions {
+    padding: 10px 16px;
+  }
+
+  .model3d-instructions p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn span {
+    display: none; /* Hide text on very small screens */
+  }
+
+  .control-btn {
+    padding: 10px;
+  }
+}
