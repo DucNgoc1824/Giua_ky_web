@@ -19,7 +19,6 @@ const otpManager = {
       expiryTime,
       attempts: 0
     });
-    console.log(`🔑 OTP stored for ${username}: ${otp} (expires in 5 min)`);
   },
 
   // Verify OTP

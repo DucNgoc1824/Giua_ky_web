@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaRobot, FaTimes, FaPaperPlane, FaTicketAlt, FaBook } from 'react-icons/fa';
 import Select from 'react-select';
+import ReactMarkdown from 'react-markdown';
 import chatbotService from '../services/chatbotService';
 import subjectService from '../services/subjectService';
 import { toast } from 'react-toastify';
@@ -280,7 +281,13 @@ const ChatWidget = ({ onCreateTicket }) => {
                                     </div>
                                 )}
                                 <div className="message-content">
-                                    <p>{message.text}</p>
+                                    {message.role === 'ai' ? (
+                                        <div className="markdown-content">
+                                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                                        </div>
+                                    ) : (
+                                        <p>{message.text}</p>
+                                    )}
                                     {message.shouldCreateTicket && message.role === 'ai' && (
                                         <button
                                             className="create-ticket-btn"

@@ -370,6 +370,90 @@ body.dark-mode .chat-widget-footer {
     border-top-color: #374151;
 }
 
+/* Markdown Content Styling */
+.markdown-content {
+    background: white;
+    padding: 14px 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+}
+
+.markdown-content h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #667eea;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.markdown-content p {
+    margin: 8px 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #374151;
+}
+
+.markdown-content strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.markdown-content li {
+    margin: 6px 0;
+    color: #4b5563;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 12px 0;
+}
+
+.markdown-content code {
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #d97706;
+    font-family: 'Courier New', monospace;
+}
+
+/* Dark mode for markdown */
+body.dark-mode .markdown-content {
+    background: #374151;
+}
+
+body.dark-mode .markdown-content h3 {
+    color: #a5b4fc;
+}
+
+body.dark-mode .markdown-content p {
+    color: #e5e7eb;
+}
+
+body.dark-mode .markdown-content strong {
+    color: #f9fafb;
+}
+
+body.dark-mode .markdown-content li {
+    color: #d1d5db;
+}
+
+body.dark-mode .markdown-content code {
+    background: #1f2937;
+    color: #fbbf24;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     .chat-widget-container {

@@ -6,15 +6,11 @@ const courseMaterialController = {
       const { subject_id, title } = req.body;
       const added_by_user_id = req.user.userId;
 
-      console.log('📤 Upload Material Request:', { subject_id, title, user: req.user });
-
       if (!req.file) {
-        console.log('❌ No file provided');
         return res.status(400).json({ message: 'Vui lòng chọn một file để upload.' });
       }
       
       const fileUrl = `/uploads/${req.file.filename}`;
-      console.log('📁 File:', req.file.filename);
 
       if (!subject_id || !title) {
         return res
