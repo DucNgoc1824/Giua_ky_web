@@ -1,4 +1,5 @@
 const materialModel = require('../models/courseMaterialModel');
+const lecturerModel = require('../models/lecturerModel');
 
 const courseMaterialController = {
   addMaterial: async (req, res) => {
@@ -16,6 +17,18 @@ const courseMaterialController = {
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập đủ Môn học và Tiêu đề.' });
+      }
+
+      // Kiểm tra nếu là giảng viên thì chỉ được upload tài liệu môn mình dạy
+      if (req.user.roleId === 2) {
+        const lecturerSubjects = await lecturerModel.getSubjectsByLecturerId(req.user.lecturerId);
+        const isTeachingSubject = lecturerSubjects.some(s => s.subject_id == subject_id);
+        
+        if (!isTeachingSubject) {
+          return res.status(403).json({ 
+            message: 'Bạn chỉ được upload tài liệu cho các môn mà bạn đang dạy.' 
+          });
+        }
       }
 
       // Detect file type based on extension

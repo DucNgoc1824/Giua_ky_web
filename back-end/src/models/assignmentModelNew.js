@@ -5,13 +5,13 @@ const assignmentModel = {
   
   // Tạo bài tập mới
   createAssignment: async (data) => {
-    const { title, description, due_date, subject_id, lecturer_id, class_id } = data;
+    const { title, description, due_date, subject_id, lecturer_id } = data;
     const query = `
-      INSERT INTO Assignments (title, description, due_date, subject_id, lecturer_id, class_id)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO Assignments (title, description, due_date, subject_id, lecturer_id)
+      VALUES (?, ?, ?, ?, ?)
     `;
     try {
-      const [result] = await db.execute(query, [title, description, due_date, subject_id, lecturer_id, class_id]);
+      const [result] = await db.execute(query, [title, description, due_date, subject_id, lecturer_id]);
       return result.insertId;
     } catch (error) {
       throw error;
@@ -29,12 +29,9 @@ const assignmentModel = {
         a.created_at,
         s.subject_name,
         s.subject_code,
-        c.class_code,
-        c.class_id,
         COUNT(DISTINCT sub.submission_id) AS total_submissions
       FROM Assignments a
       JOIN Subjects s ON a.subject_id = s.subject_id
-      LEFT JOIN Classes c ON a.class_id = c.class_id
       LEFT JOIN Submissions sub ON a.assignment_id = sub.assignment_id
       WHERE a.lecturer_id = ?
       GROUP BY a.assignment_id
@@ -48,7 +45,7 @@ const assignmentModel = {
     }
   },
 
-  // Lấy danh sách bài tập của sinh viên (theo lớp)
+  // Lấy danh sách bài tập của sinh viên (theo môn học mà sinh viên đang học)
   getAssignmentsByStudent: async (student_id) => {
     const query = `
       SELECT 
@@ -75,11 +72,15 @@ const assignmentModel = {
       JOIN Users u ON l.user_id = u.user_id
       JOIN Students st ON st.student_id = ?
       LEFT JOIN Submissions sub ON a.assignment_id = sub.assignment_id AND sub.student_id = ?
-      WHERE a.class_id = st.class_id OR a.class_id IS NULL
+      WHERE s.subject_id IN (
+        SELECT DISTINCT subject_id 
+        FROM Grades 
+        WHERE student_id = ?
+      )
       ORDER BY a.due_date DESC
     `;
     try {
-      const [rows] = await db.query(query, [student_id, student_id]);
+      const [rows] = await db.query(query, [student_id, student_id, student_id]);
       return rows;
     } catch (error) {
       throw error;
@@ -93,13 +94,11 @@ const assignmentModel = {
         a.*,
         s.subject_name,
         s.subject_code,
-        u.full_name AS lecturer_name,
-        c.class_code
+        u.full_name AS lecturer_name
       FROM Assignments a
       JOIN Subjects s ON a.subject_id = s.subject_id
       JOIN Lecturers l ON a.lecturer_id = l.lecturer_id
       JOIN Users u ON l.user_id = u.user_id
-      LEFT JOIN Classes c ON a.class_id = c.class_id
       WHERE a.assignment_id = ?
     `;
     try {

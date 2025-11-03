@@ -1,4 +1,5 @@
 const assignmentModel = require('../models/assignmentModelNew');
+const lecturerModel = require('../models/lecturerModel');
 
 const assignmentController = {
   // ============ ASSIGNMENTS ============
@@ -6,11 +7,21 @@ const assignmentController = {
   // Tạo bài tập mới (Giảng viên)
   createAssignment: async (req, res) => {
     try {
-      const { title, description, due_date, subject_id, class_id } = req.body;
+      const { title, description, due_date, subject_id } = req.body;
       const lecturer_id = req.user.lecturerId;
 
       if (!title || !due_date || !subject_id || !lecturer_id) {
         return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+      }
+
+      // Kiểm tra giảng viên có dạy môn này không
+      const lecturerSubjects = await lecturerModel.getSubjectsByLecturerId(lecturer_id);
+      const isTeachingSubject = lecturerSubjects.some(s => s.subject_id == subject_id);
+      
+      if (!isTeachingSubject) {
+        return res.status(403).json({ 
+          message: 'Bạn chỉ được giao bài tập cho các môn mà bạn đang dạy.' 
+        });
       }
 
       const assignmentId = await assignmentModel.createAssignment({
@@ -19,7 +30,6 @@ const assignmentController = {
         due_date,
         subject_id,
         lecturer_id,
-        class_id: class_id || null,
       });
 
       res.status(201).json({

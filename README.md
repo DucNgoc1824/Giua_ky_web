@@ -113,56 +113,43 @@ PORT=8080
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### Bước 3: Tạo Database
+### Bước 3: Import Database
 
-Mở MySQL và chạy:
-
-```sql
-CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-### Bước 4: Import Database Schema
-
-Sử dụng **MySQL Workbench** hoặc **command line**:
+Mở **MySQL Workbench** hoặc **Command Line**:
 
 ```sql
--- Mở MySQL Workbench, connect vào localhost
--- Chạy file: back-end/database/schema.sql
--- File này sẽ tạo:
---   • 12 bảng (Users, Students, Grades, Assignments, etc.)
---   • Dữ liệu mẫu: 1 admin, 3 giảng viên, 80 sinh viên, 10 môn học
---   • Bảng Chatbot_Logs (cho AI)
+-- Cách 1: MySQL Workbench
+-- File > Run SQL Script > Chọn file: back-end/database/init.sql
 
--- Tùy chọn: Import thêm điểm mẫu
--- Chạy file: back-end/database/sample_grades_80.sql
+-- Cách 2: Command Line
+SOURCE C:/Users/YourName/path/to/back-end/database/init.sql;
+
+-- Cách 3: PowerShell
+Get-Content "back-end\database\init.sql" | mysql -u root -p
 ```
 
-**Lưu ý:** Đảm bảo đã tạo database `qlsv` trước khi import.
+**File `init.sql` bao gồm:**
 
-### Bước 5: Cài đặt Frontend
+-   ✅ Tạo database `qlsv` + 14 bảng
+-   ✅ 84 users: 1 admin, 3 giảng viên, 80 sinh viên
+-   ✅ 2 lớp D22PTDPT (mỗi lớp 40 sinh viên)
+-   ✅ 3 môn học: Xử lý ảnh, Lập trình game, Lập trình web
+-   ✅ 240 điểm mẫu (80 SV × 3 môn)
+-   ✅ 12 tài liệu học tập
+-   ✅ 3 tickets mẫu
 
-````bash
+**Password tất cả tài khoản:** `password123`
 
-```bashmysql -u root -p qlsv < database/schema.sql
-
-cd ../front-endmysql -u root -p qlsv < database/sample_grades_80.sql
-
-npm install```
-
-````
-
-````
-
-### Bước 5: Cài đặt Frontend
+### Bước 4: Cài đặt Frontend
 
 Mở terminal mới:
 
 ```bash
 cd front-end
 npm install
-````
+```
 
-### Bước 6: Chạy ứng dụng
+### Bước 5: Chạy ứng dụng
 
 **Terminal 1 - Backend:**
 
@@ -182,23 +169,23 @@ npm run dev
 
 ✅ Frontend chạy tại: `http://localhost:5173`
 
-### Bước 7: Đăng nhập
+### Bước 6: Đăng nhập
 
 Mở trình duyệt: `http://localhost:5173`
 
 ## 👤 Tài khoản demo
 
-| Role          | Username          | Password   | Mô tả                      |
-| ------------- | ----------------- | ---------- | -------------------------- |
-| 👨‍💼 Admin      | `admin`           | `password` | Quản trị viên              |
-| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password` | Quản lý lớp, chấm điểm     |
-| 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password` | Xem điểm, nộp bài, chat AI |
+| Role          | Username          | Password      | Mô tả                      |
+| ------------- | ----------------- | ------------- | -------------------------- |
+| 👨‍💼 Admin      | `admin`           | `password123` | Quản trị viên              |
+| 👨‍🏫 Giảng viên | `gv001` - `gv003` | `password123` | Quản lý lớp, chấm điểm     |
+| 👨‍🎓 Sinh viên  | `sv001` - `sv080` | `password123` | Xem điểm, nộp bài, chat AI |
 
 **Ví dụ đăng nhập:**
 
--   Admin: `admin` / `password`
--   Giảng viên: `gv001` / `password`
--   Sinh viên: `sv001` / `password` ⭐ (Có AI Chatbot)
+-   Admin: `admin` / `password123`
+-   Giảng viên: `gv001` / `password123`
+-   Sinh viên: `sv001` / `password123` ⭐ (Có AI Chatbot)
 
 ## 🤖 Hướng dẫn sử dụng AI Chatbot
 
@@ -233,9 +220,7 @@ Mở trình duyệt: `http://localhost:5173`
 Giua_ky_web/
 ├── back-end/
 │   ├── database/
-│   │   ├── schema.sql                    # Database schema
-│   │   ├── sample_grades_80.sql          # Dữ liệu mẫu 80 sinh viên
-│   │   └── create_chatbot_logs.sql       # Bảng lưu chat history
+│   │   └── init.sql                      # 🎯 Database hoàn chỉnh (schema + data)
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── db.js                     # Kết nối MySQL
@@ -243,7 +228,7 @@ Giua_ky_web/
 │   │   │   ├── authController.js         # Login, forgot password
 │   │   │   ├── chatbotController.js      # 🤖 AI Chatbot logic
 │   │   │   ├── gradeController.js        # Quản lý điểm
-│   │   │   ├── assignmentController.js   # Quản lý bài tập
+│   │   │   ├── assignmentControllerNew.js # Quản lý bài tập
 │   │   │   └── ...
 │   │   ├── models/                       # Database queries
 │   │   ├── routes/
@@ -295,7 +280,7 @@ Giua_ky_web/
 
 ## 🗄️ Database Schema
 
-### Bảng chính (12 tables):
+### Bảng chính (14 tables):
 
 1. **Users** - Tài khoản người dùng
 2. **Roles** - Phân quyền (Admin, Giảng viên, Sinh viên)
@@ -303,20 +288,24 @@ Giua_ky_web/
 4. **Lecturers** - Thông tin giảng viên
 5. **Classes** - Lớp học
 6. **Subjects** - Môn học
-7. **Grades** - Điểm số (CC, TH, GK, CK)
-8. **Tickets** - Hệ thống hỏi đáp
-9. **Assignments** - Bài tập
-10. **Submissions** - Bài nộp
-11. **Course_Materials** - Tài liệu học tập
-12. **Chatbot_Logs** 🤖 - Lịch sử chat AI (mới)
+7. **Grades** - Điểm số (CC 10%, TH 20%, GK 20%, CK 50%)
+8. **Lecturer_Subjects** - Khả năng dạy
+9. **Lecturer_Assignments** - Phân công giảng dạy
+10. **Course_Materials** - Tài liệu học tập (hỗ trợ 3D models)
+11. **Tickets** - Hệ thống hỏi đáp
+12. **Assignments** - Bài tập (không phân theo lớp)
+13. **Submissions** - Bài nộp
+14. **Chatbot_Logs** 🤖 - Lịch sử chat AI
 
-### Dữ liệu mẫu có sẵn:
+### Dữ liệu mẫu trong `init.sql`:
 
--   ✅ 80 sinh viên (sv001-sv080)
--   ✅ 3 giảng viên (gv001-gv003)
--   ✅ 1 admin
--   ✅ 240+ điểm số mẫu
--   ✅ Dữ liệu tickets, assignments, course materials
+-   ✅ 84 users: 1 admin + 3 giảng viên + 80 sinh viên
+-   ✅ 2 lớp: D22PTDPT1, D22PTDPT2 (mỗi lớp 40 SV)
+-   ✅ 3 môn: MUL2013 (Xử lý ảnh), MUL2023 (Game), MUL3033 (Web)
+-   ✅ 240 điểm mẫu (80 SV × 3 môn, điểm tự động tính)
+-   ✅ 12 tài liệu học tập (4 tài liệu/môn)
+-   ✅ 3 tickets mẫu
+-   ✅ 2 chat logs mẫu
 
 ## 🐛 Troubleshooting (Xử lý lỗi)
 
@@ -341,7 +330,9 @@ DB_NAME=qlsv
 **Giải pháp:**
 
 ```sql
-CREATE DATABASE qlsv CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- File init.sql đã tự động tạo database
+-- Nếu vẫn lỗi, chạy lại:
+SOURCE /path/to/back-end/database/init.sql;
 ```
 
 ### ❌ Lỗi Upload File

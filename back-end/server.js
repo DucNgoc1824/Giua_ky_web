@@ -19,9 +19,14 @@ const chatbotRoutes = require('./src/routes/chatbotRoutes');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// CORS configuration
+// CORS configuration - Allow both web and Android
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',           // Web frontend
+    'http://10.0.2.2:8080',            // Android emulator
+    'http://localhost:8080',           // For testing
+    /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}:\d+$/ // Android device on same network
+  ],
   credentials: true
 };
 
@@ -46,6 +51,8 @@ app.use('/api/tickets', ticketRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/uploads', express.static('uploads'));
 
-app.listen(PORT, () => {
+// Listen on all network interfaces (0.0.0.0) to allow Android emulator connection
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Android emulator can access at http://10.0.2.2:${PORT}`);
 });

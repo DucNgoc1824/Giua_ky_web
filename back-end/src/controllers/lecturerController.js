@@ -135,6 +135,28 @@ const lecturerController = {
     }
   },
 
+  // Lấy danh sách môn của giảng viên hiện tại (đang đăng nhập)
+  getMySubjects: async (req, res) => {
+    try {
+      const lecturerId = req.user.lecturerId;
+      
+      if (!lecturerId) {
+        return res.status(403).json({ message: 'Chỉ giảng viên mới có thể xem môn dạy' });
+      }
+      
+      console.log('📚 Get My Subjects');
+      console.log('Lecturer ID:', lecturerId);
+      
+      const subjects = await lecturerModel.getSubjectsByLecturerId(lecturerId);
+      console.log(`✅ Found ${subjects.length} subjects`);
+      
+      res.status(200).json(subjects);
+    } catch (error) {
+      console.error('❌ Get My Subjects Error:', error.message);
+      res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
+  },
+
   addSubjectToLecturer: async (req, res) => {
     try {
       const { id } = req.params;

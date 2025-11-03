@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const lecturerController = require('../controllers/lecturerController');
-const { verifyToken, isAdmin, isLecturerOrAdmin } = require('../middleware/authMiddleware');
+const { verifyToken, isAdmin, isLecturerOrAdmin, isLecturer } = require('../middleware/authMiddleware');
 
 router.use(verifyToken);
+
+// Giảng viên lấy danh sách môn của chính mình
+router.get('/me/subjects', isLecturer, lecturerController.getMySubjects);
 
 router.get('/:id/subjects', isLecturerOrAdmin, lecturerController.getSubjectsByLecturer);
 
