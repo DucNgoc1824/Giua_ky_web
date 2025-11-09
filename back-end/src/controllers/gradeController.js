@@ -73,16 +73,17 @@ const gradeController = {
     try {
       const { studentId } = req.params;
       
+      console.log('📊 Get Grades for Student:', studentId);
+      
       const grades = await gradeModel.findByStudentId(studentId);
       
-      if (grades.length === 0) {
-        return res.status(404).json({ message: 'Không tìm thấy điểm của sinh viên này.' });
-      }
+      console.log(`✅ Found ${grades.length} grades`);
       
-      res.status(200).json(grades);
+      res.status(200).json({ success: true, data: grades });
       
     } catch (error) {
-      res.status(500).json({ message: 'Lỗi server', error: error.message });
+      console.error('❌ Get Grades for Student Error:', error.message);
+      res.status(500).json({ success: false, message: 'Lỗi server', error: error.message });
     }
   },
 

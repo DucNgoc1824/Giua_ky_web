@@ -11,6 +11,7 @@ router.use(verifyToken);
 
 // Cho phép tất cả user đã login xem danh sách môn học
 router.get('/', subjectController.getAllSubjects);
+router.get('/enrolled/my-subjects', subjectController.getEnrolledSubjects); // Môn đang học của SV
 router.get('/:id', subjectController.getSubjectById);
 router.post('/', isAdmin, subjectController.createSubject);
 router.put('/:id', isAdmin, subjectController.updateSubject);

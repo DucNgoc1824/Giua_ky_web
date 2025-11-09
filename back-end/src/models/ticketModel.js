@@ -43,7 +43,7 @@ const ticketModel = {
       SELECT 
         t.ticket_id, t.message_text, t.response_text, t.response_at,
         t.status, t.created_at,
-        s.subject_name,
+        s.subject_name, s.subject_code,
         u.full_name AS student_name,
         c.class_code
       FROM Tickets t
@@ -51,7 +51,11 @@ const ticketModel = {
       JOIN Students st ON t.student_id = st.student_id
       JOIN Users u ON st.user_id = u.user_id
       JOIN Classes c ON st.class_id = c.class_id
-      WHERE t.lecturer_id = ?
+      WHERE t.subject_id IN (
+        SELECT DISTINCT subject_id 
+        FROM Lecturer_Subjects 
+        WHERE lecturer_id = ?
+      )
       ORDER BY t.created_at DESC;
     `;
     try {

@@ -9,6 +9,9 @@ const upload = require('../middleware/uploadMiddleware');
 // Lấy danh sách bài tập (cả GV và SV)
 router.get('/', verifyToken, assignmentController.getAssignments);
 
+// Lấy bài tập của 1 sinh viên (cho Android app)
+router.get('/student/:studentId', verifyToken, assignmentController.getAssignmentsByStudent);
+
 // Lấy chi tiết bài tập
 router.get('/:id', verifyToken, assignmentController.getAssignmentById);
 

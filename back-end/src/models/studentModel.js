@@ -73,7 +73,17 @@ const studentModel = {
   },
 
   findByUserId: async (userId) => {
-    const query = 'SELECT student_id FROM Students WHERE user_id = ?';
+    const query = `
+      SELECT 
+        s.student_id, 
+        s.student_code,
+        u.full_name,
+        c.class_code as class_name
+      FROM Students s
+      JOIN Users u ON s.user_id = u.user_id
+      JOIN Classes c ON s.class_id = c.class_id
+      WHERE s.user_id = ?
+    `;
     try {
       const [rows] = await db.query(query, [userId]);
       return rows[0];

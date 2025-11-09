@@ -23,8 +23,7 @@ router.get(
 );
 router.get(
   '/student/:studentId',
-  isLecturerOrAdmin,
-  gradeController.getGradesForStudent
+  gradeController.getGradesForStudent  // Bỏ isLecturerOrAdmin - cho phép sinh viên xem điểm của mình
 );
 
 module.exports = router;

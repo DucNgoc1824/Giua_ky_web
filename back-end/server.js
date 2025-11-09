@@ -45,8 +45,10 @@ app.use('/api/students', studentRoutes);
 app.use('/api/lecturers', lecturerRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/materials', courseMaterialRoutes);
-app.use('/api/assignments', assignmentRoutes);
+app.use('/api/materials', courseMaterialRoutes);           // For Web frontend
+app.use('/api/course-materials', courseMaterialRoutes);    // For Android app
+app.use('/api/assignments', assignmentRoutes);             // For Web frontend
+app.use('/api/assignments-new', assignmentRoutes);         // For Android app
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/uploads', express.static('uploads'));

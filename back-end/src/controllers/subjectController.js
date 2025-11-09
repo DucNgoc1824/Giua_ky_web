@@ -89,6 +89,24 @@ const subjectController = {
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   },
+
+  // Lấy môn học đang học của sinh viên
+  getEnrolledSubjects: async (req, res) => {
+    try {
+      const studentId = req.user.studentId;
+      const subjects = await subjectModel.getEnrolledSubjects(studentId);
+      res.status(200).json({
+        success: true,
+        data: subjects
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: 'Lỗi server', 
+        error: error.message 
+      });
+    }
+  },
 };
 
 module.exports = subjectController;

@@ -61,6 +61,23 @@ const subjectModel = {
       throw error;
     }
   },
+
+  // Lấy môn học đang học của sinh viên (có điểm)
+  getEnrolledSubjects: async (studentId) => {
+    const query = `
+      SELECT DISTINCT s.subject_id, s.subject_code, s.subject_name, s.credits
+      FROM Subjects s
+      JOIN Grades g ON s.subject_id = g.subject_id
+      WHERE g.student_id = ?
+      ORDER BY s.subject_code
+    `;
+    try {
+      const [rows] = await db.query(query, [studentId]);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = subjectModel;

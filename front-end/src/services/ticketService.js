@@ -13,7 +13,8 @@ const ticketService = {
   getMyTickets: async () => {
     try {
       const response = await api.get('/tickets/my-tickets');
-      return response.data;
+      // Backend trả về {success: true, data: [...]}
+      return response.data.data || response.data;
     } catch (error) {
       throw error.response.data;
     }

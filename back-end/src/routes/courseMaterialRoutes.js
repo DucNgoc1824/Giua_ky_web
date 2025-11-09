@@ -19,6 +19,10 @@ router.get(
   '/subject/:subjectId',
   courseMaterialController.getMaterialsForSubject
 );
+router.get(
+  '/student/:studentId',
+  courseMaterialController.getMaterialsByStudent
+);
 router.delete('/:id', isLecturerOrAdmin, courseMaterialController.deleteMaterial);
 
 module.exports = router;

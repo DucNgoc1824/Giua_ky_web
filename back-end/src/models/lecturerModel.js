@@ -133,6 +133,22 @@ const lecturerModel = {
     } catch (error) {
       throw error;
     }
+  },
+
+  // Tìm giảng viên dạy môn học cho lớp và học kỳ cụ thể
+  findLecturerForCourse: async (subjectId, classId, semester) => {
+    const query = `
+      SELECT lecturer_id 
+      FROM Lecturer_Assignments
+      WHERE subject_id = ? AND class_id = ? AND semester = ?
+      LIMIT 1
+    `;
+    try {
+      const [rows] = await db.query(query, [subjectId, classId, semester]);
+      return rows.length > 0 ? rows[0].lecturer_id : null;
+    } catch (error) {
+      throw error;
+    }
   }
 };
 

@@ -186,6 +186,26 @@ const assignmentController = {
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   },
+
+  // Lấy bài tập của 1 sinh viên (cho Android app)
+  getAssignmentsByStudent: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      const assignments = await assignmentModel.getAssignmentsByStudentId(studentId);
+      
+      res.status(200).json({
+        success: true,
+        data: assignments
+      });
+    } catch (error) {
+      console.error('❌ Error getting assignments for student:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Lỗi server', 
+        error: error.message 
+      });
+    }
+  },
 };
 
 module.exports = assignmentController;

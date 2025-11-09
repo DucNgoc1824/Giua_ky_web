@@ -7,8 +7,13 @@ import '../assets/ManagementPage.css';
 
 const ViewAssignmentsPage = () => {
   const [assignments, setAssignments] = useState([]);
+  const [filteredAssignments, setFilteredAssignments] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -27,12 +32,33 @@ const ViewAssignmentsPage = () => {
     try {
       const data = await assignmentService.getAssignments();
       setAssignments(data);
+      
+      // Extract unique subjects
+      const uniqueSubjects = [...new Set(data.map(a => a.subject_name))];
+      setSubjects(uniqueSubjects);
+      
+      setFilteredAssignments(data);
     } catch (error) {
       toast.error('Không thể tải danh sách bài tập');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let filtered = assignments;
+    
+    if (selectedSubject !== 'all') {
+      filtered = filtered.filter(a => a.subject_name === selectedSubject);
+    }
+    
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter(a => a.status === selectedStatus);
+    }
+    
+    setFilteredAssignments(filtered);
+    setCurrentPage(1);
+  }, [selectedSubject, selectedStatus, assignments]);
 
   const handleFileChange = (e) => {
     setSubmissionData((prev) => ({ ...prev, file: e.target.files[0] }));
@@ -106,11 +132,16 @@ const ViewAssignmentsPage = () => {
     }
   };
 
+  const handleOpenDetailModal = (assignment) => {
+    setSelectedAssignment(assignment);
+    setIsDetailModalOpen(true);
+  };
+
   // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = assignments.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(assignments.length / itemsPerPage);
+  const currentItems = filteredAssignments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredAssignments.length / itemsPerPage);
 
   return (
     <div className="management-page">
@@ -122,6 +153,59 @@ const ViewAssignmentsPage = () => {
         <div className="loading-text">Đang tải...</div>
       ) : (
         <>
+          {/* Filters */}
+          <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div>
+              <label htmlFor="subject-filter" style={{ marginRight: '0.5rem', fontWeight: '500' }}>
+                Môn học:
+              </label>
+              <select 
+                id="subject-filter"
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  fontSize: '0.95rem', 
+                  borderRadius: '4px',
+                  border: '1px solid #ddd',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">Tất cả môn</option>
+                {subjects.map(subject => (
+                  <option key={subject} value={subject}>{subject}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="status-filter" style={{ marginRight: '0.5rem', fontWeight: '500' }}>
+                Trạng thái:
+              </label>
+              <select 
+                id="status-filter"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  fontSize: '0.95rem', 
+                  borderRadius: '4px',
+                  border: '1px solid #ddd',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">Tất cả</option>
+                <option value="submitted">Đã nộp</option>
+                <option value="pending">Chưa nộp</option>
+                <option value="overdue">Quá hạn</option>
+              </select>
+            </div>
+
+            <span style={{ color: '#666', fontSize: '0.9rem' }}>
+              ({filteredAssignments.length} bài tập)
+            </span>
+          </div>
+
           <div className="table-container">
             <table className="data-table">
               <thead>
@@ -162,25 +246,39 @@ const ViewAssignmentsPage = () => {
                           : '-'}
                       </td>
                       <td>
-                        {assignment.submission_status === 'submitted' ? (
-                          <span className="text-success">✅ Đã nộp</span>
-                        ) : assignment.submission_status === 'overdue' ? (
-                          <span className="text-danger">❌ Quá hạn</span>
-                        ) : (
+                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                           <button
-                            className="btn btn-sm btn-primary"
-                            onClick={() => handleOpenSubmitModal(assignment)}
+                            className="btn btn-sm btn-info"
+                            onClick={() => handleOpenDetailModal(assignment)}
+                            title="Xem chi tiết"
                           >
-                            📤 Nộp bài
+                            👁️ Chi tiết
                           </button>
-                        )}
+                          {assignment.submission_status === 'submitted' ? (
+                            <span className="text-success" style={{ padding: '0.25rem 0.5rem' }}>✅ Đã nộp</span>
+                          ) : assignment.submission_status === 'overdue' ? (
+                            <span className="text-danger" style={{ padding: '0.25rem 0.5rem' }}>❌ Quá hạn</span>
+                          ) : (
+                            <button
+                              className="btn btn-sm btn-primary"
+                              onClick={() => handleOpenSubmitModal(assignment)}
+                            >
+                              📤 Nộp bài
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center">
-                      Chưa có bài tập nào
+                    <td colSpan="8" className="text-center" style={{ padding: '3rem', color: '#999' }}>
+                      <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
+                      <div style={{ fontSize: '1.1rem' }}>
+                        {selectedSubject !== 'all' || selectedStatus !== 'all'
+                          ? 'Không tìm thấy bài tập phù hợp với bộ lọc.'
+                          : 'Chưa có bài tập nào.'}
+                      </div>
                     </td>
                   </tr>
                 )}
@@ -197,6 +295,80 @@ const ViewAssignmentsPage = () => {
           )}
         </>
       )}
+
+      {/* Modal xem chi tiết bài tập */}
+      <Modal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title="Chi tiết bài tập"
+      >
+        {selectedAssignment && (
+          <div style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <strong>Tiêu đề:</strong> {selectedAssignment.title}
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <strong>Môn học:</strong> {selectedAssignment.subject_code} - {selectedAssignment.subject_name}
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <strong>Giảng viên:</strong> {selectedAssignment.lecturer_name}
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <strong>Hạn nộp:</strong> {formatDate(selectedAssignment.due_date)}
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <strong>Trạng thái:</strong> {getStatusBadge(selectedAssignment.submission_status)}
+            </div>
+            {selectedAssignment.description && (
+              <div style={{ marginBottom: '1rem' }}>
+                <strong>Mô tả:</strong>
+                <div style={{ 
+                  marginTop: '0.5rem', 
+                  padding: '1rem', 
+                  background: '#f5f5f5', 
+                  borderRadius: '4px',
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {selectedAssignment.description}
+                </div>
+              </div>
+            )}
+            {selectedAssignment.submission_text && (
+              <div style={{ marginBottom: '1rem' }}>
+                <strong>Bài làm của bạn:</strong>
+                <div style={{ 
+                  marginTop: '0.5rem', 
+                  padding: '1rem', 
+                  background: '#e8f5e9', 
+                  borderRadius: '4px',
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {selectedAssignment.submission_text}
+                </div>
+              </div>
+            )}
+            {selectedAssignment.score !== null && selectedAssignment.score !== undefined && (
+              <div style={{ marginBottom: '1rem' }}>
+                <strong>Điểm:</strong> <span style={{ fontSize: '1.2rem', color: '#10b981', fontWeight: 'bold' }}>{selectedAssignment.score}</span>
+              </div>
+            )}
+            {selectedAssignment.feedback && (
+              <div style={{ marginBottom: '1rem' }}>
+                <strong>Nhận xét của giảng viên:</strong>
+                <div style={{ 
+                  marginTop: '0.5rem', 
+                  padding: '1rem', 
+                  background: '#fff3cd', 
+                  borderRadius: '4px',
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {selectedAssignment.feedback}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
 
       {/* Modal nộp bài */}
       <Modal

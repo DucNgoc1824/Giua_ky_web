@@ -200,6 +200,11 @@ const assignmentModel = {
       throw error;
     }
   },
+
+  // Alias cho Android app (sử dụng getAssignmentsByStudent)
+  getAssignmentsByStudentId: async (student_id) => {
+    return assignmentModel.getAssignmentsByStudent(student_id);
+  },
 };
 
 module.exports = assignmentModel;

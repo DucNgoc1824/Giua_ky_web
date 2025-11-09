@@ -194,25 +194,67 @@ const CourseMaterialPage = () => {
         </div>
       )}
 
-      <div className="form-group" style={{ maxWidth: '400px', marginBottom: '2rem' }}>
-        <label htmlFor="subject_select" style={{ fontWeight: '600' }}>Chọn Môn học:</label>
+      <div className="form-group" style={{ maxWidth: '500px', marginBottom: '2rem' }}>
+        <label htmlFor="subject_select" style={{ fontWeight: '600', fontSize: '1.1rem', marginBottom: '0.75rem', display: 'block' }}>
+          📖 Chọn Môn học:
+        </label>
         <select
           id="subject_select"
           value={selectedSubjectId}
           onChange={(e) => setSelectedSubjectId(e.target.value)}
-          style={{ padding: '0.75rem', fontSize: '1rem', marginTop: '0.5rem' }}
+          style={{ 
+            padding: '0.75rem 1rem', 
+            fontSize: '1rem', 
+            width: '100%',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            cursor: 'pointer'
+          }}
         >
-          <option value="">-- Chọn môn học --</option>
+          <option value="">-- Chọn môn học để xem tài liệu --</option>
           {subjects.map(s => (
             <option key={s.subject_id} value={s.subject_id}>
               {s.subject_code} - {s.subject_name}
             </option>
           ))}
         </select>
+        {selectedSubjectId && (
+          <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+            📄 {materials.length} tài liệu
+          </div>
+        )}
       </div>
 
-      {isLoadingMaterials ? (
+      {!selectedSubjectId ? (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '4rem 2rem',
+          color: '#999'
+        }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📚</div>
+          <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+            Chưa chọn môn học
+          </div>
+          <div style={{ fontSize: '0.95rem' }}>
+            Vui lòng chọn môn học từ danh sách bên trên để xem tài liệu
+          </div>
+        </div>
+      ) : isLoadingMaterials ? (
         <div className="loading-text">Đang tải tài liệu...</div>
+      ) : materials.length === 0 ? (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '4rem 2rem',
+          color: '#999'
+        }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📭</div>
+          <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+            Chưa có tài liệu nào
+          </div>
+          <div style={{ fontSize: '0.95rem' }}>
+            {subjects.find(s => s.subject_id === parseInt(selectedSubjectId))?.subject_name} chưa có tài liệu được tải lên
+          </div>
+        </div>
       ) : (
         <table className="data-table">
           <thead>
@@ -220,8 +262,7 @@ const CourseMaterialPage = () => {
               <th>Tiêu đề</th>
               <th>Người thêm</th>
               <th>Ngày thêm</th>
-              {(user?.roleId === 1 || user?.roleId === 2) && <th>Hành động</th>}
-              {user?.roleId === 3 && materials.some(m => is3DModel(m)) && <th>Xem</th>}
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -292,19 +333,22 @@ const CourseMaterialPage = () => {
                     </td>
                   )}
                   
-                  {/* Student view - show view and download buttons for 3D */}
-                  {user?.roleId === 3 && is3DModel(material) && (
+                  {/* Student view - show view and download buttons */}
+                  {user?.roleId === 3 && (
                     <td className="actions">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handle3DView(material)}
-                        style={{ marginRight: '8px' }}
-                        title="Xem mô hình 3D"
-                      >
-                        <FiEye /> Xem 3D
-                      </button>
+                      {/* View button for 3D models */}
+                      {is3DModel(material) && (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handle3DView(material)}
+                          style={{ marginRight: '8px' }}
+                          title="Xem mô hình 3D"
+                        >
+                          <FiEye /> Xem 3D
+                        </button>
+                      )}
                       
-                      {/* Download button for students */}
+                      {/* Download button for all files */}
                       <a
                         href={`${BACKEND_URL}${material.url}`}
                         download
@@ -318,13 +362,7 @@ const CourseMaterialPage = () => {
                   )}
                 </tr>
               ))
-            ) : (
-              <tr>
-                <td colSpan={user?.roleId === 3 ? "3" : "4"} style={{ textAlign: 'center' }}>
-                  {selectedSubjectId ? 'Chưa có tài liệu nào cho môn này.' : 'Vui lòng chọn môn học.'}
-                </td>
-              </tr>
-            )}
+            ) : null}
           </tbody>
         </table>
       )}

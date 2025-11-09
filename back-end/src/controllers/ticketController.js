@@ -1,6 +1,6 @@
 const ticketModel = require('../models/ticketModel');
 const studentModel = require('../models/studentModel');
-const assignmentModel = require('../models/assignmentModel');
+const lecturerModel = require('../models/lecturerModel');
 
 const ticketController = {
   createTicket: async (req, res) => {
@@ -31,7 +31,7 @@ const ticketController = {
       }
 
       console.log('🔍 Tìm giảng viên cho:', { subject_id, class_id, semester });
-      const lecturer_id = await assignmentModel.findLecturerForCourse(
+      const lecturer_id = await lecturerModel.findLecturerForCourse(
         subject_id,
         class_id,
         semester
@@ -65,9 +65,16 @@ const ticketController = {
     try {
       const student_id = req.user.studentId;
       const tickets = await ticketModel.findByStudent(student_id);
-      res.status(200).json(tickets);
+      res.status(200).json({
+        success: true,
+        data: tickets
+      });
     } catch (error) {
-      res.status(500).json({ message: 'Lỗi server', error: error.message });
+      res.status(500).json({ 
+        success: false,
+        message: 'Lỗi server', 
+        error: error.message 
+      });
     }
   },
 

@@ -5,6 +5,9 @@ import '../assets/ManagementPage.css';
 
 const MyGradesPage = () => {
   const [grades, setGrades] = useState([]);
+  const [filteredGrades, setFilteredGrades] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [selectedSemester, setSelectedSemester] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth(); 
@@ -15,6 +18,12 @@ const MyGradesPage = () => {
     try {
       const data = await gradeService.getMyGrades();
       setGrades(data);
+      
+      // Extract unique semesters
+      const uniqueSemesters = [...new Set(data.map(g => g.semester))].sort().reverse();
+      setSemesters(uniqueSemesters);
+      
+      setFilteredGrades(data);
     } catch (err) {
       setError(err.message || 'Không thể tải bảng điểm.');
     } finally {
@@ -25,6 +34,14 @@ const MyGradesPage = () => {
   useEffect(() => {
     fetchMyGrades();
   }, []);
+
+  useEffect(() => {
+    if (selectedSemester === 'all') {
+      setFilteredGrades(grades);
+    } else {
+      setFilteredGrades(grades.filter(g => g.semester === selectedSemester));
+    }
+  }, [selectedSemester, grades]);
 
   if (isLoading) return <div className="loading-text">Đang tải bảng điểm...</div>;
   if (error) return <div className="error-text">Lỗi: {error}</div>;
@@ -42,6 +59,33 @@ const MyGradesPage = () => {
         <strong>Tên đăng nhập:</strong> {user.username}
       </div>
 
+      {/* Filter học kỳ */}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <label htmlFor="semester-filter" style={{ fontSize: '1rem', fontWeight: '500' }}>
+          <strong>Học kỳ:</strong>
+        </label>
+        <select 
+          id="semester-filter"
+          value={selectedSemester}
+          onChange={(e) => setSelectedSemester(e.target.value)}
+          style={{ 
+            padding: '0.5rem 1rem', 
+            fontSize: '1rem', 
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            cursor: 'pointer'
+          }}
+        >
+          <option value="all">Tất cả học kỳ</option>
+          {semesters.map(sem => (
+            <option key={sem} value={sem}>{sem}</option>
+          ))}
+        </select>
+        <span style={{ color: '#666', fontSize: '0.9rem' }}>
+          ({filteredGrades.length} môn)
+        </span>
+      </div>
+
       <table className="data-table">
         <thead>
           <tr>
@@ -56,8 +100,8 @@ const MyGradesPage = () => {
           </tr>
         </thead>
         <tbody>
-          {grades.length > 0 ? (
-            grades.map((grade) => (
+          {filteredGrades.length > 0 ? (
+            filteredGrades.map((grade) => (
               <tr key={`${grade.semester}-${grade.subject_id}`}>
                 <td>{grade.semester}</td>
                 <td>
@@ -86,8 +130,13 @@ const MyGradesPage = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" style={{ textAlign: 'center' }}>
-                Bạn chưa có điểm nào.
+              <td colSpan="8" style={{ textAlign: 'center', padding: '3rem', color: '#999' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
+                <div style={{ fontSize: '1.1rem' }}>
+                  {selectedSemester === 'all' 
+                    ? 'Bạn chưa có điểm nào.' 
+                    : `Không có điểm trong học kỳ ${selectedSemester}.`}
+                </div>
               </td>
             </tr>
           )}

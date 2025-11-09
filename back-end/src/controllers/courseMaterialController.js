@@ -100,6 +100,30 @@ const courseMaterialController = {
     } catch (error) {
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
+  },
+
+  // Lấy tài liệu của 1 sinh viên (cho Android app)
+  getMaterialsByStudent: async (req, res) => {
+    try {
+      const { studentId } = req.params;
+      console.log('📚 Fetching materials for student:', studentId);
+      
+      // Lấy tài liệu theo môn học mà sinh viên đang học
+      const materials = await materialModel.findByStudentId(studentId);
+      console.log(`✅ Found ${materials.length} materials for student`);
+      
+      res.status(200).json({
+        success: true,
+        data: materials
+      });
+    } catch (error) {
+      console.error('❌ Get Materials for Student Error:', error.message);
+      res.status(500).json({ 
+        success: false,
+        message: 'Lỗi server', 
+        error: error.message 
+      });
+    }
   }
 };
 

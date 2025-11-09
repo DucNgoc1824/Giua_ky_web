@@ -132,6 +132,32 @@ const studentController = {
     } catch (error) {
       res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
+  },
+
+  // API MỚI: Lấy thông tin student từ userId (cho Android app)
+  getStudentByUserId: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const student = await studentModel.findByUserId(userId);
+      
+      if (!student) {
+        return res.status(404).json({ 
+          success: false,
+          message: 'Không tìm thấy sinh viên.' 
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        data: student
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false,
+        message: 'Lỗi server', 
+        error: error.message 
+      });
+    }
   }
 };
 
